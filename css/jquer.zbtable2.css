@@ -1,0 +1,40 @@
+.zbt-table{
+    width: 100%;
+    border-collapse: collapse;
+}
+.zbt-table thead{
+	background-color: darkturquoise;
+}
+.zbt-table th,td{
+    height: 30px;
+    text-align: center;
+    border: 1px solid #AAAAAA;
+}
+.zbt-table tbody tr{
+	cursor: pointer;
+}
+.zbt-evenRow{
+	background-color:white;
+}
+.zbt-oddRow{
+	background-color:white;
+}
+/* .zbt-curRow{
+	background: #FF0000;
+} */
+.contain{
+			outline-style: none ;
+			    border: 0px solid #ccc;
+			    font-size: 16px;
+			color: blue;
+			
+		}
+		.tab{
+			background-color: darkturquoise;
+		}
+		.tab2{
+			background-color: darkmagenta;
+		}
+		.tab3{
+			background-color: darkorange;
+		}

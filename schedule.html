@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>课程表</title>
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<meta http-equiv="Access-Control-Allow-Headers" content="x-requested-with,content-type" />
+
+		<link rel="stylesheet" href="layui/css/layui.css" media="all">
+		<script src="layui/layui.js"></script>
+
+		<script src="js/jquery-3.3.1.min.js"></script>
+		<link rel="stylesheet" href="css/eleTree.css" media="all">
+		<script src="js/Timetables.min.js"></script>
+
+
+		<script src="js/cpexcel.js"></script>
+		<script src="js/shim.js"></script>
+		<script src="js/jszip.js"></script>
+		<script src="js/xlsx.js"></script>
+	</head>
+	
+	<style>
+
+
+
+		body{
+	   		  padding: 20px;
+			   
+	   		  }
+	   
+	     .bottom{
+	         position: absolute;
+	         width:calc(100% - 60px);
+	         height: calc(100% - 240px);
+	         border: 1px solid #000;
+	         /* background: #999; */
+	   			
+	     }
+	     .top
+	     {
+	         position: relative ;
+	         width: calc(100% - 20px);
+	         height: 200px;
+	         /* border: 1px solid #F00; */
+	         background: #DADADA;
+	         /* z-index: 100; */
+			 overflow:scroll
+			
+			 
+	     }
+	   		.left{
+	   			position: relative;
+	   			width: 40%;
+	   			height: 100%;
+	   			/* border: 1px solid #F00; */
+				font-size: 25px;
+	   			float: left;
+				 overflow:scroll;
+				 
+				 
+	   		}
+	   		.right{
+				
+	   			position: relative;
+	   			width: 59%;
+	   			height: 100%;
+	   			/* border: 1px solid yellow; */
+	   			float: left;
+				
+	   		}
+		.eee{
+			border: 0;
+			
+		}
+		
+		.eleTree{
+		    width: 350px;
+		    height: 50%;
+		    border: 1px solid #ccc;
+		    /* overflow: scroll; */
+		}
+		.red{
+		    color: #ff4200;
+		}
+		.blue{
+		    color: #01AAED;
+		}
+		a:hover{
+		    color: #01AAED;
+		}
+			
+		.nav{
+		    position: fixed;
+		    right: 25px;
+		    top: calc(50% - 120px);
+		    border: 1px solid #d2d2d2;
+		    background-color:#fff;
+		    z-index: 100000;
+		}
+		.nav-title{
+		    background-color: #F8F8F8; 
+		    padding:0 80px 0 20px;
+		    margin: 0px;
+		    height: 42px;
+		    line-height: 42px;
+		    border-bottom: 1px solid #eee;
+		}
+		.nav ul{
+		    padding:10px 0px 10px 35px;
+		}
+		.nav ul li{
+		    padding: 5px 0px;
+		    list-style-type: decimal;
+		}
+		.nav ul a{
+		    color: #333;
+		    font-size: 14px;
+		    text-decoration: none;
+		}
+		
+		
+		
+		.cmn-toggle {
+  position: absolute;
+  margin-left: -9999px;
+  visibility: hidden;
+}
+.cmn-toggle + label {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+input.cmn-toggle-round-flat + label {
+  padding: 2px;
+  width: 100px;
+  height: 30px;
+  background-color: #dddddd;
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+input.cmn-toggle-round-flat + label:before,
+input.cmn-toggle-round-flat + label:after {
+  display: block;
+  position: absolute;
+  content: "";
+}
+input.cmn-toggle-round-flat + label:before {
+  top: 2px;
+  left: 2px;
+  bottom: 2px;
+  right: 2px;
+  background-color: #fff;
+  border-radius: 60px;
+  transition: background 0.4s;
+}
+input.cmn-toggle-round-flat + label:after {
+  top: 4px;
+  left: 4px;
+  bottom: 4px;
+  width: 42px;
+  background-color: #dddddd;
+  border-radius: 52px;
+  transition: margin 0.4s, background 0.4s;
+}
+input.cmn-toggle-round-flat:checked + label {
+  background-color: #8ce196;
+}
+input.cmn-toggle-round-flat:checked + label:after {
+  margin-left: 60px;
+  background-color: #8ce196;
+}
+
+/* //课程表 */
+  .gn{
+	  float: left;margin: 20px;font-size: 25px;color: darkcyan;
+  }
+  .center{
+	  align-content: center;
+	  color: darkmagenta;
+	  margin: 20px;
+  }
+  
+  
+  #coursesTable {
+      padding: 15px 10px;
+  }
+  
+  .Courses-head {
+      background-color: #edffff;
+  }
+  
+  .Courses-head > div {
+      text-align: center;
+      font-size: 14px;
+      line-height: 28px;
+  }
+  
+  .left-hand-TextDom, .Courses-head {
+      background-color: #f2f6f7;
+  	
+  }
+  
+  .Courses-leftHand {
+      background-color: #f2f6f7;
+      font-size: 12px;
+  }
+  
+  .Courses-leftHand .left-hand-index {
+      color: #9c9c9c;
+      margin-bottom: 4px !important;
+  }
+  
+  .Courses-leftHand .left-hand-name {
+      color: #666;
+  }
+  
+  .Courses-leftHand p {
+      text-align: center;
+      font-weight: 900;
+  }
+  
+  .Courses-head > div {
+      border-left: none !important;
+  }
+  
+  .Courses-leftHand > div {
+      padding-top: 5px;
+      border-bottom: 1px dashed rgb(219, 219, 219);
+  }
+  
+  .Courses-leftHand > div:last-child {
+      border-bottom: none !important;
+  }
+  
+  .left-hand-TextDom, .Courses-head {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+  	
+  }
+  
+  .Courses-content > ul {
+      border-bottom: 1px dashed rgb(219, 219, 219);
+      box-sizing: border-box;
+  }
+  
+  .Courses-content > ul:last-child {
+      border-bottom: none !important;
+  }
+  
+  .highlight-week {
+      color: #02a9f5 !important;
+  }
+  
+  .Courses-content li {
+      text-align: center;
+      color: #666666;
+      font-size: 14px;
+      line-height: 50px;
+  }
+  
+  .Courses-content li span {
+      padding: 6px 2px;
+      box-sizing: border-box;
+      line-height: 18px;
+      border-radius: 4px;
+      white-space: normal;
+      word-break: break-all;
+      cursor: pointer;
+  }
+  
+  .grid-active {
+      z-index: 9999;
+  }
+  
+  .grid-active span {
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  
+
+.file {
+    position: relative;
+    display: inline-block;
+    background: darkorange;
+    border: 1px solid #99D3F5;
+    border-radius: 4px;
+    padding:6px 14px;
+    overflow: hidden;
+    color: #1E88C7;
+    text-decoration: none;
+    text-indent: 0;
+    line-height: 25px;
+}
+.file input {
+    position: absolute;
+    font-size: 100px;
+    right: 0;
+    top: 0;
+    opacity: 0;
+}
+.file:hover {
+    background: #AADFFD;
+    border-color: #78C3F3;
+    color: #004974;
+    text-decoration: none;
+}
+</style>
+	<body>
+
+
+		<div class="top  ">
+			<h1 align="center" class="center">课程表管理    <input type="text" id="inp" style="border: 0;height: 36px;background-color: #DADADA" size ="15" maxlength="30" /></h1>
+
+			<span>
+				<!--   <span  class="gn">是否开启拖拽功能：</span>
+			<span class="switch" style="float: left;margin: 20px 30px;">
+				
+				<input id="cmn-toggle-4" class="cmn-toggle cmn-toggle-round-flat" type="checkbox"  name="f4">
+				<label for="cmn-toggle-4" name="f4"></label>
+			</span> -->
+				<span class="gn">是否需要审核：</span>
+				<span class="switch" style="float: left;margin: 20px;">
+
+					<input id="cmn-toggle-5" class="cmn-toggle cmn-toggle-round-flat" type="checkbox">
+					<label for="cmn-toggle-5"></label>
+				</span>
+
+				<span class="gn">
+
+					<a href="javascript:;" class="file">导入
+						<input type="file" name="xlfile" id="xlf">
+
+					</a>
+				</span>
+				<button class="layui-btn layui-btn-radius" style="float: left;margin: 20px;font-size: 25px;" id="xia">下载模板</button>
+				
+			</span>
+			
+				
+		</div>
+		<div class="bottom ">
+			<div class="left">
+				<br />
+				<span style="float: left;margin: 0 10px;">
+					<input type="text" placeholder="请输入名称搜索" class="layui-input eleTree-search " style="float: left;width: 60%;margin:0 10px;"
+					 id="search" />
+					<!-- <button id="btn" style="float: right;">刷新</button> -->
+
+					<button class="layui-btn layui-btn-radius" style="float: right;width: 30%;font-size: 20px;" id="save" onclick="test()">保存</button>
+				</span>
+				<br />
+				<br />
+				<div class="eleTree ele1" lay-filter="ele1" style="padding:10px;border: 0;"></div>
+			</div>
+			<div class="right" id="right">
+
+				<div id="coursesTable"></div>
+
+			</div>
+		</div>
+
+		<script src="js/biao.js"></script>
+		<script>
+			data = "";
+			classid = "";  //保存班级id
+			classnm="";//保存班级名称
+			$.get("index1.json", function(data2, status) {
+				data = data2.data;
+
+				// alert("数据: " + data+ "\n状态: " + status);
+
+			})
+			layui.config({
+				base: "js/"
+			}).use(["eleTree"], function() {
+				$ = layui.jquery,
+					eleTree = layui.eleTree;
+                 
+				e1 = eleTree.render({
+					elem: '.ele1',
+					data: data,
+					// url: 'index2.json',
+
+					defaultExpandAll: true, //是否在第一次展开某个树节点后才渲染其子节点
+					expandOnClickNode: true, //是否在点击节点的时候展开或者收缩节点
+					accordion: true, //是否每次只打开一个同级树节点展开（手风琴效果）
+					emptText: "", //当数据为空时现实的内容
+					indent: 16, //相邻级节点间的水平缩进，单位为像素
+					draggable: true,
+					contextmenuList: ["copy", "add", "edit", "remove", {
+						eventName: "test",
+						text: "测试"
+					}],
+					// contextmenuList: ["copy","add.async","edit","remove",{eventName: "test", text: "测试"}],
+					searchNodeMethod: function(value, data) {
+						console.log("f:" + value)
+						// for(var i in data)
+						// console.log("di:",i," ",data[i]," ",typeof(data[i]))
+						if (!value) return true;
+						return data.label.indexOf(value) !== -1;
+					}
+
+				});
+
+				eleTree.on("nodeClick(ele1)", function(d) {
+					// var str = d.data["currentData"]["id"];
+					// var len = str.split("-").length - 1
+					// alert(str); 
+					// alert("tihs2:"+$(this).children().eq(1).find("class").length)
+					// console.log("dd2:", d.data["currentData"].hasOwnProperty("banji")); // 点击节点对应的数据
+
+					if (d.data["currentData"].hasOwnProperty("banji")) {
+
+						classid = d.data["currentData"]["id"]
+						classnm=d.data["currentData"]["label"]
+						$.post("http://localhost:86/HBuilder/xops/Back.php", {
+							type: "Class",
+							operation: "search_sc",
+							id: classid,
+							token: "1ab66e59325257b60b971d4afa1505ce"
+						}, function(data, status) {
+						var ku=data.split(":");
+						data=ku[0];
+						var ki=ku[1];
+						// alert("ki:"+data)
+				if ($("#cmn-toggle-5").is(':checked')!=ki){
+					$("#cmn-toggle-5").click()
+				}
+				$("#inp").val(classnm)
+							// alert("data1:"+typeof(data)+" "+data);
+							if (data.length > 0) {
+								obj = JSON.parse(data);
+								// alert("obj:"+typeof(obj))
+								var newArray = obj.map(function(col, i) {
+									return obj.map(function(row) {
+										return row[i];
+									})
+								});
+								newArray = newArray.splice(1, 8);
+								onChange(newArray)
+							} else {
+								onChange(courseList2)
+
+							}
+
+						})
+					} else {
+
+						classid = "";
+						classnm="";
+						onChange(courseList2)
+					}
+					
+					// console.log("classid:",classid); 
+
+					// console.log(d.data);   // event对象
+					// console.log(d.node);    // 点击的dom节点
+					// console.log(this);      // 与d.node相同
+				})
+
+				eleTree.on("nodeInsertBefore(ele1)", function(d) {
+					var timestamp = Date.parse(new Date());
+					console.log("dd2:", d.data.hasOwnProperty("banji"), " ", d.newData["label"], " ", typeof(d.newData["label"])); // 点击节点对应的数据
+					var newvalue = d.newData["label"];
+					console.log("dadds:", d.data["id"], " ", typeof(d.data["id"]), " ", timestamp)
+					if (d.data.hasOwnProperty("banji")) {
+
+						var tname = name_class(data)
+						var p = 0;
+                         // alert("qq:"+tname.toString())
+						for (var t in tname) {
+							// console.log("t22:"+t+" +"+tname[t]+" ="+typeof(tname[t]))
+							if (tname[t] == newvalue) {
+
+								p++;
+							}
+
+						}
+						if (p > 1) {
+
+							d.stop();
+							layer.alert("新增的班级名称不能相同", {
+								icon: 4
+							})
+							return;
+						}
+						// alert("ddoo--22")
+						d.stop();
+						e1.insertBefore(d.data["id"], {
+							id: timestamp,
+							label: newvalue,
+							visible: true,
+							banji: "1-1-1",
+						})
+						// el.insertBefore(key,data)
+
+					} else {
+						// alert("ddoo")
+						d.stop();
+						e1.insertBefore(d.data["id"], {
+							id: timestamp,
+							label: newvalue,
+
+						})
+					}
+
+
+					// console.log("t:"+" "+typeof(tname)+" "+tname);    // 点击节点对应的数据
+					// console.log(d.node);    // 点击的dom节点
+					// console.log(this);      // 与d.node相同
+					// d.stop();               // 取消添加
+					// d.setData({             // 自定义数据（异步操作必须调用之后才会添加数据，如果不需要修改值，可以不传参数）
+					//     key: 666,
+					//     label: "aaa"
+					// })
+					// console.log("sd1:", d.newData["label"], " ", typeof(tname)); // 新增加的节点数据
+				})
+				// 添加节点之后事件
+				eleTree.on("nodeInsertAfter(ele1)", function(d) {
+					// console.log(d.data);    // 点击节点对应的数据
+					// console.log(d.node);    // 点击的dom节点
+					// console.log(this);      // 与d.node相同
+					// 
+					// console.log(d.newData); // 新增加的节点数据
+					var timestamp = Date.parse(new Date());
+					// console.log("dd2:", d.data.hasOwnProperty("banji")," ",d.newData["label"]," ",typeof(d.newData["label"])); // 点击节点对应的数据
+					var newvalue = d.newData["label"];
+					// console.log("dadds:", d.data["id"], " ", typeof(d.data["id"])," ",timestamp)
+
+					if (d.data.hasOwnProperty("banji")) {
+
+						var tname = name_class(data)
+						var p = 0;
+
+						for (var t in tname) {
+							// console.log("t22:"+t+" +"+tname[t]+" ="+typeof(tname[t]))
+							if (tname[t] == newvalue) {
+								p++;
+							}
+
+						}
+						if (p > 1) {
+
+							d.stop();
+							layer.alert("新增的班级名称不能相同", {
+								icon: 4
+							})
+							return;
+						}
+						// alert("ddoo--33")
+						d.stop();
+						e1.insertAfter(d.data["id"], {
+							id: timestamp,
+							label: newvalue,
+							visible: true,
+							banji: "1-1-1",
+						})
+						// el.insertAfter(key,data)
+
+					} else {
+						// alert("ddo")
+						d.stop();
+						e1.insertAfter(d.data["id"], {
+							id: timestamp,
+							label: newvalue,
+
+						})
+					}
+				})
+				eleTree.on("nodeTest(ele1)", function(d) {
+					console.group("自定义右键菜单回调nodeTest:")
+					console.log(d.data); // 点击节点对于的数据
+					console.log(d.node); // 点击的dom节点
+					console.log(this); // 与d.node相同
+					console.groupEnd();
+				})
+
+
+				// 节点被编辑事件
+				eleTree.on("nodeEdit(ele1)", function(d) {
+					// console.group("编辑节点nodeEdit:")
+					if (d.data.hasOwnProperty("banji")) {
+
+                       
+						var arr_name = name_class(data);
+						var ind = arr_name.indexOf(d.value);
+						var newd = arr_name.indexOf(d.data["label"]);
+						if (ind > -1 && ind != newd) {
+							d.stop();
+							layer.alert("修改的班级名称出现不能相同", {
+								icon: 4
+							})
+						}
+					}
+
+					// alert("ss:"+ind+" "+newd+" "+arr_name.join(","))
+					// console.log("dd6:", d.data["label"]); // 点击节点对应的数据
+					console.log(d.data); // 点击节点对于的数据
+					// console.log(d.node);        // 点击的dom节点
+					// console.log("bb",d.value);       // 新输入的值
+					// console.log(this);          // 与d.node相同
+					// d.stop();                // 取消编辑
+					console.groupEnd();
+					// 异步修改节点
+					// setTimeout(function() {
+					//     d.async()
+					// },300)
+				})
+				eleTree.on("nodeAppend(ele1)", function(d) {
+					console.log(d.data); // 点击节点对应的数据
+					console.log(d.node); // 点击的dom节点
+					console.log(this); // 与d.node相同
+					d.stop(); // 取消添加
+					d.setData({ // 自定义数据（异步操作必须调用之后才会添加数据，如果不需要修改值，可以不传参数）
+						key: 666,
+						label: "aaa"
+					})
+					console.log(d.newData); // 新增加的节点数据
+				})
+				// e1.unExpandAll() //合并所有
+				// e1.remove("dsf");
+				// console.log("wp:"+e1.getAllNodeData() )
+				//<input type="text" placeholder="请输入名称搜索" class="layui-input eleTree-search" style="float: left;width: 60%;margin:0 10px;">
+			});
+			$(function() {
+				$("#cmn-toggle-5").click()
+				// alert($('#cmn-toggle-5').is(':checked'))
+		
+							
+			});
+
+			function name_class(data) {
+				var name = [];
+// 				for (var i in data) {
+// 					if (data[i].hasOwnProperty("children")) {
+// 						for (var j in data[i]["children"]) {
+// 							if (data[i]["children"][j].hasOwnProperty("children")) {
+// 								for (var k in data[i]["children"][j])
+// 								for(var z in data[i]["children"][j]["children"] ){
+// 									console.log("wm14:",i," ",j," ",k," ",typeof(data[i]["children"][j]["children"][z]["children"]),"  ",data[i]["children"][j]["children"][z]["children"])
+// 									var result = data[i]["children"][j]["children"][z]["children"];
+// 									for (var p in result){
+// 										name.push(result[p]["label"]);
+// 									}
+// 									return;
+// 									
+// 								// name.push(result[z]["label"]);	
+// 								}
+// 								
+// 							}
+// 
+// 						}
+// 
+// 					}
+// 				}
+				// for (var z in result)
+				// 	name.push(result[z]["label"]);
+				// alert(name.length+" =="+name.join(","))
+				var i =$(".eleTree-node-group").find(".eleTree-node").find(".eleTree-node-content").find(".eleTree-node-content-label").length;
+				
+				return name;
+			}
+
+			$(".eleTree-search").on("change", function() {
+				e1.search($(this).val());
+			})
+
+			$(function() {
+
+
+
+				$("#btn").click(function() {
+
+					e1.reload('index2.json', {
+
+					})
+					$(".eleTree-search").val('').change();
+					$(".eleTree-search").on("change", function() {
+						e1.search($(this).val());
+					})
+
+				})
+
+
+			})
+			//方法二
+			function test() {
+			var py="";
+			 if($("#cmn-toggle-5").is(':checked'))
+			 py=1
+			 else
+			 py=0
+			 // alert("qq:"+" = "+py)
+				// for(var i in data)
+				// console.log("2:",i," ",typeof(data[i]), " ",data[i])
+				$.post("http://localhost:86/HBuilder/xops/Back.php", {
+					type: "Config",
+					operation: "schedule",
+					data: data,
+					classid:classid+":"+py,
+					token: "1ab66e59325257b60b971d4afa1505ce"
+				}, function(data, status) {
+alert("2data:" + (data));
+					obj = JSON.parse(data)
+					
+					if(obj.code==200){
+						 
+						layer.msg("保存成功！",{icon:6,"title":"提示"})
+					}
+
+
+				});
+			
+				 // alert('tt2:'+classid.length+" ="+$("#cmn-toggle-5").is(':checked')+" "+py)
+				//
+				// alert("fdg:"+$(".eleTree-node").eq(0).attr("data-id"))
+			}
+			layui.use(['layer'], function() {
+				layer = layui.layer;
+          
+			})
+			
+
+			var X = XLSX;
+			var XW = {
+				/* worker message */
+				msg: 'js/xlsx',
+				/* worker scripts */
+				worker: 'js/xlsxworker.js'
+			};
+
+			var global_wb;
+
+			var process_wb = (function() {
+
+
+				function get_format() {
+					return "json";
+				}
+
+				var to_json = function to_json(workbook) {
+					var result = {};
+					workbook.SheetNames.forEach(function(sheetName) {
+
+						var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName], {
+							header: 1
+						});
+						// alert("dd:"+sheetName+" "+roa.length)
+						if (roa.length) result["data"] = roa;
+					});
+					// console.log("reult:"+result["data"].splice(1,2))
+					var dele = result["data"].splice(0, 1)
+					var arr_del = Object.values(dele);
+
+					for (var i in dele)
+						arr_del.push(dele[i])
+					// console.log("dele:",dele," =",arr_del,"@",Object.values(dele)  )
+					// alert("hh6:"+arr_del.join(",")+" "+typeof(arr_del));
+					// result["data"]=result["data"].splice(0,1)
+
+					console.log("qp:" + " " + typeof(result["data"]), " ", ["data"])
+					// $.post("http://localhost:86/HBuilder/xops/Back.php", {
+					// 	type: "Class",
+					// 	operation: "add",
+					// 	data: result["data"],
+					// 	id:"1564210637501",
+					// 	token: "1ab66e59325257b60b971d4afa1505ce"
+					// }, function(data, status) {
+					// 
+					// 	
+					// 	alert("data1:"+(data));
+					// 
+					// })
+
+					p_test = 0;
+					arr_in = [];
+					title = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"];
+
+					arr_bj = []
+
+
+					// alert("str:" + res_str)
+					result_str = JSON.stringify(result, 2, 2);
+
+					// arr_del=[,"星期一", "星期二", "星期三","星期四","星期五","星期六","星期日"]
+					// alert(res_str)
+					var c = isContained(arr_del, title);
+
+					alert("rre:" + c + "==" + arr_del.join(",") + " " + title.toString() + " " + arr_bj.join(","))
+					if (!c) {
+						// alert("缺少标题栏：" + arr_bj.join(" "))
+						layer.alert("缺少标题栏：" + arr_bj.join(","), {
+							icon: 0
+						});
+						p_test = 1;
+						return;
+					} else {
+						userData = result["data"];
+						// alert(res_str)
+						layui.sessionData('test', {
+							key: 'classname',
+							value: userData
+						});
+
+
+
+						// layui.use(['layer'], function() {
+						// 	var layer = layui.layer;
+						//              layer.open({
+						//                type: 2,
+						//                area: ['700px', '500px'],
+						//                fixed: false, //不固定
+						//                maxmin: true,
+						// 		 	shadeClose: true,
+						// 		 shade: false,
+						//                content: 'html/daoru-excel.html',
+						//              	
+						//              
+						//              });
+						// 	    });
+						// 	
+					}
+
+				result['data']=result['data'].splice(0,12)
+					return JSON.stringify(result['data'], 2, 2);
+				};
+
+
+
+				return function process_wb(wb) {
+					global_wb = wb;
+					var output = "";
+
+					switch (get_format()) {
+
+						case "json":
+							output = to_json(wb);
+							break;
+
+					}
+					var yuyue = 0;
+					if ($("#cmn-toggle-5").is(':checked'))
+						yuyue = 1;
+					alert("r3:" + yuyue)
+					
+					var ko = JSON.parse(output)
+					ko=ko.splice(0,12);
+					var newArray = ko.map(function(col, i) {
+						return ko.map(function(row) {
+							return row[i];
+						})
+					});
+					newArray = newArray.splice(1, 7);
+					alert("ppp2:" + classid+" "+classnm)
+					
+
+					$.post("http://localhost:86/HBuilder/xops/Back.php", {
+						type: "Class",
+						operation: "add_schedule",
+						data: output,
+						id:classid,
+						yuyue:yuyue,
+						classname:classnm,
+						token: "1ab66e59325257b60b971d4afa1505ce"
+					}, function(data, status) {
+					
+						onChange(newArray)
+						alert("data1:"+(data));
+					
+					})
+					console.log('da:' + " " + typeof(output) + " " + output)
+					// 	
+					// 					
+				};
+			})();
+
+
+
+			function isContained(aa, bb) {
+				// console.log("is:",aa," =",bb)
+				// alert("oo7:"+aa[0].length+" "+bb.length+" "+(aa.length < bb.length) )
+				if (!(aa instanceof Array) || !(bb instanceof Array) || ((aa[0].length < bb.length))) {
+					return false;
+				}
+				var aaStr = aa.toString();
+				// alert("len:"+aaStr)
+				for (var i = 0; i < bb.length; i++) {
+
+					if (aaStr.indexOf(bb[i]) < 0) {
+						arr_bj.push(bb[i])
+					}
+
+				}
+				if (arr_bj.length > 0)
+					return false;
+				return true;
+			}
+
+			var do_file = (function() {
+				var rABS = typeof FileReader !== "undefined" && (FileReader.prototype || {}).readAsBinaryString;
+
+
+				return function do_file(files) {
+					rABS = false;
+					use_worker = false;
+					var f = files[0];
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						if (typeof console !== 'undefined') console.log("onload", new Date(), rABS, use_worker);
+						var data = e.target.result;
+
+						if (!rABS) data = new Uint8Array(data);
+						if (use_worker) xw(data, process_wb);
+						else process_wb(X.read(data, {
+							type: rABS ? 'binary' : 'array'
+						}));
+					};
+					if (rABS) reader.readAsBinaryString(f);
+					else reader.readAsArrayBuffer(f);
+				};
+			})();
+
+
+
+			(function() {
+				var xlf = document.getElementById('xlf');
+				if (!xlf.addEventListener) return;
+
+				function handleFile(e) {
+					if (classid.length == 0) {
+						layer.alert('您还未选择班级，请先点击', {
+							icon: 4
+						});
+						return;
+					}
+
+
+					do_file(e.target.files);
+					$("#xlf").val("");
+
+				}
+				xlf.addEventListener('change', handleFile, false);
+
+
+
+			})();
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-36810333-1']);
+			_gaq.push(['_trackPageview']);
+		</script>
+	</body>
+</html>

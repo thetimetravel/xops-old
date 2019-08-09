@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<meta name="keywords" content="hsiangleev,layui扩展">
+		<title>layui扩展无限级联选择器</title>
+		<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+		<meta http-equiv="Access-Control-Allow-Origin" content="http://localhost:86" />
+<meta http-equiv="Access-Control-Allow-Origin" content="http://192.168.2.202:3006">
+<meta http-equiv="Access-Control-Allow-Origin" content="http://localhost:86" />
+
+		<script src="js/jquery-3.3.1.min.js"></script>
+		<link rel="stylesheet" href="layui2/src/css/layui.css" media="all">
+		<link rel="stylesheet" href="css/cascader.css" media="all">
+		<link rel="icon" type="image/png" sizes="32x32" href="images/titlelogo.png">
+		<script src="layui2/src/layui.js"></script>
+		<link rel="stylesheet" href="css/formSelects-v4.css" media="all">
+	</head>
+	<body style="background-color: #DEE5E7;">
+
+
+		<style>
+			.body {
+
+				padding: 0;
+
+				margin: 0;
+
+				background: #eee;
+
+			}
+
+			.outer,
+			.inner {
+				border: 0px solid #999;
+			}
+
+			.outer {
+
+				width: 100%;
+                 /* font-size: 12px; */
+				 color: darkgoldenrod;
+				height: 90%;
+
+			}
+
+			.inner {
+
+				width: 50%;
+
+				height: 80%;
+
+			}
+
+			.layui-table-cell{
+				color: darkgoldenrod;
+				font-weight: 700;
+				
+			}
+			
+@media only screen and (min-width: 320px){html {font-size:1px!important;color: green;}}
+@media only screen and (min-width: 360px){html {font-size: 72.5%!important;color: yellow;}}
+@media only screen and (min-width: 400px){html {font-size: 82.5%!important;color: red;}}
+@media only screen and (min-width: 480px){html {font-size: 94%!important;color: blue;}}
+
+		</style>
+
+		<div class="outer" style="">
+			<h3 style="text-align: center;color: deeppink;margin: 30px 50px 80px 50px;font-weight: 700;">预约教室</h3>
+
+
+			<div class="layui-form-item" style="margin-left: 10x;width: 85%">
+				<label class="layui-form-label">选择教室:</label>
+				<div class="layui-input-block">
+					<input type="text" id="a" class="layui-input" readonly="readonly">
+				</div>
+
+			</div>
+		
+			<div class="layui-form-item" style="margin-left: 10x;width: calc(85% - 5px);margin-top: 20px;">
+			<label class="layui-form-label" style="height: 58px;white-space:pre-wrap;">时间(只能选取30天之内的日期):</label>
+			<div class="layui-input-block">
+				
+				<input type="text" readonly  class="layui-input" id="test-limit2"  style="width:100%; height: 38px;color: darkgoldenrod;" >
+			</div>
+			</div>
+
+			<div class="layui-form-item" style="margin-left: 10x;width: calc(85%);margin-top: 20px;">
+			<label class="layui-form-label"  onclick="diji()">第几节:</label>
+			<div  class="layui-input-block">
+				<select name="city" xm-select="method-on-example3" id="sel" height="58px">
+				
+				</select>
+			</div>
+			</div>
+			<div align="center" style="margin-top: 30px;">
+				<button class="layui-btn layui-btn-lg layui-btn-primary layui-btn-radius" style="background-color: #00BFFF;"
+				 onclick="sub()">查询</button>
+
+
+			</div>
+		</div>
+		<div id="show_data" style="margin-top: 20px;margin-left: 10px;margin-right: 10px;display: none;">
+			<table class="layui-hide" lay-id="demo2" lay-filter="test" id="test"></table>
+		</div>
+		
+						
+		
+		  <script type="text/html" id="barDemo">
+		  	
+		    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="yuyue" id="yu">预约</a>
+		  
+		</script>
+			<script type="text/html" id="timedata">
+			 
+			{{day2}}
+			  
+				</script>
+					<script type="text/html" id="shenpi">
+				 
+				{{# if(d.yuyue){ }} 是{{# }else{ }}否{{# } }}
+				  
+          
+
+				</script>
+				
+		<script src="js/formSelects-v4.min.js" type="text/javascript" charset="UTF-8"></script>
+		<script type="text/javascript">
+			 function diji(){
+				  $.post("http://192.168.2.202:3006",{
+			  type:"NewOrder",
+			  id:"-1,31",
+			   },function(data,status){
+			  // alert(typeof(data));
+			  alert(data);
+			   })
+				
+			}
+			layui.use(["layer"], function() {
+				layer = layui.layer;
+			
+			})
+			
+			
+				$.post("http://localhost:86/HBuilder/xops/Back.php", {
+				type: "Look",
+				operation: "is_search",
+			
+				token: "1ab66e59325257b60b971d4afa1505ce"
+			}, function(data, status) {
+			
+			obj=JSON.parse(data);
+			var timet=parseInt(obj.time);
+			// alert("data2:" + (data)+" "+typeof(obj.class)+" "+parseInt(obj.time)==0);
+			 if(timet==0){
+				layui.use(["layer"], function() {
+					layer = layui.layer;
+				layer.msg("您还未添加时间管理的数据，请先去主界面的时间管理添加数据",{icon:5,"title":"提示",time:5000})
+				})
+				
+			}else{
+			 for(var i=1;i<=timet;i++){
+	var add='<option value="'+i+'">第'+i+'节</option>';			            
+			$("#sel").append(add)
+			 }
+			}
+			})
+			layui.formSelects.render('method-on-example3');
+			
+
+			 data_json=[];
+			day2="";
+			
+			function sub() {
+				
+
+				var jiao = $("#a").val();
+				var jie = layui.formSelects.value('method-on-example3', 'valStr');
+			
+				var  u = jiao.split("/");
+				 day2=$("#test-limit2").val();
+                   // alert("jie:"+jie+" "+typeof(jie))
+				if (jiao.length == 0) {
+					layer.msg("您还未选择教室", {
+						icon: 5,
+						time: 2000
+					});
+					return;
+				} else if (u.length != 4) {
+
+					layer.msg("预约教室格式错误，请选择到具体教室！", {
+						icon: 5,
+						time: 3000
+					});
+					return;
+				}else if(day2.length==0){
+					layer.msg("您还未选择日期", {
+						icon: 5,
+						time: 2000
+					});
+					return;
+				}
+				 else if (jie.length == 0) {
+					layer.msg("您还未选择第几节课", {
+						icon: 5,
+						time: 2000
+					});
+					return;
+				}
+				
+			
+				 day=new Date(day2).getDay();
+	         // alert(typeof(day)+" "+day+" == "+day2)
+		
+				// alert(jie+"=" + u[3])
+				uu=u;
+				 $.post("http://localhost:86/HBuilder/xops/Back.php", {
+					type: "Class",
+					operation: "yuyue",
+					classname: u[3],  //教室名
+				    yuyue:jie,  //第几节
+					id:day,  //第几天
+					token: "1ab66e59325257b60b971d4afa1505ce"
+				}, function(data, status) {
+					var fg=data.split(':');
+					data=fg[0];
+				      data2=fg[1];
+				       // alert("data2:"+data+" "+typeof(data)+ " "+data.length+" = "+data2+" "+typeof(data2)+ " "+data2.length)
+					   if(data.length==2){
+						   layer.msg("暂无数据!",{icon:5,title:"提示"})  
+						   return;
+					   }
+					 
+					obj = JSON.parse(data)
+					obj3=JSON.parse(data2);
+					var tt="[";
+					for(var t=0;t<obj.length;t++)
+					tt+="{jie:"+obj[t]+",yuyue:"+obj3[t]+"},";
+					
+					tt=tt.substring(0,tt.length-1)
+					tt+="]";
+					// alert(tt);
+					var obj2= eval("(" + tt + ")")
+	
+				// alert("data:" + (obj2.length)+" "+typeof(obj2));
+            
+				layui.use('table', function() {
+					var table = layui.table;
+					table.reload('test', {
+						data: obj2,
+						cols: [
+							[{
+								field:'xhao',
+									type: 'numbers',
+									fixed: 'left',
+									title: '序号',
+									minWidth: "5%",
+									unresize: true,
+									sort: true,
+	
+								} 
+								
+								,
+							
+								 {
+									field: 'time',
+									title: '时间',
+									minWidth: 120,
+									width: '25%',
+									edit: 'text',
+									fixed: 'left',
+									minWidth: "10%",
+									unresize: true,
+									toolbar:'#timedata',
+									align:"left",
+									sort: true,	
+								}
+								,
+								
+								{
+									
+										field: 'jie',
+										title: '第几节',
+										width: '20%',
+										minWidth: 120,
+										edit: 'text',
+										fixed: 'ledt',
+										sort: true,
+										minWidth: "10%",
+											align:"left",
+									}
+								,
+								{	
+									field:'yuyue',
+									title: '审核',
+									minWidth: 120,
+									width: '20%',
+									edit: 'text',
+									fixed: 'left',
+									minWidth: "10%",
+									unresize: true,
+									toolbar:'#shenpi',
+									align:"left",
+														
+								},
+								{
+									
+										field: 'jie',
+										title: '操作',
+										width: '30%',
+										minWidth: 120,
+										edit: 'text',
+										fixed: 'center',
+										
+										toolbar:'#barDemo'
+									}
+								
+						
+								]
+							],
+							
+						
+				
+					});
+				});
+				   $("#show_data").css("display",'block')
+				});
+				
+
+
+			}
+			
+             function GetRequest() { 
+    var url = location.search; //获取url中"?"符后的字串 
+ 
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1); 
+        strs = str.split("&"); 
+  
+    } 
+    return strs; 
+} 
+   // alert(" "+(GetRequest()[0].split("=")[1]))
+   layui.use(['laydate'], function() {
+   
+   	laydate = layui.laydate;
+	var ins22 = laydate.render({
+			elem: '#test-limit2',
+			min: 0,
+			max: 30,
+			done: function(value, date) {
+				// alert("d:"+value+" ")
+				// for (var i in date)
+				// 	console.log("i：" + i + " " + date[i])
+				return true;
+			},
+		});
+	
+	});
+   
+		</script>
+		
+
+
+		<script>
+			
+			data = "";
+			$.get("index.json", function(data2, status) {
+				data = data2.data;
+
+				// alert("数据: " + data[0]["label"]+ "\n状态: " + status);
+
+			})
+			
+
+			layui.config({
+				base: "js/"
+			}).use(['form', "jquery", "cascader", "form"], function() {
+				var $ = layui.jquery;
+				var cascader = layui.cascader;
+
+
+				var cas = cascader({
+					elem: "#a",
+					data: data,
+					// url: "/aa",
+					// type: "post",
+					// triggerType: "change",
+					// showLastLevels: true,
+					// where: {
+					//     a: "aaa"
+					// },
+					// value: ["B", "BB2", "BBB4"],
+					changeOnSelect: true,
+					success: function(valData, labelData) {
+						// console.log("p:",valData, labelData);
+					}
+				});
+
+
+				// $(".layui-btn").on("click",function() {
+				//     cas.reload({
+				//         data: data,
+				//         
+				//     })
+				// })
+			})
+		
+		layui.config({
+			base: 'test/js/'
+		}).use(['testTablePlug'], function() {
+				table = layui.table;
+		tablePlug = layui.tablePlug; //表格插件
+		
+		// 当前这个测试页面测试的重点不是智能重载，所以关掉该功能，实际上该功能也是默认关闭的，可以不执行下面这句代码，也可以强制指定。
+		tablePlug.smartReload.enable(false);
+				table.render({
+						// elem: '#demo2'
+						elem: '[lay-id="demo2"]',
+
+						data: data_json
+
+							,
+						title: '预约教室',
+						page: {
+							layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+							curr: 1 //设定初始在第 5 页
+								,
+							groups: 5 //只显示 1 个连续页码
+								,
+							first: true //不显示首页
+								,
+							last: true //不显示尾页
+
+						},
+
+
+						limit: 5,
+						loading: true,
+						limits: [5,8,10,15],
+						// toolbar: '#toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+						// ,
+					
+						cellMinWidth: 90
+							// , autoSort: false // 不进行前端排序
+							,
+						done: function(res, curr, count) {
+
+
+// 						
+// 							console.log("res:", res);
+// 
+// 							//得到当前页码
+// 							console.log("curr", curr);
+// 
+// 							//得到数据总量
+// 							console.log("co", count);
+
+
+						},
+
+						primaryKey: 'id'
+
+							,
+						checkStatus: {
+							// 原始已经选中的记录的主键值集合
+							default: []
+						},
+						checkDisabled: {
+							enabled: true,
+							data: []
+						},
+						cols:  [
+							[{
+								field:'xhao',
+									type: 'numbers',
+									fixed: 'left',
+									title: '序号',
+									minWidth: "5%",
+									unresize: true,
+									
+									// LAY_CHECKED: true
+								} 
+								
+								,
+							
+								 {
+									
+									title: '时间',
+									minWidth: 120,
+									width: '25%',
+									edit: 'text',
+									fixed: 'left',
+									minWidth: "10%",
+									unresize: true,
+									toolbar:'#timedata',
+									align:"left",
+														
+								}
+								,
+								
+								{
+									
+										field: 'jie',
+										title: '第几节',
+										width: '20%',
+										minWidth: 120,
+										edit: 'text',
+										fixed: 'ledt',
+										sort: true,
+										minWidth: "10%",
+											align:"left",
+									}
+								,
+								{	
+									
+									title: '审核',
+									minWidth: 120,
+									width: '20%',
+									edit: 'text',
+									fixed: 'left',
+									minWidth: "10%",
+									unresize: true,
+									toolbar:'#shenpi',
+									align:"left",
+														
+								},
+								{
+									
+										field: 'jie',
+										title: '操作',
+										width: '30%',
+										minWidth: 120,
+										edit: 'text',
+										fixed: 'center',
+										sort: true,
+									
+										toolbar:'#barDemo'
+									}
+								
+								
+						
+								]
+							]
+							
+							
+						});
+						
+				})
+				
+
+
+		</script>
+
+	</body>
+</html>

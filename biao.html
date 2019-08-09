@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+		<script src="js/Timetables.min.js"></script>
+		<script src="js/jquery-3.3.1.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/dialog.css">
+		<script src="js/jquery.dialog.min.js"></script>
+		<title>大学课表</title>
+		<style>
+			#coursesTable {
+				padding: 15px 10px;
+			}
+
+			.Courses-head {
+				background-color: #edffff;
+			}
+
+			.Courses-head>div {
+				text-align: center;
+				font-size: 14px;
+				line-height: 28px;
+			}
+
+			.left-hand-TextDom,
+			.Courses-head {
+				background-color: #f2f6f7;
+
+			}
+
+			.Courses-leftHand {
+				background-color: #f2f6f7;
+				font-size: 12px;
+			}
+
+			.Courses-leftHand .left-hand-index {
+				color: #9c9c9c;
+				margin-bottom: 4px !important;
+			}
+
+			.Courses-leftHand .left-hand-name {
+				color: #666;
+			}
+
+			.Courses-leftHand p {
+				text-align: center;
+				font-weight: 900;
+			}
+
+			.Courses-head>div {
+				border-left: none !important;
+			}
+
+			.Courses-leftHand>div {
+				padding-top: 5px;
+				border-bottom: 1px dashed rgb(219, 219, 219);
+			}
+
+			.Courses-leftHand>div:last-child {
+				border-bottom: none !important;
+			}
+
+			.left-hand-TextDom,
+			.Courses-head {
+				border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+
+			}
+
+			.Courses-content>ul {
+				border-bottom: 1px dashed rgb(219, 219, 219);
+				box-sizing: border-box;
+			}
+
+			.Courses-content>ul:last-child {
+				border-bottom: none !important;
+			}
+
+			.highlight-week {
+				color: #02a9f5 !important;
+			}
+
+			.Courses-content li {
+				text-align: center;
+				color: #666666;
+				font-size: 10px;
+				line-height: 50px;
+			}
+
+			.Courses-content li span {
+				padding: 6px 2px;
+				box-sizing: border-box;
+				line-height: 18px;
+				border-radius: 4px;
+				white-space: normal;
+				word-break: break-all;
+				cursor: pointer;
+			}
+
+			.grid-active {
+				z-index: 9999;
+			}
+
+			.grid-active span {
+				box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+			}
+			
+			.center2{
+				text-align: center;
+				color: darkorange;
+				height: 20px;
+				margin: 0px;
+			}
+			#right{
+				height: calc(100% - 30px);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="center2" id="center2"></div>
+		<div  id="right">
+		<div id="coursesTable"></div>
+		</div>
+		<script>
+		var obi_i = GetRequest();
+		var type= obi_i[0].split("=")[1];
+		 id = obi_i[1].split("=")[1];
+		id=decodeURIComponent(id)
+		courseList2 = [
+			['', '', '', '', '', '', '', ''],
+			['', '', '', '', '', '', '', '', '', ''],
+			['', '', '', '', '', '', '', '', '', ''],
+			['', '', '', '', '', '', '', '', '', ''],
+			['', '', '', '', '', '', '', '', '', ''],
+			['', '', '', '', '', '', '', '', '', ''],
+			['', '', '', '', '', '', '', '', '', '']
+		];
+		 pp=[
+			  [{index: '1', name: '09:00-09:40'}, 1],
+			  [{index: '2', name: '09:40-10:20'}, 1],
+			  [{index: '3', name: '10:40-12:00'}, 1],
+			  [{index: '4', name: '14:00-14:40'}, 1],
+			  [{index: '5', name: '14:40-15:20'}, 1],
+			  [{index: '6', name: '15:30-16:10'}, 1],
+			  [{index: '7', name: '16:10-16:50'}, 1],
+			  [{index: '8', name: '17:00-17:40'}, 1],
+			  [{index: '9', name: '17:40-18:20'}, 1],
+			  [{index: '10', name: '19:00-19:40'}, 1],
+			  [{index: '11', name: '19:40-20:20'}, 1],
+			  [{index: '12', name: '20:30-21:10'}, 1]
+			];
+			var week = window.innerWidth > 360 ? ['周一', '周二', '周三', '周四', '周五', '周六', '周日'] : ['一', '二', '三', '四', '五', '六', '日'];
+			var day = new Date().getDay();
+			// alert("d:"+typeof(day)+" "+day)
+			courseType = []
+			result = "["
+			cou=""
+			// alert("d:"+typeof(day)+" "+day)
+			$.post("http://mycloud.konzesys.com.cn/app/zhiweibao/xops/Back.php", {
+				type: "Uptime",
+				operation: "search",
+				token: "1ab66e59325257b60b971d4afa1505ce"
+			}, function(data, status) {
+			
+				var obj = JSON.parse(data)
+				// alert("data:"+obj.nums)
+				if (obj.nums == 0) {
+					 $.sendSuccessToTop('您尚未设置上课时间表，请先去设置！', 2000, function() {
+									 
+					});
+					
+					return;
+				}
+				data=obj.data;
+				cou=obj.nums;
+				
+				
+				for (var j in data)
+					for (var i in data[j]) {
+				// console.log('ii:' + i + " " + j + " " + typeof(data[j][i]), " ", data[j][i])
+						result += "[{index:'" + (parseInt(j)+1) + "',name:'" + data[j]['begin'] + "-" + data[j]['over'] + "'},1],";
+						break;
+			
+					}
+					result = result.substring(0, result.lastIndexOf(','));
+					 result+="]";
+		
+				courseType=eval(result);
+			
+					// alert(type+" "+id)	
+					
+			newArray=[]
+          $.post("http://mycloud.konzesys.com.cn/app/zhiweibao/xops/Back.php", {
+          	type: "Class",
+          	operation: "search_test",
+			id:id,
+			classname:type,
+          	token: "1ab66e59325257b60b971d4afa1505ce"
+          }, function(data, status) {
+			   // alert(data)
+			  var obj=JSON.parse(data);
+			 
+			  if(obj.code==200){
+				  var obj2=JSON.parse(obj.data);
+				  newArray = obj2.map(function(col, i) {
+				 	return obj2.map(function(row) {
+				 		return row[i];
+				 	})
+				 });
+				 newArray = newArray.splice(1, 8);
+				 var div = document.documentElement.clientHeight;
+				  // alert("4kp:"+cou+" "+" "+div )
+				  
+				 heigh=div-90;
+				  // alert("5kp:"+" "+heigh)
+				 heigh=heigh /cou;
+				 heigh=Math.floor( heigh * 100 ) / 100
+				 // alert(heigh)
+				 var Timetable = new Timetables({
+				 	el: '#coursesTable',
+				 	timetables: newArray,
+				 	week: week,
+				 	timetableType: courseType,
+				 	highlightWeek: day,
+				 	gridOnClick: function(e) {
+				 		if (e.name != null)
+				 			alert(e.name + '  ' + e.week + ', 第' + e.index + '节课, 课长' + e.length + '节');
+				 		console.log(e);
+				 	},
+					
+				 	styles: {
+				 		Gheight: heigh,
+				 		leftHandWidth: 40,
+				 	}
+				 });
+			  }else if(obj.code==202){
+				   var Timetable = new Timetables({
+				  	el: '#coursesTable',
+				  	timetables: courseList2,
+				  	week: week,
+				  	timetableType: pp,
+				  	highlightWeek: day,
+				  	gridOnClick: function(e) {
+				  		if (e.name != null)
+				  			alert(e.name + '  ' + e.week + ', 第' + e.index + '节课, 课长' + e.length + '节');
+				  		console.log(e);
+				  	},
+				  	styles: {
+				  		Gheight: 50,
+				  		leftHandWidth: 80,
+				  	}
+				  });
+				  $.sendSuccessToTop('没有该数据，请先导入课程表！', 2000, function() {
+				 				 
+				 });
+			  }
+			  
+			  })
+			 
+				})
+				$(function(){
+					$("#center2").append(id)
+				})
+	    function GetRequest() { 
+	    var url = location.search; //获取url中"?"符后的字串 
+	
+	    if (url.indexOf("?") != -1) {
+	        var str = url.substr(1); 
+	        strs = str.split("&"); 
+	  
+	    } 
+		
+	    return strs; 
+	} 
+		
+		</script>
+	</body>
+</html>

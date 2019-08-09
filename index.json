@@ -1,0 +1,112 @@
+{
+	"code": 0,
+	"data": [{
+		"id": "1564331666000",
+		"label": "南校区",
+		"children": [{
+			"id": "1564210599633",
+			"label": "A楼",
+			"children": [{
+				"id": "1564210613526",
+				"label": "第一层",
+				"children": [{
+					"id": "1564210635501",
+					"label": "A101",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210637501",
+					"label": "A102",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210785501",
+					"label": "A103",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210550122",
+					"label": "A104",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635670",
+					"label": "A105",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635688",
+					"label": "A106",
+					"banji": "1-1-1",
+					"visible": "true"
+				}],
+				"visible": "true"
+			}, {
+				"id": "11564210635501",
+				"label": "第二层",
+				"children": [{
+					"id": "1564210635692",
+					"label": "A201",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635695",
+					"label": "A202",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635697",
+					"label": "A203",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635804",
+					"label": "A204",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635806",
+					"label": "A205",
+					"banji": "1-1-1",
+					"visible": "true"
+				}],
+				"visible": "true"
+			}],
+			"visible": "true"
+		}]
+	}, {
+		"id": "1564331620000",
+		"label": "北校区",
+		"children": [{
+			"id": "2",
+			"label": "清风楼",
+			"children": [{
+				"id": "1564210635501",
+				"label": "第一层",
+				"children": [{
+					"id": "1564210635808",
+					"label": "C101",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635816",
+					"label": "C102",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635834",
+					"label": "C103",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635844",
+					"label": "C104",
+					"banji": "1-1-1",
+					"visible": "true"
+				}],
+				"visible": "true"
+			}],
+			"visible": "true"
+		}]
+	}]
+}

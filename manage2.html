@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>订单处理系统</title>
+		<!-- <link rel="stylesheet" type="text/css" href="css/style.css"> -->
+		<!-- <link rel="stylesheet" type="text/css" href="css/reset.css"> -->
+		<link rel="stylesheet" type="text/css" href="css/comment.css">
+		<!-- <link rel="stylesheet" type="text/css" href="css/myflight.css"> -->
+		<script src="js/jquery-3.3.1.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/manage.css">
+		
+		<!-- 提示框 -->
+		<link rel="stylesheet" type="text/css" href="css/dialog.css">
+		<script src="js/jquery.dialog.min.js"></script>
+		<script src="layui2/src/layui.js"></script>
+	</head>
+
+	<style>
+		
+		.left {
+			width: 28%;
+			height: 50%;
+			border: 1px solid #bbe1f1;
+			font-size: 20px;
+			margin: 20px 1.5%;
+			padding: 10px;
+			float: left;
+			background:#eefaff;
+			position: relative;
+			border-radius: 12px;
+		
+			/* background-color: #54364a; */
+			background-image: url(images/a.jpg);
+			background-repeat: no-repeat;
+			background-size: cover;
+		
+		
+		}
+		
+		.btn {
+		
+			margin-top: 5px;
+			margin-left: calc(50% - 48px);
+			color: red;
+			/* width: 50px; */
+		}
+		
+		.layui-btn2 {
+			display: inline-block;
+			height: 38px;
+			line-height: 38px;
+			padding: 0 18px;
+			background-color: #009688;
+			color: #fff;
+			font-weight: 37.5rem;
+			white-space: nowrap;
+			text-align: center;
+			font-size: 16px;
+			border: none;
+			border-radius: 2px;
+			cursor: pointer;
+		}
+		
+		.layui-btn-radius {
+			border-radius: 100px;
+		}
+		
+		.layui-btn-warm {
+			background-color: #FFB800;
+		}
+		
+		.wenzi {
+			/* position: absolute; */
+			margin-top: 8px;
+			color: darkmagenta;
+			display: block;
+			width: 100%;
+			height: 24px;
+			overflow: hidden;
+			/* margin-left: 20%; */
+			margin-bottom: 8px;
+		text-align: center;
+		}
+		
+		.center {
+		
+			margin-left: 0px;
+			margin-top: 0px;
+			border-radius: 8px;
+			color: darkmagenta;
+		   background: #00F7DE;
+		   text-align: center;
+		   position: relative;
+		}
+		.img {
+			margin-top: 1px;
+			margin-right: 5px;
+			position: relative;
+		}
+		
+		.left2{
+			text-align: center;
+			color: darkcyan;
+			margin-left: 30%;
+			font-size: 25px;
+			overflow: hidden;
+			width: 40%;
+			height: 28px;
+		}
+		
+		.layui-btn {
+			display: inline-block;
+			height: 30px;
+			width: 88px;
+			line-height: 30px;
+			padding: 0 18px;
+			background-color: #009688;
+			color: #fff;
+			font-weight: 37.5rem;
+			white-space: nowrap;
+			text-align: center;
+			font-size: 16px;
+			border: none;
+			border-radius: 12px;
+			cursor: pointer;
+			margin-right: 15px;
+		
+		}
+		.left-btn{
+			display: inline-block;
+			height: 35px;
+			width: 88px;
+			line-height: 35px
+			padding: 0 18px;
+			background-color: #009688;
+			color: #fff;
+			font-weight: 37.5rem;
+			white-space: nowrap;
+			text-align: center;
+			margin-top: 3px;
+			margin-right: 20px;
+			font-size: 16px;
+			border: none;
+			border-radius: 12px;
+		 background-color: #FFB800;
+		 
+		}
+		
+		.layui-btn-warm {
+			background-color: #FFB800;
+			
+		}
+		
+		.bar{
+			margin-left: 10%;
+			color: darkcyan;
+			font-size: 25px;
+			font-weight: 400px;
+			height: 40px;
+		
+		}
+
+		.maindiv{
+		 	width:calc(100% - 20px);
+			padding:10px;
+			overflow:hidden; /*关键*/
+			/* border:1px solid black; */
+		}
+		 
+		 
+		.leftdiv{
+			float:left;
+			width:calc(50% - 20px);
+			/* background-color:#CC6633; */
+		}
+		 
+		.rightdiv{
+			float:right;
+			width:calc(50% - 40px);
+			/* background-color:#CC66FF; */
+			
+		}
+		 
+		.centerdiv{
+			float:left;
+			width:50px;
+			border-right: 1px dashed black;
+			padding-bottom:1600px;  /*关键*/
+			margin-bottom:-1600px;  /*关键*/
+		 
+		}
+		.leftbiao{
+	margin-left: 10%;
+	color: darkblue;
+	font-size: 20px;
+	
+	}
+	.leftkan{
+		margin-left: 20%;
+		color: darkcyan;
+		font-size: 20px;
+	}
+	</style>
+	<script type="text/javascript">
+		
+		    
+		        var WebSocketUrl='ws://127.0.0.1:6086?type=ConnetSocket';
+		        var UpdateHeart=true;
+		        var MyLoop=null;
+		        var isConnectSocket={state:false,loop:null};
+		        var ws = null;
+			
+			
+				 
+		        function HeartBeart(){
+		                loop();
+		                function loop(){
+		                    console.log('心跳包发送2');
+		                    MyLoop=setTimeout(loop,'4000');
+		     
+		
+		                    if(!UpdateHeart){
+		                        clearTimeout(MyLoop);
+		                        console.log('socket似乎断线了,停止心跳检测');
+		                        UpdateHeart=true;
+		
+		                 
+		                    var open=confirm("网络好像断开22，请重新连接网络");
+		                if(open){
+		                    loopconnect();
+		                        function loopconnect(){
+		                                
+		                                isConnectSocket.state=true;
+		                                isConnectSocket.loop=setTimeout(loopconnect,'7000');
+		                                ConnectSocket();
+		
+		                        }
+		
+		
+		                }else{
+		
+		                }
+		
+		                        // this_.$options.methods.SetTipsFn.call(this_, "系统提示", '通信断开，重新连接！', 'CutSocket', false, null)
+		//                      this_.$options.methods.ConnectSocket.call(this_);
+		                    }else{
+		                        console.log('心跳检测');
+		                        ws.send(JSON.stringify({type:'HeartBeat'}));
+		                        UpdateHeart=false;
+		                           // alert("连接网络成功");
+		                    }
+		
+		
+		                }
+		
+		
+		        }
+		    ConnectSocket();
+		    var idd="";
+		    cout=0;
+		function ConnectSocket(){
+		      ws = new WebSocket(WebSocketUrl);
+		      ws.onopen = function(){
+		        console.log('websocket打开2');
+		        ws.send(JSON.stringify({type:'MyInfo',id:"-1"}));
+		    };
+		    ws.onmessage = function(ev){
+		        
+		        var mydata=JSON.parse(ev.data);
+		        console.log("pp:",mydata," ",ev);
+		         if(mydata.type=="ConnetSuccess"){
+		            console.log('success socket');
+		
+		            if(isConnectSocket.state){
+		                           console.log('is null');
+		                            clearTimeout(isConnectSocket.loop);
+		                            isConnectSocket.state=false;
+		            }
+		
+		                console.log('is not null');
+		            HeartBeart();
+		
+		         }
+		
+		         if(mydata.type=='UpdateSuccess'){
+		                        UpdateHeart=true;
+		                        console.log('socket心跳更新成功！');
+		         }
+		
+		
+		        if(mydata.type=='NewOrder'){
+		         
+		            // cx()
+				 
+		            idd=mydata.id;
+					var arr_idd=idd.split(",");
+						ko(parseInt(arr_idd[1]))
+						var pt=$("#dd1").text();
+						if(pt.indexOf("(")==-1){
+							$("#dd1").append("(1)")
+						}else{
+							var po1=pt.indexOf("(");
+							var po2=pt.indexOf(")");
+							var pvalue=pt.substring(po1+1,po2);
+							pvalue=parseInt(pvalue)+1;
+							pt="("+pvalue+")"
+							// alert("v:"+pt);
+							$("#dd1").empty()
+							$("#dd1").append(pt);
+						}
+						layui.use(["layer"],function(){
+							var layer=layui.layer;
+							 layer.open({
+							  type: 0,
+									title:"提示"
+							  ,offset: "rb" //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+							  ,id: 'layerDemo' //防止重复弹出
+							  ,content: '您有新的订单，请尽快去处理!'
+							  ,icon:6,
+							anim:2
+							  // ,btnAlign: 'c' //按钮居中
+							  ,shade: 0 ,//不显示遮罩
+									  shadeClose: true,
+									  time:2000
+							  ,yes: function(){
+							    layer.closeAll();
+							  }
+							});
+							
+						})
+		            cout++;
+				
+		            console.log('有新的报修订单22,请触发提示信息，或重新获取信息'," ",cout," ", arr_idd[1]," = ",typeof(arr_idd[1]));
+		        }
+		
+		        if(mydata.type=="NewOrder_Success"){
+		            console.log("dsfqqqqq");
+		        }
+		    };
+		    ws.onclose = function(ev){
+		        console.log('socket关闭');
+		    };
+		    ws.onerror = function(ev){
+		        console.log('socket错误');
+		        console.log(ev);
+		    };
+		
+		}
+		
+		 
+			
+			
+		</script>
+	<body>
+
+		<!-- <div class="myflight font20px">
+			订单处理系统
+		</div> -->
+
+		<div class="myflight_imformation_wrapper">
+
+			<div class="manage_tab float_r deepGray">
+				<ul>
+					<li  class="manage_tab_bright">未处理订单<span id="dd1"></span></li>
+					<li  >已经处理订单<span id="dd2"></span></li>
+					<li >不需要审核的订单<span id="dd3"></span></li>
+				</ul>
+			</div>
+
+			<div class="manage_myflight_content float_r" style="position: relative;">
+		
+				<div id="show_data">
+
+				</div>
+			
+			<div id="finish" tyle="overflow: auto;display: none;width: calc(100% - 20px);height: calc(100% - 20px);">
+				
+				</div>
+
+				<div id="shenhe" tyle="overflow: auto;display: none;width: calc(100% - 20px);height: 100%;">
+					
+					</div>
+					<div id="guo" tyle="overflow: auto;display: none;width: calc(100% - 20px);height: 100%;">
+					
+						</div>
+
+			</div>
+		</div>
+
+		<script>
+			chusi()
+			function chusi(){
+				
+						$.post("http://localhost:86/HBuilder/xops/Back.php", {
+						type: "Look",
+						operation: "sea_all",
+					
+						token: "1ab66e59325257b60b971d4afa1505ce"
+					
+					}, function(data, status) {
+						// alert(data)
+						var obj=JSON.parse(data);
+						if(obj.code==200){
+							// alert("d:"+$("#dd1").text().indexOf("(")==-1)
+							if(obj.data1>0 && $("#dd1").text().indexOf("(")==-1)
+							$('#dd1').append("("+obj.data1+")")
+							else{
+								$("#dd1").empty();
+								$('#dd1').append("("+obj.data1+")")
+							}
+							
+							if(obj.data2>0 && $("#dd2").text().indexOf("(")==-1)
+							$('#dd2').append("("+obj.data2+")")
+							else{
+								$("#dd2").empty();
+								$('#dd2').append("("+obj.data2+")")
+							}
+							if(obj.data3>0 && $("#dd3").text().indexOf("(")==-1) 
+							$('#dd3').append("("+obj.data3+")")
+							else{
+								$("#dd3").empty();
+								$('#dd3').append("("+obj.data3+")")
+							}
+						}else{
+							 $.sendSuccessToTop('获取数量异常，请与管理员联系', 2000, function() {
+						
+											 
+							});
+						}
+						})
+				
+			}
+			
+			
+			data = "";
+			init()
+			function init(){
+				$("#show_data").empty(); 
+			$.post("http://localhost:86/HBuilder/xops/Back.php", {
+				type: "Yuorder",
+				operation: "search",
+
+				token: "1ab66e59325257b60b971d4afa1505ce"
+
+			}, function(data2, status) {
+				// alert(data2)
+				obj = JSON.parse(data2);
+
+				data = obj.data;
+				// alert("sf:"+$("#order1").text())
+			
+				jiaza(data,"#show_data","处理")
+
+				// alert("data:"+typeof(data[0])+" "+data[0]+" ") 
+			})
+			}
+			
+			function finish(){
+					$("#finish").empty(); 
+				$.post("http://localhost:86/HBuilder/xops/Back.php", {
+					type: "Yuorder",
+					operation: "searchfin",
+				
+					token: "1ab66e59325257b60b971d4afa1505ce"
+				
+				}, function(data2, status) {
+					// alert(data2)
+					obj = JSON.parse(data2);
+					
+					data = obj.data;
+					
+					jiaza(data,"#finish","查看")
+					
+			})	
+			}
+			
+			function ko(id){
+			$.post("http://localhost:86/HBuilder/xops/Back.php",{
+			type:"Yuorder",
+			operation:"searchid",
+			userid:id,
+			token:"1ab66e59325257b60b971d4afa1505ce"					     
+							},function(data,status){
+							// alert(data)	
+						obj=JSON.parse(data);
+						data=obj.data;
+						jiaza(data,"#show_data","处理")
+						
+						})
+				
+			}
+			function cx(){
+				 // $("#ordre1").addClass('manage_tab_bright').siblings('li').removeClass('manage_tab_bright');
+		
+			// alert("wm:"+$(".manage_tab_bright").attr("id"))
+			
+				 $('#show_data').attr("style","display:none;")
+				$('#show_data').show("fast",function(){
+					init();
+				});//slow
+						
+				$( "#finish" ).hide();
+				
+				 $("#shenhe").hide();
+				 $("#guo").hide()
+			}
+			
+		
+			function guo(id){
+				$.post("http://localhost:86/HBuilder/xops/Back.php",{
+								  type:"Yuorder",
+								operation:"searchid",
+							userid:id,
+							 token:"1ab66e59325257b60b971d4afa1505ce"
+													     
+							},function(data,status){
+							// alert(data)	
+						obj=JSON.parse(data);
+						data=obj.data;
+						// $("#guo").empty(); 
+						
+					var look='<ul class="tbody font15px" style="background-color:darkturquoise"><div class="bar"><img src="images/order2.png" width="24px"  height="24px"/>订单详情</div><div id="guo_person" tyle="overflow: auto;display: none;width: calc(100% - 20px);height: 100%;" ><div style="text-align: right;margin-top: -50px;"><button class="left-btn" id="resurn"'
+					if(data[0]["yuyue"]=='0')
+					 look+='onclick="fhui4()">'
+					 else if(data[0]["accou"]=="1")
+					 look+='onclick="fhui2()">'
+					 else 
+					  look+='onclick="fhui()">'
+					 look+='返回</button></div><br/></ul><ul class="tbody font15px" ><div class="bar">订单号：'+data[0]["ordernum"]+'</div><div id="guo_person" tyle="overflow: auto;display: none;width: calc(100% - 20px);height: 100%;" ><div style="text-align: right;margin-top: -50px;"><button class="left-btn" id='+data[0]['id']+' onclick="del(this)">删除订单</button><button class="left-btn que" id='+data[0]['id']+' onclick="suc(this)">确认订单</button></div><br/></ul><div class="progressBar"><ul class="font16px"><li><div class="barNum white font18px chu1" >1</div>未处理<div class="progressLine font18px"></div></li><li><div class="barNum white font18px chu2"  >2</div>已完成</li></ul></div><br><div class="maindiv"><div class="leftdiv"><div class="leftbiao">报修人信息</div><br><div class="leftkan">报修人id:'+data[0]["userid"]+'</div><br><div class="leftkan">报修人姓名:'+data[0]["username"]+'</div><br><div class="leftkan">报修时间:'+data[0]["time"]+'</div><br></div><div class="centerdiv"></div><div class="rightdiv"><div class="leftbiao">教室信息</div><br><div class="leftkan">教室名称:'+data[0]["classname"]+'</div><br><div class="leftkan">楼层设置:'+data[0]["path"]+'</div><br><div class="leftkan">第几节:'+data[0]["section"]+'</div><br><div class="leftkan">时长:'+data[0]["len"]+'</div><br><div class="leftkan">预约:'
+				if(data[0]["yuyue"]==1)
+				look+="是";
+				else
+				look+="否";	
+					look+='</div><br></div></div>';
+							$("#guo").append(look);
+							if(data[0]["accou"]=="1" || data[0]["yuyue"]=='0'){
+							if(data[0]["yuyue"]=='0'){
+							var look2='<div class="leftkan">管理员:无</div><br><div class="leftkan">完成时间:'+data[0]["time"]+'</div><br>';
+							}else{
+						var look2='<div class="leftkan">管理员:'+data[0]["account"]+'</div><br><div class="leftkan">完成时间:'+data[0]["finishtime"]+'</div><br>';
+								}
+						
+							$(".rightdiv").append(look2)
+							$(".chu2").css("background",'red');
+							$("#resurn3").hide()
+							}else{
+						$(".chu1").css("background",'red');				
+							}
+				var methods=$("#resurn").attr("onclick");
+			          if(methods.indexOf(2)!=-1 || methods.indexOf(4)!=-1)
+					
+					$(".que").hide()	  
+					  
+						// console.log("wm:"+i+" "+data[0][i])
+						})
+			
+				
+				
+			}
+			
+			function jiaza(data,id,chakan){
+				for (var i in data)
+					for (var j in data[i]) {
+						look =
+							'<div class="left"><div class="wenzi center"> <input type="image" src="images/order.png"  class="img" width="22px" height="22px"></input>' +
+							data[i]["classname"] + '</div><span class="wenzi"> \
+					用户名:' + data[i]["username"] +
+							'</span><span class="wenzi">时间:' + data[i]["time"] + '</span><span class="wenzi">第几节:' + data[i]["section"] +
+							'</span>';
+							if(id=="#show_data")
+							look+='<button class="layui-btn2 layui-btn-warm layui-btn-radius  btn"  onclick="deal(this)" id=' + data[i]["id"] +
+							'>'+chakan+'</button></div>';
+				               else if(id=="#finish")
+							look+='<button class="layui-btn2 layui-btn-warm layui-btn-radius  btn"  onclick="delfinsih(this)"  id=' + data[i]["id"] + 
+							'>'+chakan+'</button></div>';
+							else
+						   look+='<button class="layui-btn2 layui-btn-warm layui-btn-radius  btn"  onclick="shen(this)"  id=' + data[i]["id"] + 
+							'>'+chakan+'</button></div>';
+							     
+						$(id).append(look);
+						// console.log("ww2:", i + " " + j + " " + data[i][j].length, " ", typeof(data[i][j]) + " " + data[i].length)
+						break;
+					}
+			}
+			
+			function shenhe(){
+					$("#shenhe").empty(); 
+					$.post("http://localhost:86/HBuilder/xops/Back.php", {
+						type: "Yuorder",
+						operation: "search_shenhe",
+					
+						token: "1ab66e59325257b60b971d4afa1505ce"
+					
+					}, function(data2, status) {
+						// alert(data2)
+						obj = JSON.parse(data2);
+						
+						data = obj.data;
+						
+						jiaza(data,"#shenhe","查看")
+						
+				})	
+			}
+		</script>
+
+	
+
+		<script src="js/manage.js"></script>
+	</body>
+</html>

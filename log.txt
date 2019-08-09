@@ -1,0 +1,373 @@
+
+
+<!DOCTYPE HTML>
+
+<html lang="en">
+
+<head>
+
+<meta charset="utf-8">
+
+<title>Center div with jQuery demo</title>
+
+<style type="text/css">
+
+body{
+
+	padding:0;
+
+	margin:0;
+
+	background:#eee;
+
+}
+
+.outer,.inner{border:2px solid #999;}
+
+.outer{
+
+	width:70%;
+
+	height:80%;
+
+}
+
+.inner{
+
+	width:50%; 
+
+	height:80%; 
+
+}
+
+p.info{
+
+	position:absolute;
+
+	top:10px;
+
+	right:10px;
+
+	background:#EB3755;
+
+	color:#fff;
+
+	font-family:arial,sans-serif;
+
+	font-size:15px;
+
+	margin:0;
+
+	padding:20px;
+
+	z-index:2;
+
+}
+
+</style>
+
+<script src="http://www.jq22.com/jquery/1.7.2/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+<p class="info">Fluid nested divs example</p>
+
+<div class="outer"> 
+
+	<div class="inner">
+
+		<div class="inner"></div>
+
+	</div>
+
+</div> 
+
+<script>
+
+    (function($){
+
+        $(document).ready(function(){
+
+			$.fn.center=function(){
+
+				return this.each(function(){
+
+					var $this=$(this),
+
+						parent=$this.parent(),
+
+						topPos,
+
+						topMargin,
+
+						leftMargin,
+
+						resizeTimeout;
+
+					if(parent.is("body:not(.root-height-set)")){
+
+						$("html,body").css("height","100%").addClass("root-height-set");
+
+					}
+
+					if($this.css("position")==="absolute" || $this.css("position")==="fixed"){
+
+						topPos="50%";
+
+						topMargin="-"+Math.round($this.outerHeight()/2)+"px";
+
+						leftMargin="-"+Math.round($this.outerWidth()/2)+"px";
+
+						$this.css({"left":"50%","margin-left":leftMargin});
+
+					}else{
+
+						topPos=Math.floor((parent.height()-$this.outerHeight())/2);
+
+						topMargin="auto";
+
+						$this.css({"position":"relative","margin-left":"auto","margin-right":"auto"});
+
+					}
+
+					$this.css({"top":topPos,"margin-top":topMargin});
+
+					$(window).resize(function(){
+
+						if(resizeTimeout){
+
+							clearTimeout(resizeTimeout);
+
+						}
+
+						resizeTimeout=setTimeout(function(){
+
+							if($this.css("position")==="absolute"){
+
+								topMargin="-"+Math.round($this.outerHeight()/2)+"px";
+
+								leftMargin="-"+Math.round($this.outerWidth()/2)+"px";
+
+								$this.css({"margin-left":leftMargin,"margin-top":topMargin});
+
+							}else{
+
+								topPos=Math.floor((parent.height()-$this.outerHeight())/2);
+
+								$this.css("top",topPos);
+
+							}
+
+						},150);
+
+					});
+
+				});
+
+			}
+
+			$(".outer,.inner").center();
+
+        });
+
+    })(jQuery);
+
+</script>
+
+<script src="http://www.jq22.com/js/jq.js"></script>
+
+</body>
+
+</html>2019-08-05 15:00:50:1=====================:
+
+2019-08-05 15:01:17:1=====================:
+
+2019-08-05 15:01:27:1=====================:
+
+2019-08-05 15:01:38:1=====================:
+
+2019-08-05 15:01:49:1=====================:
+
+2019-08-05 15:01:58:1=====================:
+
+2019-08-05 15:02:08:1=====================:
+
+2019-08-05 15:02:13:1=====================:
+
+2019-08-05 15:02:21:1=====================:
+
+2019-08-05 15:02:32:1=====================:
+
+2019-08-05 15:02:39:1=====================:
+
+2019-08-05 15:04:09:1=====================:
+
+2019-08-05 15:04:12:sql_up2====:Insert into `teacher`(account,password,tel,datetime,sex,ac_id,duty) values("蔡旭","12354d","15220036601",'2019-08-05 15:04:12','','','')
+
+2019-08-05 15:04:12:sql_up2====:Insert into `teacher`(account,password,tel,datetime,sex,ac_id,duty) values("wwwd","df333d","15220036601",'2019-08-05 15:04:12','','','')
+
+2019-08-05 15:04:12:1=====================:
+
+2019-08-05 15:07:09:1=====================:
+
+2019-08-05 15:07:15:1=====================:
+
+2019-08-05 15:07:17:sql_up2====:Insert into `teacher`(account,password,tel,time,sex,ac_id,duty) values("黄舟舟","566sdfd","15220036612",'2019-08-05 15:07:17','"\u5973"','','')
+
+2019-08-05 15:07:17:1=====================:
+
+2019-08-05 15:08:57:1=====================:
+
+2019-08-05 15:09:02:1=====================:
+
+2019-08-05 15:09:07:1=====================:
+
+2019-08-05 15:09:13:sql_up2====:Insert into `teacher`(account,password,tel,time,sex,ac_id,duty) values("黄舟舟","566sdfd","13300023512",'2019-08-05 15:09:13','"女"','"1030"','"普通职工"')
+
+2019-08-05 15:09:13:sql_up2====:Insert into `teacher`(account,password,tel,time,sex,ac_id,duty) values("康雨余","df333s","13300023511",'2019-08-05 15:09:13','"男"','"1055"','"普通职工"')
+
+2019-08-05 15:09:13:1=====================:
+
+2019-08-05 15:13:17:1=====================:
+
+2019-08-05 15:13:20:1=====================:
+
+2019-08-05 15:13:22:sql_up2====:Insert into `teacher`(account,password,tel,time,sex,ac_id,duty) values("蔡旭","12354d","15220036610",'2019-08-05 15:13:22','"男"',"1020","普通职工")
+
+2019-08-05 15:13:23:1=====================:
+
+2019-08-05 15:18:25:1=====================:
+
+2019-08-05 15:18:36:1=====================:
+
+2019-08-05 15:18:46:1=====================:
+
+2019-08-05 15:23:42:1=====================:
+
+2019-08-05 15:23:48:1=====================:
+
+2019-08-05 15:23:54:1=====================:
+
+2019-08-05 15:24:19:1=====================:
+
+2019-08-05 15:24:24:1=====================:
+
+2019-08-05 15:25:14:1=====================:
+
+2019-08-05 15:25:22:1=====================:
+
+
+{
+	"code": 0,
+	"data": [{
+		"id": "1564331666000",
+		"label": "南校区",
+		"children": [{
+			"id": "1564210599633",
+			"label": "A楼",
+			"children": [{
+				"id": "1564210613526",
+				"label": "第一层",
+				"children": [{
+					"id": "1564210635501",
+					"label": "A101",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210637501",
+					"label": "A102",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210785501",
+					"label": "A103",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210550122",
+					"label": "A104",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635670",
+					"label": "A105",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635688",
+					"label": "A106",
+					"banji": "1-1-1",
+					"visible": "true"
+				}],
+				"visible": "true"
+			}, {
+				"id": "11564210635501",
+				"label": "第二层",
+				"children": [{
+					"id": "1564210635692",
+					"label": "A201",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635695",
+					"label": "A202",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635697",
+					"label": "A203",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635804",
+					"label": "A204",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635806",
+					"label": "A205",
+					"banji": "1-1-1",
+					"visible": "true"
+				}],
+				"visible": "true"
+			}],
+			"visible": "true"
+		}]
+	}, {
+		"id": "1564331620000",
+		"label": "北校区",
+		"children": [{
+			"id": "2",
+			"label": "清风楼",
+			"children": [{
+				"id": "1564210635501",
+				"label": "第一层",
+				"children": [{
+					"id": "1564210635808",
+					"label": "C101",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635816",
+					"label": "C102",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635834",
+					"label": "C103",
+					"banji": "1-1-1",
+					"visible": "true"
+				}, {
+					"id": "1564210635844",
+					"label": "C104",
+					"banji": "1-1-1",
+					"visible": "true"
+				}],
+				"visible": "true"
+			}],
+			"visible": "true"
+		}]
+	}]
+}

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+	<style>
+		
+		.layui-btn {
+			display: inline-block;
+			height: 38px;
+			width: 88px;
+			line-height: 38px;
+			padding: 0 18px;
+			background-color: #009688;
+			color: #fff;
+			font-weight: 37.5rem;
+			white-space: nowrap;
+			text-align: center;
+			font-size: 16px;
+			border: none;
+			border-radius: 12px;
+			cursor: pointer;
+			margin-right: 5px;
+		}
+		.left-btn{
+			display: inline-block;
+			height: 38px;
+			width: 88px;
+			line-height: 38px
+			padding: 0 18px;
+			background-color: #009688;
+			color: #fff;
+			font-weight: 37.5rem;
+			white-space: nowrap;
+			text-align: center;
+			font-size: 16px;
+			border: none;
+			border-radius: 12px;
+	     background-color: #FFB800;
+		 
+		}
+		
+		.layui-btn-warm {
+			background-color: #FFB800;
+			
+		}
+		.big{
+			width: calc(100% - 40px);
+			height: calc(100% - 20px);
+			 /* padding: 20px; */
+			 background-color: #D0E9C6; 
+				/* border-radius: 12px; */
+				position: relative;
+				/* margin-bottom: 50px; */
+		}
+		.left{
+			text-align: center;color: darkcyan;margin-left: 30%;font-size: 25px;overflow: hidden;width: 40%;height: 28px;
+		}
+	</style>
+	<body class="big">
+			<div  style="text-align: right;margin-right: 0px;margin-top: 0x;"><button class="left-btn" >返回</button></div><br/>
+		<h1 style="text-align: center;color: darkorange;margin: 20px;">订单信息管理</h1>
+	
+		
+		
+		<script>
+			main(2)
+			function main(id){
+				
+				$.post("http://localhost:86/HBuilder/xops/Back.php",{
+							  type:"Yuorder",
+							operation:"searchid",
+						userid:id,
+						 token:"1ab66e59325257b60b971d4afa1505ce"
+												     
+						},function(data,status){
+						// alert(data)	
+					obj=JSON.parse(data);
+					
+					if(obj.code==200){
+						data=obj.data;
+						for(var i in data){
+					look='<div id="show" style="position: relative;"><div class="left">用户id:'+data[i]["userid"]+'</div><br/><div class="left">用户名:'+data[i]["username"]+'</div><br/><div class="left">教室名:'+data[i]["classname"]+'</div><br/><div class="left">第几节课:'+data[i]["section"]+'</div><br/><div class="left">楼层:'+data[i]["path"]+'</div><br/><div class="left">时间:'+data[i]["time"]+'</div><br/><div class="left">时长:'+data[i]["len"]+'</div><br/><div class="left">是否需要审核:'+data[i]["yuyue"]+'</div><br/><div  style="text-align: center;"><button class="layui-btn layui-btn-warm  ">删除</button><button class="layui-btn layui-btn-warm  ">通过</button></div><br/></div>';
+					$("body").append(look)
+						}
+						// console.log(i," ",typeof(data[i])," ",data[i])
+					}
+					});
+				
+		
+				
+			}
+		</script>
+	</body>
+</html>

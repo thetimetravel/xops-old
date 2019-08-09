@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<!-- <script src="../lib/layui/layui.js"></script>
+		<link href="../lib/layui/css/layui.css" type="text/css" rel="stylesheet"> -->
+		<link rel="stylesheet" href="../layui2/src/css/layui.css" media="all">
+		<script src="../layui2/src/layui.js"></script>
+		<script src="../js/jquery-3.3.1.min.js"></script>
+		<!-- <link href="../css/formSelects-v4.css" type="text/css" rel="stylesheet" />
+		<script src="../js/formSelects-v4.min.js"></script> -->
+<!-- import Vue.js -->
+<!-- <script src="//vuejs.org/js/vue.min.js"></script> -->
+<!-- import stylesheet -->
+<!-- <link rel="stylesheet" href="//unpkg.com/iview/dist/styles/iview.css"> -->
+<!-- import iView -->
+<!-- <script src="//unpkg.com/iview/dist/iview.min.js"></script> -->
+	<body>
+		<span class="layui-badge">9df</span>
+		<!-- 你的HTML代码 -->
+ <ul class="layui-nav">
+  <li class="layui-nav-item">
+    <a href="">控制台<span class="layui-badge">9</span></a>
+  </li>
+  <li class="layui-nav-item">
+    <a href="">个人中心<span class="layui-badge-dot"></span></a>
+  </li>
+  <li class="layui-nav-item">
+    <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我<span class="layui-badge">9</span></a>
+    <dl class="layui-nav-child">
+      <dd><a href="javascript:;">修改信息<span class="layui-badge">9</span></a></dd>
+      <dd><a href="javascript:;">安全管理</a></dd>
+      <dd><a href="javascript:;">退了</a></dd>
+    </dl>
+  </li>
+</ul>
+       <div id="test1" onclick="test1()">iframe</div>
+			  <div id="test2" onclick="test2()">iframe2</div>
+				<div onclick="test3()">ifr3</div>
+				<div onclick="test4()">ifr4</div>
+								<div onclick="test5()">ifr5</div>
+								<div onclick="test6()">ifr6</div>
+								<div onclick="test7()">ifr7</div>
+				  <input type="text" id="test" value ="ABS" onchange="onChangeTest(this)" style="ime-mode:disabled">
+					<div style="width: 300px; display: inline-block;margin-right: 10px;">
+					<select name="city" xm-select="selectId">
+    <option value="1" >北京2</option>
+    <option value="2" >上海</option>
+    <option value="3">广州</option>
+    <option value="4" >深圳</option>
+    <option value="5">天津</option>
+</select>
+
+<style>
+	 .yanse{
+		 color: :red;
+	 }
+</style>
+
+			 <script>
+				 var pt="(7)";
+				 var po1=pt.indexOf("(");
+				 var po2=pt.indexOf(")");
+				 var pvalue=pt.substring(po1+1,po2);
+				 pvalue=parseInt(pvalue)+1;
+				 pt="("+pvalue+")"
+				 // alert("g:"+pvalue+" "+po1+' '+po2+" "+pt)
+    // layui.formSelects.render('selectId');
+ 
+				  function onChangeTest(changeVal) {
+        // alert("Value is " + changeVal.defaultValue);
+      }
+				 var p=[22,88];
+				 
+				 p=p.splice(0,1);
+				 var a = [2]
+					var b = [2]
+					var d = a.filter(function(v){ return b.indexOf(v) == -1 })
+					a = [1,2,23,14,15,17,23,13,19,45,55,66,78,102,456,10459];
+b = a.slice(0,10);
+var person={"name": "xiaojiayu", "age": 24, "gender": "man"};
+  // person.slice(0,1)
+// delete p2.hh
+// alert(person["name"]);
+// for(var i in p2)
+// alert("i:"+i)
+					var wr=[[1,2,3,4,5,6,7],
+					[11,12,13,14,15,16,17],
+					[21,22,23,24,25,26,27],
+					[31,32,33,34,35,36,37],
+					[41,42,43,44,45,46,47]];
+					// wr[0]=wr[0].slice(1,5);
+					var newArray = wr[0].map(function(col, i) {
+        return wr.map(function(row) {
+        return row[i];
+       })
+    });
+					wr=wr.slice(2,wr.length)
+					// alert(typeof(newArray)+" "+newArray.toString())
+					// alert("dcc:"+d.toString()+d.length);
+				 // alert("p2L:"+p.length+" "+p.toString())
+				 // for(var i in p2[0])
+				 // alert("ii:"+i+" "+p2[0][i])
+ var p2=[{"hh":"f1f"},{"hh":22},{"hh":33},{"hh":"3ww"},{"hh":8}];
+ var look2=[22,"3ww"]
+ var re=[];
+				 function objFn(obj, objIndex, objs,look2){
+		// alert("[]:"+typeof(obj.hh)+objIndex+" "+look2.indexOf(obj.hh))
+					 if(look2.indexOf(obj.hh)>-1)
+					 re.push(objIndex);
+					 // if(obj.hh=="22")
+					 // return objs;
+					 // for(var i in obj)
+	  // alert(i+" "+obj[i]+" "+typeof(obj[i]));
+		 // alert("ww22:"+objs+" "+typeof(objs))
+// }
+
+    alert("ww1:"+p2.findIndex(objFn)+" "+re.join(":"));//值为1(即大王的下标)
+				 var p3={"g":"f"};
+				 // alert("k:"+typeof(p)+" "+typeof(p2)+" "+typeof(p3)+" ")
+				 p.push(33)
+				 var p4={"hh:":"qqqqq"};
+				 p2.push(p4)
+				 for(var i in p2)
+				 for(var j in p2[i])
+				 // alert("i:"+i+" "+j+" "+p2[i][j])
+				 // alert("h:"+p.toString()+ " "+p2+" "+p3)
+				  layui.use(['layer'],function(){
+				 						  layer=layui.layer;
+										  })
+										 
+				 function test1(){
+// 					
+// 						layer.open({
+//   type: 2,
+//   title: false,
+//   closeBtn: 0, //不显示关闭按钮
+//   shade: [0],
+//   area: ['340px', '215px'],
+//   offset: 'rb', //右下角弹出
+//   time: 1000, //2秒后自动关闭
+//   anim: 2,
+//   content: ['http://www.baidu.com', 'no'], //iframe的url，no代表不显示滚动条
+//   end: function(){ //此处用于演示
+//      alert('右下角弹出')
+//   }
+// })
+// 
+// 				
+// 				
+				 }
+				 
+				 function test2(){
+					 type="sucds";
+					 layer.open({
+					   type: 2,
+						 
+					   title: '数据导入',
+					   shadeClose: true,
+					   shade: false,
+					   maxmin: true, //开启最大化最小化按钮
+					   area: ['893px', '600px'],
+					   content: './daoru-excel.html?type='+type
+					 });
+				 }
+				 
+				 function test3(){
+layer.open({
+  type: 1
+  ,title: false //不显示标题栏
+  ,closeBtn: false
+  ,area: '300px;',
+ maxmin: true
+	 ,shadeClose: true
+	,shade: false
+  ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
+  ,resize: false
+  ,btn: ['火速围观', '残忍拒绝']
+  ,btnAlign: 'c'
+  ,moveType: 1 //拖拽模式，0或者1
+  ,content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">内容<br>内容</div>'
+  ,success: function(layero){
+    var btn = layero.find('.layui-layer-btn');
+		btn.click(function(){
+			alert("dsfsssss");
+		})
+		
+    // btn.find('.layui-layer-btn0').attr({
+    //   href: 'http://www.layui.com/'
+    //   ,target: '_blank'
+    // });
+  },btn2:function(layero){
+		alert("dsf")
+	}
+});
+
+}
+
+			function test4(){
+		layer.open({
+  type: 2,
+  area: ['700px', '450px'],
+  fixed: false, //不固定
+  maxmin: true,
+  content: './daoru-excel.html',
+	
+	 success:function (layero,index) {
+           layui.sessionData("test", {
+  key: 'xops_user_name'
+  ,value: '贤心'
+})
+                // var iframe = window['layui-layer-iframe' + index];
+                // iframe.chil('我是父布局传c到子布局的值')
+        }
+
+});
+
+			}
+			
+			
+ function GetValue(obj){
+     alert("wm:"+obj);
+}
+
+            function test5(){
+							  layui.use(['layer'],function(){
+												  layer=layui.layer;
+// 						layer.open({
+//   type: 1, 	电话
+
+
+
+//   content: 'dsf' ,//这里content是一个普通的String
+// 	area: ['340px', '215px'],
+// 	offset: 'rt', //右下角弹出
+// });
+var p=3;
+		layer.open({
+  type: 0, 
+	icon:2,
+	// time: 5000,
+					shadeClose: true,
+					shade: false,
+					maxmin: true, //开启最大化最小化按钮
+					anim: 2, //动画从下到上
+					offset: 'auto',
+					resize :false,
+					resizing :false,
+	// closeBtn: true,
+  content: '<div >导入错误</div><div>有<span style="color:red">'+p+'</span>条数据格式错误</div><div >有<span style="color:red">'+p+'</span>条数据格式已经存在</div><div style="color:red">浅蓝色代表格式错误，浅紫色代表已经存在</div>' ,//这里content是一个普通的String
+	area: ['450px', '250px'],
+	offset: 'auto', //右下角弹出,
+	// end :function (index){
+	// 	alert("sd:")
+	// }
+	// btn: ['确认']
+});
+});
+							// alert("dfs");
+						}
+						
+						
+						function test6(){
+								 layer.confirm("现在总共有1条数据格式错误(浅蓝色) <br/> 现在总共有1条数据格式错误(浅蓝色) <br/> 你确定只要导入正确的数据，忽略错误的数据吗？", {icon: 4, title:'继续导入' ,area: ['450px', "350px"]
+										  ,offset: 'auto' ,closeBtn: true, shadeClose: true
+										 	,shade: 0,resize: true ,btn: ['确认', '取消']},
+									 function(index){
+							  //do something
+							   alert("fg")
+							  layer.close(index);
+							});
+						}
+						
+						function test7(){
+							layer.open({
+  type: 1,
+  skin: 'layui-layer-demo', //样式类名
+  closeBtn: 1, //不显示关闭按钮
+  anim: 2,
+  title:"<span style='color:red;font-size:20px;'>导出数据</span>",
+  shade:0,
+  btn:["导出所有数据","导出所选数据"],
+  shadeClose: true, //开启遮罩关闭
+  area: ['300px', '150px'],
+  offset: 'auto', 
+  maxmin :true,
+  resize :true,
+  content: '<span>文件名:&nbsp;<input type="text" style="width:80%;height:30px;"   maxlength="16"/>',
+  yes:function(index, layero){
+    alert("btn")
+},btn2: function(index, layero){
+      alert('拜托你')
+    
+    //return false 开启该代码可禁止点击该按钮关闭
+  }
+ 
+});
+						}
+			 </script>
+	</body>
+</html>

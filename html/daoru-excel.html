@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>动态数据表格插件ZBTable</title>
+		<link rel="stylesheet" type="text/css" href="../css/jquer.zbtable2.css" />
+		<script src="../js/jquery.1.10.min.js"></script>
+		<script src="../js/jquery.zbtable2.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../layui2/src/layui.js"></script>
+        <!-- <link rel="stylesheet" type="text/css" href="../layui2/src/css/layui.css" /> -->
+
+	</head>
+	<style>
+		.layui-layout-admin .layui-footer {
+			position: fixed;
+			left: 200px;
+			right: 0;
+			bottom: 0;
+			text-align: right;
+			height: 50px;
+			line-height: 44px;
+			padding: 3px 15px 0;
+			background-color: #fff;
+			border-top: #eee 0px solid;
+			}
+			.layui-text a:not(.layui-btn) {
+				color: #01AAED
+			}
+			
+			.layui-text a:not(.layui-btn):hover {
+				text-decoration: underline
+			}
+			
+			.layui-btn {
+				display: inline-block;
+				height: 38px;
+				line-height: 38px;
+				vertical-align: top;
+				padding: 0 15px;
+				background-color: #0dc316;
+				color: #fff;
+				white-space: nowrap;
+				text-align: center;
+				font-size: 14px;
+				border: none;
+				border-radius: 2px;
+				cursor: pointer
+			}
+			
+			.layui-btn:hover {
+				opacity: .8;
+				filter: alpha(opacity=80);
+				color: #fff
+			}
+			
+			.layui-btn:active {
+				opacity: 1;
+				filter: alpha(opacity=100)
+			}
+			
+			.layui-btn+.layui-btn {
+				margin-left: 10px
+			}
+			
+	</style>
+	<script>
+
+
+	</script>
+	<body>
+		<table id="test" class="zbt-table"></table>
+
+		<div class="layui-form-item layui-layout-admin">
+			<div class="layui-input-block">
+				<div class="layui-footer" style="left: 0;">
+					<button type="reset" class="layui-btn layui-btn-primary" onclick="sub(1)" style="visibility:hidden;" id="continues">继续导入</button>
+
+					<button type="reset" class="layui-btn layui-btn-primary" onclick="cancel()">取消</button>
+					<button class="layui-btn" lay-submit="" lay-filter="component-form-demo1" onclick="sub(3)">立即提交</button>
+
+				</div>
+			</div>
+		</div>
+
+
+	</body>
+
+	<script type="text/javascript">
+		layui.use(['layer','table'], function() {
+			layer = layui.layer;
+			table=layui.table;
+		});
+
+		var localTest = layui.sessionData('test');
+		// alert(" w"+localTest.nickname); //获得“贤心”
+		 userData = "";
+		// var qq=[{"account":"管理员","password":"123456","tel":" 第三方"},{"account":"travel","password":"12df","tel":"陈"},{"account":"yy","password":"yy","tel":"第三方"}];
+		chil(localTest.nickname);
+
+		function chil(obj) {
+
+			userData = obj;
+
+			$('#test').ZBTable({
+				// evenRowClass:'zbt-evenRow',//表格偶数行样式
+				//  		oddRowClass:'zbt-oddRow',//表格奇数行样式
+				//  		curRowClass:'zbt-curRow',//表格hover样式
+				overflowHeight: "500px", //出现滚动条的高度
+				titles: [{
+					title: "姓名",
+					keyName: "account"
+				}, {
+					title: "密码",
+					keyName: "password",
+
+				}, {
+					title: "电话",
+					keyName: "tel"
+				}],
+				data: obj,
+
+			});
+
+		}
+
+		function cancel() {
+
+			$("td").removeClass("tab");
+			$("td").removeClass("tab2");
+			// parent.GetValue('我是子界面值'); //GetValue是父界面的Js 方法
+			var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+			parent.layer.close(index);
+
+
+		}
+
+		function FilterData(a, b) { //循环判断数组a里的元素在b里面有没有，有的话就放入新建立的数组中
+			var result = new Array();
+			var c = b.toString();
+			for (var i = 0; i < a.length; i++) {
+				if (c.indexOf(a[i].toString()) == -1) {
+
+					result.push(a[i]);
+
+				}
+			}
+
+			return result;
+		}
+
+
+		len_tab2 = -1;
+		len_tab = -1;
+
+		function sub(first) {
+
+			arr_user = [];
+			arr_pwd = [];
+			arr_tel = [];
+			arr_res = [];
+			arr_all = [];
+			arr_con = [];
+			arr_t1 = [];
+			arr_t2 = [];
+			for (var j in userData) {
+				arr_all.push(j)
+				for (var k in userData[j]) {
+
+					switch (k) {
+						case "account":
+							var len = userData[j][k].length;
+							if (len < 2 || len > 16) {
+								arr_user.push(j)
+							}
+							break;
+						case "password":
+							var len1 = userData[j][k].length;
+							var reg = /[\u4E00-\u9FA5\uF900-\uFA2D]/;
+							po = reg.test(userData[j][k])
+							// console.log("len1:", len1, '  ', po, " ", userData[j][k])
+							if (len1 < 6 || len1 > 16) {
+								arr_pwd.push(j)
+							} else if (po) {
+								arr_pwd.push(j)
+							}
+							break;
+						case "tel":
+
+							var len2 = /^1\d{10}$/.test(userData[j][k]);
+
+							if (!len2) {
+								arr_tel.push(j)
+							}
+							break;
+					}
+
+				}
+			}
+
+
+
+			$("td").removeClass("tab");
+			$("td").removeClass("tab2");
+			for (var u in arr_user) {
+				// console.log("arr_user:",u," ",arr_user[u])
+				$('#' + arr_user[u] + 'tab').children().eq(0).addClass("tab")
+			}
+			for (var u in arr_pwd) {
+				// console.log("arr_pwd:",u," ",arr_pwd[u])
+				$('#' + arr_pwd[u] + 'tab').children().eq(1).addClass("tab")
+			}
+			for (var u in arr_tel) {
+				// console.log("arr_tel:",u," ",arr_tel[u])
+				$('#' + arr_tel[u] + 'tab').children().eq(2).addClass("tab")
+			}
+
+			let res = arr_user.concat(arr_tel.filter(function(v) {
+				return !(arr_user.indexOf(v) > -1)
+			}))
+
+			res = res.concat(arr_pwd.filter(function(v) {
+				return !(res.indexOf(v) > -1)
+			}))
+
+			// for(var k in res)
+			// console.log("res:",k," ",res[k]," ",typeof(res[k]))
+			c = FilterData(arr_all, res)
+
+
+			for (var e = 0; e < c.length; e++) {
+				arr_res.push(userData[c[e]])
+			}
+			// alert("gg12:" +( parseInt( userData.length-arr_res.length)) + " " + c.toString())
+			if (arr_res.length > 0) {
+
+				$.post("http://localhost:86/HBuilder/xops/Back.php", {
+					type: "User",
+					operation: "dao",
+					account: c.toString(),
+					password: JSON.stringify(arr_res),
+					phone: parseInt(userData.length - arr_res.length),
+					token: "1ab66e59325257b60b971d4afa1505ce"
+
+				}, function(data, ff) {
+					// alert("data:" + data + " \n")
+
+					arr_dt = data.split(":");
+					var obj_du = JSON.parse(arr_dt[0]);
+					var obj_dt = JSON.parse(arr_dt[1]);
+
+					// alert("t1:"+typeof(obj_du[0])+ " "+ Object.keys(obj_du).length)
+
+
+					for (var i in obj_du) {
+						arr_t1.push(c[obj_du[i]]);
+						console.log('obj_du：', i, " ", typeof(c[obj_du[i]]), " ", c[obj_du[i]], " ", arr_t1[i])
+
+						$('#' + c[obj_du[i]] + 'tab').children().eq(0).addClass("tab2")
+
+					}
+					for (var i in obj_dt) {
+						arr_t2.push(c[obj_dt[i]]);
+						console.log('obj_dt2：', i, " ", typeof(c[obj_dt[i]]), " ", c[obj_dt[i]], " ", arr_t2[i])
+						$('#' + c[obj_dt[i]] + 'tab').children().eq(2).addClass("tab2")
+
+					}
+
+
+					len_tab = $(".tab").length;
+					len_tab2 = $(".tab2").length;
+					// alert("Ff:"+first)
+
+					if (first == 3) {
+
+						show_res();
+					} else {
+
+
+						second()
+					}
+
+
+					// alert("z:"+$(".tab").length+" "+$(".tab2").length)
+
+
+
+				})
+			} else {
+
+				if (first == 3) {
+
+					show_res();
+				} else {
+
+
+					second()
+				}
+
+
+			}
+
+
+		}
+
+		function show_res() {
+
+			var len_tab = $(".tab").length;
+			var len_tab2 = $(".tab2").length;
+
+			show_data = "<div >导入失败</div>";
+			if (len_tab > 0)
+				show_data += '<div> 有<span style="color:red">' + len_tab +
+				'</span>条数据格式错误</div>';
+			if (len_tab2 > 0)
+				show_data += '<div >有<span style="color:red">' + len_tab2 + '</span>条数据格式已经重复</div>';
+			show_data += '<div style="color:red">浅蓝色代表格式错误，浅紫色代表已经存在</div>';
+			// alert("w:"+show_data)
+			if (len_tab > 0 || len_tab2 > 0) {
+				$("#continues").attr("style", "visibility:visible")
+				layer.msg(show_data, {
+					icon: 1,
+					area: ['450px', '130px'],
+					closeBtn: true,
+					offset: 'auto', //右下角弹出
+					resize: true,
+
+					// time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				});
+			} else {
+				var arr_con3 = []
+				for (var e = 0; e < c.length; e++) {
+					arr_con3.push(userData[c[e]])
+				}
+				for (var u in arr_con3)
+					console.log("arr_con3:", u, " ", typeof(arr_con3[u]), " ", arr_con3[u])
+				post(arr_con3);
+				layer.open({
+					content: '成功导入'+arr_con3.length+'个数据',
+					icon: 6,
+					time: 2000, //2秒后自动关闭
+					end: function(layero, index) {
+						
+						 table.reload('test', { 
+						});
+						
+							var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+						parent.layer.close(index);
+						alert("sdf");
+						window.location.href='http://127.0.0.1:86/HBuilder/xops/user.html';
+						
+					}
+					
+				});
+				
+
+			}
+
+
+
+		}
+
+		function second() {
+
+
+			// alert("len:"+len_tab+ " "+len_tab2)
+
+			show_datas = "";
+			var wei = 220;
+
+			if (len_tab > 0) {
+				show_datas += '<div>&nbsp;&nbsp;现在总共有<span style="color:red">' + len_tab +
+					'</span>条数据格式错误(浅蓝色)';
+				wei += 30;
+			}
+
+
+			if (len_tab2 > 0) {
+				show_datas += '<div> &nbsp;&nbsp;有<span style="color:red">' + len_tab2 + '</span>条数据格式已经重复(浅紫色)</div>';
+				wei += 30;
+			}
+
+			// 
+			show_datas += '<div style="color:red">&nbsp;&nbsp;你确定只要导入正确的数据，忽略错误的数据吗？</div>';
+			// show_datas += '<div style="color:blue">&nbsp;&nbsp;浅蓝色代表格式错误，浅紫色代表已经存在</div>';
+			show_datas += "<div> &nbsp;&nbsp; </div>"
+			wei += "px";
+
+			if (len_tab == 0 && len_tab2 == 0) {
+				// alert("ddd:"+c.length)
+				var arr_cons = []
+				for (var e = 0; e < c.length; e++) {
+					arr_cons.push(userData[c[e]])
+				}
+				for (var u in arr_cons)
+					console.log("arr_cons:", u, " ", typeof(arr_cons[u]), " ", arr_cons[u])
+				post(arr_cons)
+				layer.open({
+					content: '成功导入'+arr_cons.length+'个数据',
+					icon: 6,
+					time: 2000, //2秒后自动关闭
+					offset: 'auto', //
+					end: function(layero, index) {
+						 table.reload('test', { 
+						});
+							var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+						parent.layer.close(index);
+						
+					}
+					
+				});
+				// layer.alert("导入成功1！", {
+				// 	offset: 'auto', //
+				// 	icon: 6,
+				// 	time: 200
+				// });
+			} else {
+				// alert("wei:"+wei)
+				layer.confirm(show_datas, {
+						icon: 4,
+						title: '继续导入',
+						area: ['450px', wei],
+						offset: 'auto',
+						closeBtn: true,
+						shadeClose: true,
+
+						shade: 0,
+						resize: true,
+						btn: ['确认', '取消']
+					},
+					function(index) {
+						//do something
+						arr_t1 = arr_t1.concat(arr_t2.filter(function(v) {
+							return !(arr_t1.indexOf(v) > -1)
+						}))
+						// arr_t1 = arr_t1.concat(arr_t2.filter(v => !arr_t1.includes(v)))
+						for (var u in arr_t1)
+							console.log("wmwm:", u, " ", typeof(arr_t1[u]), " ", arr_t1[u])
+						console.log("c:", c.length, " ", arr_t1.length)
+						if (c.length != arr_t1.length) {
+							// arr_t1=FilterData(c, arr_t1);
+							arr_t1 = c.filter(function(v) {
+								return arr_t1.indexOf(v) == -1
+							})
+						} else {
+							layer.open({
+								content: '成功导入数据',
+								icon: 6,
+								time: 2000, //2秒后自动关闭
+								offset: 'auto', //
+								end: function(layero, index) {
+									
+										var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+									parent.layer.close(index);
+									
+								}
+								
+							});
+							// layer.alert("导入成功", {
+							// 	icon: 1,
+							// 	time: 2000
+							// });
+							// var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+							// parent.layer.close(index);
+							// return;
+
+						}
+						for (var u in arr_t1)
+							console.log("wmwm22:", u, " ", typeof(arr_t1[u]), " ", arr_t1[u])
+						for (var e = 0; e < arr_t1.length; e++) {
+							arr_con.push(userData[arr_t1[e]])
+						}
+						// alert("fff:"+arr_con.length+" "+arr_t1.length)
+						for (var u in arr_con)
+							console.log("con:", u, " ", typeof(arr_con[u]), " ", arr_con[u])
+						post(arr_con)
+						
+						layer.open({
+							content: '成功导入'+arr_con.length+'个数据',
+							icon: 6,
+							time: 2000, //2秒后自动关闭
+							offset: 'auto', //
+							end: function(layero, index) {
+								 table.reload('test', { 
+								});
+									var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+								parent.layer.close(index);
+								
+							}
+							
+						});
+						// layer.alert("导入成功5！", {
+						// 	offset: 'auto', //
+						// 	icon: 1,
+						// 	time: 200
+						// });
+						console.log("df")
+						// var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+						// parent.layer.close(index);
+					});
+
+			}
+		}
+
+		function post(data) {
+			$.post("http://localhost:86/HBuilder/xops/Back.php", {
+				type: "User",
+				operation: "dao",
+				// account: c.toString(),
+				password: JSON.stringify(data),
+				phone: -1,
+				token: "1ab66e59325257b60b971d4afa1505ce"
+
+			}, function(data, ff) {
+				// alert("data2:"+data);
+			})
+
+		}
+
+
+
+		function change(vv, pp, fie) {
+			userData[pp][fie] = vv.value;
+			// for (var i in userData)
+			// 	console.log("userData:", i, " ", userData[i])
+			// alert("dp1:"+vv.defaultValue+" "+vv.value+" "+pp+" "+fie)
+		}
+	</script>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>SheetJS Live Demo</title>
+		
+	</head>
+	<body>
+		<pre>
+
+<input type="file" name="xlfile" id="xlf" /> 
+
+<!-- Use Web Workers: (when available) <input type="checkbox" name="useworker" checked>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked> -->
+</pre>
+		<pre id="out"></pre>
+
+		<br />
+
+		<script src="js/cpexcel.js"></script>
+		<script src="js/shim.js"></script>
+		<script src="js/jszip.js"></script>
+		<script src="js/xlsx.js"></script>
+		<script>
+			var storage=null
+			  storage = window.sessionStorage; 
+			  // storage.removeItem("xops123456")
+			  
+			alert("h3:"+storage.getItem("xops123456"))
+			// sessionStorage.setItem("key","ff")
+			// sessionStorage.clear()
+			// alert("hh:"+sessionStorage.getItem("key"))
+
+			var X = XLSX;
+			var XW = {
+				/* worker message */
+				msg: 'xlsx',
+				/* worker scripts */
+				worker: 'js/xlsxworker.js'
+			};
+
+			var global_wb;
+
+
+			var process_wb = (function() {
+				var OUT = document.getElementById('out');
+
+
+				function get_format() {
+					return "json";
+				}
+
+				var to_html = function to_html(workbook) {
+					OUT.innerHTML = "";
+					workbook.SheetNames.forEach(function(sheetName) {
+						var htmlstr = X.write(workbook, {
+							sheet: sheetName,
+							type: 'string',
+							bookType: 'html'
+						});
+						OUT.innerHTML += htmlstr;
+					});
+					return "";
+				};
+
+				var to_json = function to_json(workbook) {
+					var result = {};
+					workbook.SheetNames.forEach(function(sheetName) {
+
+						var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName], {
+							header: 1
+						});
+						// alert("dd:"+sheetName+" "+roa.length)
+						if (roa.length) result["data"] = roa;
+					});
+					// alert("hh:"+result);
+					arr_in = [];
+					title = ["用户名", "密码", "电话"];
+					title_bt=["username","password","tel"];
+					arr_bj = []
+					res_str="[";
+					var uid=0,pid=0,tid=0;
+					for (var i in result) {
+
+						for (var j in result[i]) {
+
+							// console.log("tt:", i, "--", j, "--", result[i][j])
+							for (var z in result[i][j]){
+									if (j == 0) {
+										for(var k in result[i][0]){
+									
+												arr_in.push(result[i][0][k])
+												switch(result[i][0][k]) {
+													case "用户名":
+													uid=k;
+													break;
+													case "密码":
+													pid=k;
+													break;
+													case "电话":
+													tid=k;
+													break;
+													default:
+													break;
+													}
+					     console.log(" gggg ", uid," ",pid," ",tid," ", "::", result[i][0])
+											
+										}
+											break;
+								
+								// console.log(" gggg ", z, "::", result[i][0])
+								}
+								console.log(i, "  " , j, "  ", z, "::", result[i][j][z])
+								if(j>0 ){				
+									res_str+="{\"username\":\""+result[i][j][uid]+"\",\"password\":\""+result[i][j][pid]+"\",\"tel\":\""+result[i][j][tid]+"\"},"
+								}
+								
+								// alert("vv:"+" "+j+" "+z+" "+result[i][j][z])
+								break;
+								
+								
+							}		
+						}
+
+					}
+					res_str=res_str.substr(0,res_str.length-1)+"]";
+					alert("str:"+res_str)
+					result_str = JSON.stringify(result, 2, 2);
+			
+
+					// alert("rre:" + arr_in.join(",") + " " + arr_in.length)
+					var c = isContained(arr_in, title);
+					if (!c) {
+						alert("缺少标题栏：" + arr_bj.join(" "))
+					}else{
+						// sessionStorage.setItem("xops123456",res_str)
+								var storage = null;
+						if(window.sessionStorage){              //判断浏览器是否支持localStorage
+						   storage = window.sessionStorage;     
+						   storage.setItem("xops123456", res_str);    //调用setItem方法，存储数据
+						   alert(storage.getItem("xops123456"));     //调用getItem方法，弹框显示 name 为 Rick
+			
+						 
+						}else
+						{
+							alert("false")
+						}
+					}
+					// alert("Pq:"+ " "+result['data'])
+					// sessionStorage.setItem("xops123456",result_str)
+					 alert("h33:"+sessionStorage.getItem("xops123456"))
+					return JSON.stringify(result['data'], 2, 2);
+				};
+
+
+ 
+				return function process_wb(wb) {
+					global_wb = wb;
+					var output = "";
+					
+					switch (get_format()) {
+
+						case "json":
+							output = to_json(wb);
+							break;
+						case "html":
+							output = to_html(wb);
+							break;
+					}
+					output=output.replace("\[","{")
+					output=output.replace("\[","{")
+					console.log("gg:",output )
+					if (OUT.innerText === undefined) OUT.innerText = output;
+					else OUT.innerText = output;
+					if (typeof console !== 'undefined') console.log("output", new Date());
+				};
+			})();
+
+
+
+			function isContained(aa, bb) {
+				if (!(aa instanceof Array) || !(bb instanceof Array) || ((aa.length < bb.length))) {
+					return false;
+				}
+				var aaStr = aa.toString();
+				// alert("len:"+bb.length)
+
+				for (var i = 0; i < bb.length; i++) {
+
+					if (aaStr.indexOf(bb[i]) < 0) {
+						arr_bj.push(bb[i])
+						
+
+					}
+
+				}
+				if (arr_bj.length > 0)
+					return false;
+				return true;
+			}
+
+			var do_file = (function() {
+				var rABS = typeof FileReader !== "undefined" && (FileReader.prototype || {}).readAsBinaryString;
+				// var domrabs = document.getElementsByName("userabs")[0];
+
+				// if(!rABS) domrabs.disabled = !;
+
+				var use_worker = typeof Worker !== 'undefined';
+				// var domwork = document.getElementsByName("use+worker")[0];
+				// if(!use_worker) domwork.disabled = !;
+
+				var xw = function xw(data, cb) {
+					var worker = new Worker(XW.worker);
+					worker.onmessage = function(e) {
+						switch (e.data.t) {
+							case 'ready':
+								break;
+							case 'e':
+								console.error(e.data.d);
+								break;
+							case XW.msg:
+								cb(JSON.parse(e.data.d));
+								break;
+						}
+					};
+					worker.postMessage({
+						d: data,
+						b: rABS ? 'binary' : 'array'
+					});
+				};
+
+				return function do_file(files) {
+					rABS = false;
+					use_worker = false;
+					var f = files[0];
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						if (typeof console !== 'undefined') console.log("onload", new Date(), rABS, use_worker);
+						var data = e.target.result;
+
+						if (!rABS) data = new Uint8Array(data);
+						if (use_worker) xw(data, process_wb);
+						else process_wb(X.read(data, {
+							type: rABS ? 'binary' : 'array'
+						}));
+					};
+					if (rABS) reader.readAsBinaryString(f);
+					else reader.readAsArrayBuffer(f);
+				};
+			})();
+
+
+			(function() {
+				var xlf = document.getElementById('xlf');
+				if (!xlf.addEventListener) return;
+
+				function handleFile(e) {
+					do_file(e.target.files);
+				}
+				xlf.addEventListener('change', handleFile, false);
+			})();
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-36810333-1']);
+			_gaq.push(['_trackPageview']);
+		</script>
+	</body>
+</html>

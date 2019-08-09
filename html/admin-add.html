@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>添加职工</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+		<link rel="shortcut icon" href="../images/titlelogo.png" type="image/x-icon" />
+		<link rel="stylesheet" href="../css/font.css">
+		<link rel="stylesheet" href="../css/xadmin.css">
+		<script src="../js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/xadmin.js"></script>
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	</head>
+
+	<body>
+		<div class="x-body layui-anim layui-anim-up">
+			<form class="layui-form">
+				<div class="layui-form-item">
+					<label for="username" class="layui-form-label">
+						<span class="x-red">*</span>账号
+					</label>
+					<div class="layui-input-inline">
+						<input type="text" id="username" name="username" required lay-verify="username" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid layui-word-aux">
+						<span class="x-red">*</span>2到16个字符
+					</div>
+				</div>
+
+				<div class="layui-form-item">
+					<label for="L_pass" class="layui-form-label">
+						<span class="x-red">*</span>密码
+					</label>
+					<div class="layui-input-inline">
+						<input type="password" id="password" name="password" required lay-verify="password" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid layui-word-aux">
+						<span class="x-red">*</span>6到16个字符
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="password2" class="layui-form-label">
+						<span class="x-red">*</span>确认密码
+					</label>
+					<div class="layui-input-inline">
+						<input type="password" id="password2" name="password2" required lay-verify="password2" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="phone" class="layui-form-label">
+						<span class="x-red">*</span>手机号码
+					</label>
+					<div class="layui-input-inline">
+						<input type="text" id="phone" name="phone" required lay-verify="phone" autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<label for="ac_id" class="layui-form-label">
+						<span class="x-red">*</span>职工id
+					</label>
+					<div class="layui-input-inline">
+						<input type="text" id="ac_id" name="ac_id" required lay-verify="ac_id" autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid layui-word-aux">
+						<span class="x-red">*</span>4到16个字符
+					</div>
+				</div>
+				   <div class="layui-form-item">
+				    <label for="username" class="layui-form-label">
+				        <span class="x-red">*</span>性别
+				    </label>
+				    <div class="layui-input-inline">
+				        <select id="shipping" name="shipping" class="valid">
+				          <option value="shentong">男</option>
+				          <option value="shunfeng">女</option>
+				        </select>
+				    </div>
+				</div>
+				<div class="layui-form-item">
+				    <label for="username" class="layui-form-label">
+				        <span class="x-red">*</span>职务
+				    </label>
+				    <div class="layui-input-inline">
+				        <select name="contrller" id="dutych">
+				          <option>普通职工</option>
+				          <option>辅导员</option>
+				          <option>导师</option>
+				          <option>年级主任</option>
+				        </select>
+				    </div>
+				</div>
+				<div class="layui-form-item">
+					<label for="L_repass" class="layui-form-label">
+					</label>
+					<button class="layui-btn" lay-filter="add" lay-submit="">
+						增加
+					</button>
+				</div>
+
+			</form>
+		</div>
+		
+		<script>
+			
+			// alert("y:"+jsont.length)
+			layui.use(['form', 'layer'], function() {
+				$ = layui.jquery;
+				var form = layui.form,
+					layer = layui.layer;
+
+				//自定义验证规则
+				form.verify({
+					username: function(value) {
+						if (value.length < 2) {
+							return '账号不能少于2个字符啊';
+						}
+						if (value.length > 16) {
+							return '账号不能超过16个字符';
+						}
+					},
+					password: function(password) {
+						if (password.length < 6) {
+							return '密码不能少于6个字符啊';
+						}
+						if (password.length > 16) {
+							return '密码不能超过16个字符';
+						}
+					},
+					password2: function(value) {
+						if ($('#password').val() != $('#password2').val()) {
+							return '两次密码不一致';
+						}
+					},
+					ac_id:function(ac_id){
+						if (ac_id.length < 4) {
+							return '职工id不能少于4个字符啊';
+						}
+						if (ac_id.length > 16) {
+							return '职工id不能超过16个字符';
+						}
+						
+					}
+				});
+
+				//监听提交
+				form.on('submit(add)', function(data) {
+					// console.log(data);
+					username = $('#username').val();
+					var password = $("#password").val();
+					var phone = $("#phone").val();
+                    var sex=jQuery("#shipping  option:selected").text();
+					var duty=$("#dutych").val();
+					var ac_id=$("#ac_id").val()
+               // alert('sex1:'+sex+" "+duty)
+
+
+					$.post("http://localhost:86/HBuilder/xops/Back.php", {
+
+						type: "Teacher",
+						operation: "add",
+						account: username,
+						password: password,
+						tel: phone,
+						duty:duty,
+						ac_id:ac_id,
+						sex:sex,
+						token: "1ab66e59325257b60b971d4afa1505ce"
+
+					}, function(data, status) {
+						// alert("s:"+data)
+						obj = JSON.parse(data);
+						switch(obj.code){
+							case 301:	
+							layer.alert("账号已存在，请重新输入！", {
+								icon: 4
+							});
+							break;
+							case 302:
+								layer.alert("手机已存在，请重新输入！", {
+								icon: 4
+							});
+							break;
+							case 200:
+								
+							layer.alert("添加成功！", {
+								icon: 6
+							}, function() {
+								var shp={"id":obj.id,"account":username,"password":password,"tel":phone,"datetime":obj.date,"duty":duty,"ac_id":ac_id,"sex":sex};
+								parent.GetValue(shp);
+												
+								var index = parent.layer.getFrameIndex(window.name);
+								//      //关闭当前frame
+								parent.layer.close(index);
+							
+							});
+							
+							break;
+						   case 201:
+							layer.alert("添加参数缺少，请联系管理员！", {
+								icon: 8
+							});
+							break;
+						   case 202:
+							layer.alert("账号添加失败！", {
+								icon: 8
+							});
+							break;
+							
+						}
+						
+		
+
+					})
+
+					
+					return false;
+				});
+
+			});
+		
+		</script>
+	</body>
+
+</html>

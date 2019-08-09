@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>动态数据表格插件ZBTable</title>
+		
+	
+	</head>
+	<style>
+		
+
+.maindiv{
+ 	width:calc(100% - 20px);
+	padding:10px;
+	overflow:hidden; /*关键*/
+	/* border:1px solid black; */
+}
+ 
+ 
+.leftdiv{
+	float:left;
+	width:calc(30% - 20px);
+	background-color:#CC6633;
+	height: 500PX;
+}
+ 
+.rightdiv{
+	float:right;
+	width:calc(30% - 50px);
+	background-color:#CC66FF;
+	
+}
+ 
+.centerdiv{
+	float:left;
+	width:50px;
+	border-right: 1px dashed black;
+	padding-bottom:1600px;  /*关键*/
+	margin-bottom:-1600px;  /*关键*/
+ 
+}
+
+
+	</style>
+	<body>
+	<div class="maindiv">
+		<div class="leftdiv"><br><br><br><br><br><br><br><br></div>
+		<div class="centerdiv"></div>
+		<div class="rightdiv">ww<br><br><br><br><br><br><br><br></div>
+	</div>
+<!-- <div style="float:left;width: 1px;height: 25px; background: #000;margin-left: 0px;">222</div> 
+<div style="float:left;width: 1px;height: 25px; background: #000;margin-left: 100px;">333</div> -->
+
+	<!-- </div> -->
+
+		<script>function myfun(){
+ 
+  var div1=document.getElementById("content");
+  var div2=document.getElementById("side");
+  
+  var h1=div1.offsetHeight;
+  var h2=div2.offsetHeight;
+ 
+  	if(h1>h2){
+    	div1.style.borderRight="1px dashed #B6AEA3";
+		 
+ 
+	}else{
+ 
+        div2.style.borderLeft="1px dashed #B6AEA3";
+  }}
+ 
+</script>
+	
+
+	</body>
+
+	
+</html>

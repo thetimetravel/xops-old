@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<script src="../js/jquery-3.3.1.min.js"></script>
+<script src="../layui2/src/layui.js"></script>
+	<style>
+		.left {
+			width: 28%;
+			height: 50%;
+			border: 1px solid #bbe1f1;
+			font-size: 20px;
+			margin: 20px 1.5%;
+			padding: 10px;
+			float: left;
+			background:#eefaff;
+			position: relative;
+			border-radius: 12px;
+
+		}
+
+		.btn {
+
+			margin-top: 10px;
+			margin-left: calc(50% - 48px);
+			color: red;
+			/* width: 50px; */
+		}
+
+		.layui-btn {
+			display: inline-block;
+			height: 38px;
+			line-height: 38px;
+			padding: 0 18px;
+			background-color: #009688;
+			color: #fff;
+			font-weight: 37.5rem;
+			white-space: nowrap;
+			text-align: center;
+			font-size: 16px;
+			border: none;
+			border-radius: 2px;
+			cursor: pointer;
+		}
+
+		.layui-btn-radius {
+			border-radius: 100px;
+		}
+
+		.layui-btn-warm {
+			background-color: #FFB800;
+		}
+
+		.wenzi {
+			/* position: absolute; */
+			margin-top: 8px;
+			color: #0059BC;
+			display: block;
+			width: 100%;
+			height: 24px;
+			overflow: hidden;
+			margin-left: 10%;
+		
+		}
+
+		.center {
+
+			margin-left: 0px;
+			
+			border-radius: 8px;
+			color: darkmagenta;
+		   background: #00F7DE;
+		   text-align: center;
+		   position: relative;
+		}
+		.img{
+			margin-top: 3px;
+			margin-right: 5px;
+			position: relative;
+		}
+		
+		.new{
+			color: red;
+			font-size: 20px;
+		}
+		
+	</style>
+	<body>
+		<div id="show">
+			
+		</div>
+		<button id="btn">添加</button>
+		<img src="../images/order.png" style="width: 12px height:1;"  width="12px"/>
+		<script>
+			data="";
+			$.post("http://localhost:86/HBuilder/xops/Back.php",{
+						  type:"Yuorder",
+						operation:"search",
+											
+					 token:"1ab66e59325257b60b971d4afa1505ce"
+											     
+					},function(data2,status){
+				obj=JSON.parse(data2);
+			
+						data=obj.data;
+							// alert(data.length)
+						for(var i in data)
+						for(var j in data[i]){
+					look ='<div class="left"><div class="wenzi center"><img src="../images/order.png" width="20px" height="20px" class="img"/>'+data[i]["classname"]+'</div><span class="wenzi">用户名:'+data[i]["username"]+'</span><span class="wenzi">时间:'+data[i]["time"]+'</span><span class="wenzi">第几节:'+data[i]["section"]+'</span><button class="layui-btn layui-btn-warm layui-btn-radius  btn" id='+data[i]["id"]+'>处理</button></div>';
+				
+					$("#show").append(look);
+					console.log("ww:",i+" "+j+ " "+data[i][j].length," ",typeof(data[i][j])+" "+data[i].length)
+						break;
+						}
+						
+	// alert("data:"+typeof(data[0])+" "+data[0]+" ") 
+							})
+							
+			$("#btn").click(function() {
+				layui.use(["layer"],function(){
+					var layer=layui.layer;
+					// layer.msg("<div class=\"new\">您有新的订单，请尽快去处理</div>",{
+					// 	 offset:"rb", 
+					// 	  shadeClose: true,
+					// 	  shade: false,
+					// 	  time :2000,
+					// 	  anim :2,
+					// 	  icon:6,
+					// 	  area: ['250px', '200px'],
+					// 	  title:"提示53"
+					// 	})
+					text="您有新的订单，请尽快去处理"
+      layer.open({
+        type: 0,
+		title:"提示"
+        ,offset: "rb" //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+        ,id: 'layerDemo' //防止重复弹出
+        ,content: '您有新的订单，请尽快去处理!'
+        ,icon:6,
+		anim:2
+        // ,btnAlign: 'c' //按钮居中
+        ,shade: 0 ,//不显示遮罩
+		  shadeClose: true,
+		  time:2000
+        ,yes: function(){
+          layer.closeAll();
+        }
+      });
+// 					layer.open({
+//   type: 0,
+//   offset:"rb", 
+//   title:"提示4",
+//  shadeClose: true,
+//  shade: false,
+//  time :2000,
+//  anim :2,
+//   content: '您有新的订单，请尽快去处理' //这里content是一个普通的String
+// });
+					
+				})
+				// 
+				// look =
+				// 	'<div class="left"><span class="wenzi center">教室2</span><span class="wenzi" id="name">用户名:</span><span class="wenzi">时间:</span><span class="wenzi">第几节:</span><button class="layui-btn layui-btn-warm layui-btn-radius  btn">暖色按钮</button></div>';
+				// 	 $("#name").append("<span>eed</span>");
+				// $("#show").append(look);
+				// alert("S")
+			})
+		</script>
+	</body>
+</html>

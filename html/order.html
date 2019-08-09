@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html>
+	<?php header('Content-Type: text/html; charset=utf-8');?>
+	<head>
+		<meta charset="UTF-8">
+		<title>预约管理</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
+		<link rel="shortcut icon" href="../images/titlelogo.png" type="image/x-icon" />
+		<link rel="stylesheet" href="../css/font.css">
+		<link rel="stylesheet" href="../css/xadmin.css">
+		<script src="../js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/xadmin.js"></script>
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+		<!-- <script src="http://www.jq22.com/jquery/jquery-3.3.1.js"></script> -->
+
+		<link href="../lib/layui/css/layui.css" type="text/css" rel="stylesheet">
+		<script language="Javascript" src="../js/nicePage.js"></script>
+
+		<?php $host="localhost";  //IP地址
+$username="root";  //数据库用户名
+$password="root"; //数据库密码
+$port=3306;       //端口
+$dbname="xops"; //数据库名称
+//连接数据库
+$con = mysqli_connect($host.":".$port,$username,$password,$dbname);
+
+if ($con->connect_error) {
+   die('Connect Error (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
+
+}
+ $l=5;
+$con->query("set names utf8"); // 设置输出字符集
+         $sql_se="Select * from `schedule`  ";
+         $result_se=mysqli_query($con,$sql_se);
+         $count_se= mysqli_num_rows($result_se);
+				  $newru=[];
+     while ($rowru=mysqli_fetch_assoc($result_se)) {
+        $newru[]=$rowru;
+      }
+      
+
+?>
+	</head>
+	<style>
+	* { margin: 0; padding: 0; }
+	body { font-family: 'Microsoft Yahei'; font-size: 18px; background-color: #f8f8f8; }
+	
+	#table2 {
+	  width: 1200px;
+	  margin: 40px auto 0;
+	  border-collapse: collapse;
+	  background-color: #fff;
+	}
+	#table td,
+	#table th {
+	/*  padding: 0.75em 1.5em; */
+	}
+	#table thead {
+	  color: #fff;
+	  background-color: #31bc86;
+	}
+	#table thead th {
+	  text-align: left;
+	}
+	#table tbody {}
+	#table tbody tr {
+	  border-bottom: 2px dashed #000;
+	  cursor: default;
+	  transition: all .125s ease-in-out;
+	}
+	#table tbody tr:hover {
+	  background-color: cornflowerblue;
+	}
+	#table tbody tr.event-bgColor {
+	  background-color: rgba(255, 192, 203, .2);
+	}
+	#table tbody tr.default-bgColor {
+	  background-color: #fff;
+	}
+	#table tbody tr.hover-bgColor {
+	  background-color: rgba(255, 192, 203, .8);
+	}
+	#table tbody tr.selected-bgColor {
+	  background-color: rgb(255, 192, 203);
+	}
+	
+	#selectAll {
+	  margin-left: -4px;
+	}
+	.checkbox {
+	  -webkit-user-select: none;
+	  -moz-user-select: none;
+	  -ms-user-select: none;
+	  -o-user-select: none;
+	  user-select: none;
+	}
+	
+  
+	.content{
+		outline-style: none ;
+		    border: 0px solid #ccc;
+		    bordHer-radius: 3px;
+		    font-size: 20px;
+            width: 100%;
+		padding:5px 0px; 
+        margin: -10px 0px;
+		color: blue;
+	}
+
+.content2{
+    border-color: red;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px  red,0 0 8px  yellow;
+    box-shadow: inset 0 1px 1px  red,0 0 8px  yellow;
+}
+
+  </style>
+	<body class=" layui-fluid" >
+
+
+		<script>
+
+
+
+			layui.use(['laypage', 'layer'], function() {
+				var laypage = layui.laypage,
+					layer = layui.layer;
+
+			
+	     		laypage.render({
+	     	elem: 'demo21',
+	     	count: <?php echo $count_se;?>,
+				limit:<?php echo $l;?>,
+	     	layout: [],
+	     	jump: function(obj) {
+	          curr=obj.curr;
+	     		// console.log(obj.curr)
+					
+	     	}
+	     });
+
+				
+			});
+		</script>
+		<script>
+
+         arr_id=[];
+		
+			jsonttp='[';
+ 	        
+            	<?php for($i=0;$i<$count_se;$i++){ 
+            	$value_se=$newru[$i]['id'];
+				$value_da=$newru[$i]['roomid'];
+				$value_un=$newru[$i]['people']; 
+				$value_tel=$newru[$i]['week']; 
+				$value_dt=$newru[$i]['day'];
+				$value_st=$newru[$i]['start'];
+				$value_ed=$newru[$i]['end'];
+				$value_at=$newru[$i]['activity'];
+				$value_ht=$newru[$i]['hostid'];
+				$tt=$i+1;
+				
+				?>
+				
+				$p=1;
+			 arr_id.push(<?php echo $value_se;?>);
+		// alert("hh:"+$prt)
+            // jsonttp+="{'1':'<input type=\"checkbox\" value=\"<?php echo $value_se;?>\" name=\"test\"  style=\"width:16px;height:16px;\" class=\"layui-form-checkbox\" />'+'<span style=\"font-size:20px;margin-left:5px;\">'+ ($p++)+'</span>','4':'<span style=\"font-size:20px;margin-left:5px;\"><?php echo $value_tel?></span>','2':'<span style=\"font-size:20px;margin-left:5px;\" ><?php echo $value_da;?></span>','3':'<span style=\"font-size:20px;margin-left:5px;\"><?php echo $value_un;?></span>','5':'<span style=\"font-size:20px;margin-left:5px;\"><?php echo $value_dt;?></span>','6':'<span style=\"font-size:20px;margin-left:5px;\"><?php echo $value_st;?></span>','7':'<span style=\"font-size:20px;margin-left:5px;\"><?php echo $value_ed;?></span>','8':'<span style=\"font-size:20px;margin-left:5px;\"><?php echo $value_at;?></span>','9':'<span style=\"font-size:20px;margin-left:5px;\"><?php echo $value_ht;?></span>'},";
+			jsonttp+="{'1':'<input type=\"checkbox\" value=\"<?php echo $value_se;?>\" name=\"test\"  style=\"width:16px;height:16px;\" class=\"layui-form-checkbox\" />'+'<span style=\"font-size:20px;margin-left:5px;\">'+ ($p++)+'</span>','4':'<input value=<?php echo $value_tel;?> class=\"content\" style=\"margin:0px;\" readonly=\"readonly\" id=<?php echo $tt;?>week  onchange=\"change(this.id)\" />','2':' <input value=<?php echo $value_da;?> class=\"content\" style=\"margin:0px;\"  readonly=\"readonly\" id=<?php echo $tt;?>rmid onchange=\"change(this.id)\" /> ','3':'<input value=<?php echo $value_un;?> class=\"content\" style=\"margin:0px;\" readonly=\"readonly\" id=<?php echo $tt;?>peo onchange=\"change(this.id)\"/>','5':'<input value=<?php echo $value_dt;?> class=\"content\" style=\"margin:0px;\" readonly=\"readonly\" id=<?php echo $tt;?>day  onchange=\"change(this.id)\"/>','6':'<input value=<?php echo $value_st;?> class=\"content\" style=\"margin:0px;\" readonly=\"readonly\" id=<?php echo $tt;?>start  onchange=\"change(this.id)\" />','7':'<input value=<?php echo $value_ed;?> class=\"content\" style=\"margin:0px;\" readonly=\"readonly\" id=<?php echo $tt;?>end  onchange=\"change(this.id)\" />','8':'<input value=<?php echo $value_at;?> class=\"content\" style=\"margin:0px;\" readonly=\"readonly\" id=<?php echo $tt;?>at   onchange=\"change(this.id)\"/>','9':'<input value=<?php echo $value_ht;?> class=\"content\" style=\"margin:0px;\" readonly=\"readonly\" id=<?php echo $tt;?>host  onchange=\"change(this.id)\"/>'},";
+            
+            <?php }?>
+              // alert("ppo:"+arr_id.length)
+		
+			jsontt="[";
+			jsontt="<?php for($i=0;$i<2;$i++){} 
+			 ?>";
+		
+			jsonttp=jsonttp.substring(0,jsonttp.length-1)+"]";	
+	     
+			 jsont = eval("(" + jsonttp + ")");
+	
+			// 	//nameList与widthList的数组长度要一致
+			var nameList = ['<input type="checkbox"   id=\"it\"  style=\"width:16px;height:16px;\" onclick=\"cb()\"  class=\"layui-form-checked\"/> <span style=\"font-size: 20px;\">序号</span>',  '<span style=\"font-size: 20px;\">房间ID</span>', '<span style=\"font-size: 20px;\">参与人员</span>', '<span style=\"font-size: 20px;\">周数</span>','<span style=\"font-size: 20px;\">星期</span>','<span style=\"font-size: 20px;\">开始时段</span>','<span style=\"font-size: 20px;\">持续时段数</span>','<span style=\"font-size: 20px;\">课程或活动</span>','<span style=\"font-size: 20px;\">主持人ID</span>'] //table的列名
+			var widthList = [140, 120, 280,100,100,100,100,300,100,] //table每列的宽度
+		
+
+		function cb(){
+			var all=document.getElementById("it");//获取到点击全选的那个复选框的id
+			      var one=document.getElementsByName("test");//获取到复选框的名称
+			      if(all.checked==true){//因为获得的是数组，所以要循环 为每一个checked赋值
+			          for(var i=0;i<one.length;i++){
+			              one[i].checked=true;
+			          }
+			 
+			      }else{
+			          for(var j=0;j<one.length;j++){
+			              one[j].checked=false;
+			          }
+			      }
+		
+		}
+
+		
+			
+				
+				 	nicePage.setCfg({
+				 		table: 'table',
+				 		bar: 'pageBar',
+				 		limit:10,
+				 		color: '#1E9FFF',
+				 		layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+				 	});
+				
+			
+			
+	
+    function btn(){
+		  
+		len=$("#bn").val().length;
+		 var str=$("#bn").val().substring(1,3);
+		// alert("q:"+len+" "+str.length)
+		 if(str=="编辑"){
+			 // alert("111")
+			 $(".content").removeAttr('readonly')
+			   $("#bn").val("保存");
+		 $(".content").addClass('content2',true)
+		 }else{
+			 // alert("222")
+			 $(".content").attr('readonly',true)
+			  $(".content").removeClass('content2')
+			   $("#bn").val("编辑");
+			   var array = [];
+			    arr_value=[];
+			   for (var i = 0; i < ge.length; i++) {
+			       if (array .indexOf(ge[i]) === -1) {
+			           array .push(ge[i])
+					   // alert("ki:"+i+" "+ge[i])
+					   arr_value.push($("#"+ge[i]).val())
+			       }
+			   }
+			   if(array.length>0){
+			   	 // alert("结果："+arr_value.join(",")+ " <br/>"+array.join(","))
+				 $.post("http://localhost:86/HBuilder/xops/Back.php",{
+					     
+					     type:"Schedule",
+						 operation:"update",
+					     roomid:array.join(","),
+						 people:arr_value.join(","),
+						 hostid:arr_id.join(","),
+						 token:"1ab66e59325257b60b971d4afa1505ce"
+					     
+					   },function(data,status){
+						   alert("data:"+data);
+						   obj=JSON.parse(data);
+						   if(obj.code==200){
+							    layer.msg('保存成功!',{icon:1,time:1500});
+						   }else if(obj.code==202){
+							    layer.msg('保存失败!',{icon:1,time:1500})
+						   }
+						   })
+		 }
+		 }
+
+   
+		//  pp=[{'1':'<input type=\"checkbox\" value="33" name=\"test\"  style=\"width:16px;height:16px;\" />','2':'eee','3':'hhhhhhhh','4':'jjjjjjj','5':'kb'}];
+		// var jsont22=jsont.concat(pp);
+		
+    }
+			 			</script>
+
+		<div style="margin-top: 3%;margin-left: 2%;margin-right: 3%;">
+			<div class="layui-form layui-col-md12 x-so">
+				<button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>删除</button>
+				<button class="layui-btn " onclick="x_admin_show('添加用户','./admin-add.html',600,400)"><i class="layui-icon"></i>添加</button>
+				<!-- <button class="layui-btn" onclick="btn()" id="bn"><i class="layui-icon">&#xe642;</i>编辑</button> &nbsp;&nbsp; -->
+				<input type="button" value="&#xe642;编辑" class="layui-btn layui-icon" id="bn"  onclick="btn()"/>
+				<input type="text" name="username" placeholder="关键字" autocomplete="off" class="layui-input">
+				<button class="layui-btn" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+				&nbsp;&nbsp;<span class="layui-input-inline">
+					<select name="cateid">
+						<option>房间ID</option>
+						<option>参与人员</option>
+						<option>周数</option>
+						<option>星期</option>
+						<option>开始时段</option>
+						<option>持续时段数</option>
+						<option>课程或活动</option>
+						<option>主持人ID</option>
+					</select>
+				</span>
+				<button class="layui-btn" ><i class="iconfont">&#xe69e;</i>&nbsp;导入</button> &nbsp;&nbsp;
+				<button class="layui-btn" ><i class="iconfont">&#xe69e;</i>&nbsp;导出</button> &nbsp;&nbsp;
+				<button class="layui-btn" ><i class="iconfont">&#xe69e;</i>&nbsp;下载模板</button> &nbsp;&nbsp;
+				<span>
+					<a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);"
+					 title="刷新">
+						<i class="layui-icon" style="line-height:38px">ဂ</i></a>
+				</span>
+				
+			</div>
+
+             <div id="dt">
+			<div id="table"></div>
+			<div id="pageBar"></div>
+            </div>
+
+
+			<div class="x-body">
+				<div class="layui-row">
+
+				</div>
+
+				<div class="page">
+					<div id="demo21"></div>
+
+				</div>
+
+			</div>
+		</div>
+
+
+		<script>
+			ge=[];
+		    $("#btn2").click(function(){
+				$("#1t").removeAttr('readonly')
+				// alert("j")
+			})
+			function change(event){
+				ge.push(event)
+				// alert("d:"+ge.length+" "+$("#"+event).val())
+			}
+			// $(".content").attr("readOnly",true);
+			layui.use('laydate', function() {
+				var laydate = layui.laydate;
+
+				//执行一个laydate实例
+				laydate.render({
+					elem: '#start' //指定元素
+				});
+
+
+
+
+				//执行一个laydate实例
+				laydate.render({
+					elem: '#end' //指定元素
+				});
+			});
+
+
+			/*用户-删除*/
+			function member_del(obj, id) {
+				layer.confirm('确认要删除吗？', function(index) {
+					//发异步删除数据
+					$(obj).parents("tr").remove();
+					layer.msg('已删除!', {
+						icon: 1,
+						time: 1000
+					});
+				});
+			}
+
+
+			function delAll(argument) {
+
+
+				var id = document.getElementsByName('test');
+				var value = new Array();
+				for (var i = 0; i < id.length; i++) {
+					if (id[i].checked)
+						value.push(id[i].value);
+				}
+				if (value.length != 0) {
+				layer.confirm('确认要删除吗？', function(index) {
+					//捉到所有被选中的，发异步进行删除
+					// for(var p=0;p<value.length;p++){
+					// 	jsont.splice(parseInt(jsont[p]-1),1)
+					// 	alert("gg:"+jsont.length)
+					// }
+					
+						$.post("http://localhost:86/HBuilder/xops/Back.php", {
+
+							type: "User",
+							operation: "del",
+							account: value.join(','),
+
+							token: "1ab66e59325257b60b971d4afa1505ce"
+
+						}, function(data, status) {
+							obj = JSON.parse(data);
+							
+							if (obj.code == 200) {
+							// alert("pp:"+data)	
+							// arr_ss=obj.data.split(",");
+							// alert("uu:"+arr_ss.length+" "+arr_ss[0])
+							// for(var j=0;j<arr_ss.length;j++){
+							// 	jsont.splice(parseInt(arr_ss[j]-1),1)
+							// 	alert("gg:"+jsont.length)
+							// }
+			
+							// $("#table").load(location.href+" #table");
+		layer.alert('删除成功！',{icon:1},function(index){
+		    //发异步删除数据
+	 
+			yu();
+			
+		});
+		function yu(){
+			 window.location.href="javascript:location.reload()";
+	
+		}
+	
+							} else {
+								layer.msg('删除失败', {
+									icon: 1
+								});
+							}
+
+						})
+
+					
+
+					// $(".layui-form-checked").not('.header').parents('tr').remove();
+				});
+				}
+				else{
+					layer.msg('您未选择删除数据！', {
+						icon: 5
+					});
+				}
+			}
+		</script>
+
+	</body>
+
+</html>

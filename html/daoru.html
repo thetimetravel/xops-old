@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!-- xlsx.js (C) 2013-present  SheetJS http://sheetjs.com -->
+<!-- vim: set ts=2: -->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>SheetJS Live Demo</title>
+		
+	</head>
+	<body>
+		<pre>
+
+<input type="file" name="xlfile" id="xlf" /> 
+
+<!-- Use Web Workers: (when available) <input type="checkbox" name="useworker" checked>
+Use readAsBinaryString: (when available) <input type="checkbox" name="userabs" checked> -->
+</pre>
+	
+
+		<br />
+
+		<script src="../js/cpexcel.js"></script>
+		<script src="../js/shim.js"></script>
+		<script src="../js/jszip.js"></script>
+		<script src="../js/xlsx.js"></script>
+		<script>
+			var arr1 = [1, 1, 2, 3, 6, 9, 5, 5, 4]
+    var arr2 = [1, 2, 5, 4, 9, 7, 7, 8, 8]
+	var arr3=[]
+    function uniqueArr(arr1, arr2){
+        var arr3 = arr1.concat(arr2)
+        var arr4 = []
+        for(var i=0,len=arr3.length; i<len; i++) {
+            if(arr4.indexOf(arr3[i]) === -1) {
+                arr4.push(arr3[i])
+            }
+        }
+        console.log("arr4:",arr4)
+		// alert("g4:"+arr4.join(","))
+     return arr4;
+   }
+   
+    arr3=uniqueArr(arr3, arr1)
+	// alert("g:"+arr3.join(","))
+	 arr3=uniqueArr(arr3, arr2)
+	// alert("gg:"+arr3.join(","))
+			var storage=null
+			  storage = window.sessionStorage; 
+			  // storage.removeItem("xops123456")
+			  
+			// alert("wem3:"+storage.getItem("xops123456"))
+			// sessionStorage.setItem("key","ff")
+			// sessionStorage.clear()
+			// alert("hh:"+sessionStorage.getItem("key"))
+
+			var X = XLSX;
+			var XW = {
+				/* worker message */
+				msg: 'xlsx',
+				/* worker scripts */
+				worker: 'js/xlsxworker.js'
+			};
+
+			var global_wb;
+
+
+			var process_wb = (function() {
+				
+
+
+				function get_format() {
+					return "json";
+				}
+
+			
+				var to_json = function to_json(workbook) {
+					var result = {};
+					workbook.SheetNames.forEach(function(sheetName) {
+
+						var roa = X.utils.sheet_to_json(workbook.Sheets[sheetName], {
+							header: 1
+						});
+						// alert("dd:"+sheetName+" "+roa.length)
+						if (roa.length) result["data"] = roa;
+					});
+					// alert("hh:"+result);
+					
+				title = ["用户名", "密码", "电话"];
+				// title_bt = ["供应商", "电话"];
+				arr_bj = []
+			
+				res_str="[";
+					var uid=0,pid=0,tid=0;
+					for (var i in result) {
+
+						for (var j in result[i]) {
+
+							// console.log("tt:", i, "--", j, "--", result[i][j])
+							for (var z in result[i][j]){
+									arr_in = [];
+									if (j == 0) {
+										for(var k in result[i][0]){
+									
+												arr_in.push(result[i][0][k])
+												switch(result[i][0][k]) {
+													case "用户名":
+													uid=k;
+													break;
+													case "密码":
+													pid=k;
+													break;
+													case "电话":
+													tid=k;
+													break;
+													default:
+													break;
+													}
+					     // console.log(" gggg ", uid," ",pid," ",tid," ", "::", result[i][0])
+											
+										}
+											break;
+								
+								// console.log(" gggg ", z, "::", result[i][0])
+								}
+								console.log(i, "  " , j, "  ", z, "::", result[i][j][z])
+								if(j>0 ){				
+									res_str+="{\"username\":\""+result[i][j][uid]+"\",\"password\":\""+result[i][j][pid]+"\",\"tel\":\""+result[i][j][tid]+"\"},"
+								}
+								
+								// alert("vv:"+" "+j+" "+z+" "+result[i][j][z])
+								break;
+								
+								
+							}		
+						}
+
+					}
+					res_str=res_str.substr(0,res_str.length-1)+"]";
+					alert("str:"+res_str)
+					result_str = JSON.stringify(result, 2, 2);
+
+					// alert("rre:" + arr_in.join(",") + " " + arr_in.length)
+					var c = isContained(arr_in, title);
+					if (!c) {
+						alert("缺少标题栏：" + arr_bj.join(" "))
+					}else{
+						
+								var storage = null;
+						if(window.sessionStorage){              //判断浏览器是否支持localStorage
+						   storage = window.sessionStorage;     
+						   storage.setItem("xops123456", res_str);    //调用setItem方法，存储数据
+						   alert("wmmen2"+storage.getItem("xops123456"));     //调用getItem方法，弹框显示 name 为 Rick
+			
+						 
+						}else
+						{ 
+							alert("您的浏览器不支持导入，请重新换个浏览器！")
+							// $.post("http://localhost:86/HBuilder/xops/Back.php",{
+							// 	type:"Config",
+							// 	operation:
+							// 	
+							// },function(data,status){
+							// 	alert("falst:"+data)
+							// })
+						
+						}
+					}
+					// alert("Pq:"+ " "+result['data'])
+					// sessionStorage.setItem("xops123456",result_str)
+					 alert("h3344:"+sessionStorage.getItem("xops123456"))
+					return JSON.stringify(result['data'], 2, 2);
+				};
+
+
+ 
+				return function process_wb(wb) {
+					global_wb = wb;
+					var output = "";
+					
+					switch (get_format()) {
+
+						case "json":
+							output = to_json(wb);
+							break;
+						
+					}
+					console.log("gg2:",output )
+					// window.location.href="x_admin_show('添加数据','./daoru-excel.html',800,600)";
+					 // console.log("output", new Date());
+				};
+			})();
+
+
+
+			function isContained(aa, bb) {
+			
+				if (!(aa instanceof Array) || !(bb instanceof Array) ) {
+						
+					return false;
+				}
+				var aaStr = aa.toString();
+				// alert("len:"+aa.length+" "+aaStr)
+
+				for (var i = 0; i < bb.length; i++) {
+
+					if (aaStr.indexOf(bb[i]) < 0) {
+						arr_bj.push(bb[i])
+						
+
+					}
+
+				}
+				if (arr_bj.length > 0)
+					return false;
+				return true;
+			}
+
+			var do_file = (function() {
+				var rABS = typeof FileReader !== "undefined" && (FileReader.prototype || {}).readAsBinaryString;
+			
+
+				return function do_file(files) {
+					rABS = false;
+					use_worker = false;
+					var f = files[0];
+				
+					var reader = new FileReader();
+					reader.onload = function(e) {
+						if (typeof console !== 'undefined') console.log("onload", new Date(), rABS, use_worker);
+						var data = e.target.result;
+
+						if (!rABS) data = new Uint8Array(data);
+						if (use_worker) xw(data, process_wb);
+						else process_wb(X.read(data, {
+							type: rABS ? 'binary' : 'array'
+						}));
+					};
+					if (rABS) reader.readAsBinaryString(f);
+					else reader.readAsArrayBuffer(f);
+				};
+			})();
+
+
+			(function() {
+				var xlf = document.getElementById('xlf');
+				if (!xlf.addEventListener) return;
+
+				function handleFile(e) {
+					do_file(e.target.files);
+				}
+				xlf.addEventListener('change', handleFile, false);
+			})();
+			var _gaq = _gaq || [];
+			_gaq.push(['_setAccount', 'UA-36810333-1']);
+			_gaq.push(['_trackPageview']);
+		</script>
+	</body>
+</html>

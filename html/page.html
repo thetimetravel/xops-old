@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<?php header('Content-Type: text/html; charset=utf-8');?>
+	<head>
+		<meta charset="UTF-8">
+		<title>欢迎页面-L-admin1.0</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8" />
+		<link rel="shortcut icon" href="../images/titlelogo.png" type="image/x-icon" />
+		<link rel="stylesheet" href="../css/font.css">
+		<link rel="stylesheet" href="../css/xadmin.css">
+		<script src="../js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/xadmin.js"></script>
+		<!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+		<!--[if lt IE 9]>
+      <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+      <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+		<!-- <script src="http://www.jq22.com/jquery/jquery-3.3.1.js"></script> -->
+
+		<link href="../lib/layui/css/layui.css" type="text/css" rel="stylesheet">
+				<script language="Javascript" src="../js/nicePage.js"></script>
+
+
+	
+				<?php $host="localhost";  //IP地址
+$username="root";  //数据库用户名
+$password="root"; //数据库密码
+$port=3306;       //端口
+$dbname="xops"; //数据库名称
+//连接数据库
+$con = mysqli_connect($host.":".$port,$username,$password,$dbname);
+
+if ($con->connect_error) {
+   die('Connect Error (' . $mysqli->connect_errno . ') ' . $mysqli->connect_error);
+
+}
+ $l=5;
+
+global $ip;
+$ip=0;
+$con->query("set names utf8"); // 设置输出字符集
+         $sql_se="Select * from `user`  ";
+         $result_se=mysqli_query($con,$sql_se);
+         $count_se= mysqli_num_rows($result_se);
+				  $newru=[];
+     while ($rowru=mysqli_fetch_assoc($result_se)) {
+        $newru[]=$rowru;
+      }
+      // echo "ji:".$newru[0]['json'];
+
+?>
+	</head>
+<style>
+    * { margin: 0; padding: 0; }
+    body { font-family: 'Microsoft Yahei'; font-size: 18px; background-color: #f8f8f8; }
+
+    #table2 {
+      width: 1200px;
+      margin: 40px auto 0;
+      border-collapse: collapse;
+      background-color: #fff;
+    }
+    #table td,
+    #table th {
+    /*  padding: 0.75em 1.5em; */
+    }
+    #table thead {
+      color: #fff;
+      background-color: #31bc86;
+    }
+    #table thead th {
+      text-align: left;
+    }
+    #table tbody {}
+    #table tbody tr {
+      border-bottom: 2px dashed #000;
+      cursor: default;
+      transition: all .125s ease-in-out;
+    }
+    #table tbody tr:hover {
+      background-color: rgba(129,208,177,.3);
+    }
+    #table tbody tr.event-bgColor {
+      background-color: rgba(255, 192, 203, .2);
+    }
+    #table tbody tr.default-bgColor {
+      background-color: #fff;
+    }
+    #table tbody tr.hover-bgColor {
+      background-color: rgba(255, 192, 203, .8);
+    }
+    #table tbody tr.selected-bgColor {
+      background-color: rgb(255, 192, 203);
+    }
+    
+    #selectAll {
+      margin-left: -4px;
+    }
+    .checkbox {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      -o-user-select: none;
+      user-select: none;
+    }
+  </style>
+	<body class=" layui-fluid" onload="a()">
+		
+				<!-- <div id="demo21"></div> -->
+		<!-- <script src="../lib/layui/layui.js"></script> -->
+		<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+		<script>
+
+			// function ss() {
+
+
+				// var sel = $("#sel").val();
+				// alert("sel:" + sel)
+			// }
+
+				
+			
+			layui.use(['laypage', 'layer'], function() {
+				var laypage = layui.laypage,
+					layer = layui.layer;
+
+			
+	     		laypage.render({
+	     	elem: 'demo21',
+	     	count: <?php echo $count_se;?>,
+				limit:<?php echo $l;?>,
+	     	layout: [],
+	     	jump: function(obj) {
+	          curr=obj.curr;
+	     		// console.log(obj.curr)
+					
+	     	}
+	     });
+
+				
+			});
+		</script>
+		<script>
+				
+			// alert('<?php echo gettype($count_se);?>')
+			jsonttp='[';
+ 	        
+            	<?php for($i=0;$i<$count_se;$i++){ 
+            	$value_se=$newru[$i]['id'];
+				$value_da=$newru[$i]['account'];
+				$value_un=$newru[$i]['password']; 
+				$value_tel=$newru[$i]['tel']; 
+				$value_dt=$newru[$i]['datetime'];
+				$tt=$i+1;
+				?>
+				$p=1;
+            jsonttp+="{'1':'<input type=\"checkbox\" value=\"<?php echo $value_se;?>\" name=\"test\"  style=\"width:16px;height:16px;\" />'+'<span style=\"font-size:20px;margin-left:5px;\">'+ ($p++)+'</span>','2':'<span style=\"font-size:20px;margin-left:5px;\"><?php echo $value_tel?></span>','3':'<span style=\"font-size:20px;margin-left:5px;\"><?php echo $value_da;?></span>','4':'<span style=\"font-size:20px;margin-left:5px;\"><?php echo $value_un;?></span>','5':'<span style=\"font-size:20px;margin-left:5px;\"><?php echo $value_dt;?></span>'},";
+  
+            <?php }?>
+              
+		
+			jsontt="[";
+			jsontt="<?php for($i=0;$i<2;$i++){} 
+			 ?>";
+		
+			jsonttp=jsonttp.substring(0,jsonttp.length-1)+"]";	
+	     
+			 jsont = eval("(" + jsonttp + ")");
+	
+			// 	//nameList与widthList的数组长度要一致
+			var nameList = ['<input type="checkbox"   id=\"it\"  style=\"width:16px;height:16px;\" onclick=\"cb()\"/> <span style=\"font-size: 20px;\">序号</span>', '<span style=\"font-size: 20px;\">电话</span>', '<span style=\"font-size: 20px;\">用户名</span>', '<span style=\"font-size: 20px;\">密码</span>', '<span style=\"font-size: 20px;\">注册时间</span>'] //table的列名
+			var widthList = [30, 100, 80,80,80] //table每列的宽度
+			
+
+		function cb(){
+			var all=document.getElementById("it");//获取到点击全选的那个复选框的id
+			      var one=document.getElementsByName("test");//获取到复选框的名称
+			      if(all.checked==true){//因为获得的是数组，所以要循环 为每一个checked赋值
+			          for(var i=0;i<one.length;i++){
+			              one[i].checked=true;
+			          }
+			 
+			      }else{
+			          for(var j=0;j<one.length;j++){
+			              one[j].checked=false;
+			          }
+			      }
+		
+		}
+
+		
+			
+				
+				 	nicePage.setCfg({
+				 		table: 'table',
+				 		bar: 'pageBar',
+				 		limit:5,
+				 		color: '#1E9FFF',
+				 		layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+				 	});
+				
+				 p=[];
+				function a(){
+					 // alert("p1:"+p.length)
+					  // $(document).ready(function(){
+					      $.post("http://localhost:86/HBuilder/xops/Back.php",{
+					      type:"User",
+							  operation:"search",
+							  													
+							  token:"1ab66e59325257b60b971d4afa1505ce"
+						  },function(data,status){
+							 
+							  var json = eval("(" + data + ")");		 
+							  // p=JSON.parse(data);
+							   // alert(typeof(json)+" "+json.length)
+							   p=json;
+						  })
+						   // })
+						  
+				}
+			
+ // alert("p3:"+p.length)
+    function btn(){
+		 alert("p5:"+p.length)
+    	 var id = document.getElementsByName('test');
+    // var value = new Array();
+    // for(var i = 0; i < id.length; i++){
+    //  if(id[i].checked)
+    //  value.push(id[i].value);
+    // }
+   
+		
+    }
+			 			</script>	
+					
+       <div style="margin-top: 3%;margin-left: 2%;margin-right: 3%;"  >
+			<div class="layui-form layui-col-md12 x-so"  >
+			<button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>删除</button>
+			<button class="layui-btn " onclick="x_admin_show('添加用户','./member-add.html',600,400)"><i class="layui-icon"></i>添加</button>
+			<button class="layui-btn" onclick="btn()"><i class="layui-icon">&#xe642;</i>编辑</button>  &nbsp;&nbsp;
+			<input type="text" name="username"  placeholder="请输入用户名1" autocomplete="off" class="layui-input">
+			<button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+			 &nbsp;&nbsp;<span class="layui-input-inline">
+			  <select name="cateid">
+			    <option>规则分类</option>
+			    <option>文章</option>
+			    <option>会员</option>
+			    <option>权限</option>
+			  </select>
+	</span>
+	<span>
+			 <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+			  <i class="layui-icon" style="line-height:38px">ဂ</i></a>
+				</span>
+			</div>
+ 
+	
+		<div id="table"></div>
+		<div id="pageBar"></div>
+		
+		
+			  
+			<div class="x-body">
+			  <div class="layui-row">
+			  
+			  </div>
+			  
+			  <table class="layui-table">
+			   
+			  </table>
+			  <div class="page">
+			   <div id="demo21"></div>
+				 
+			  </div>
+			
+			</div>
+			</div>
+			
+
+			<script>
+
+			  layui.use('laydate', function(){
+			    var laydate = layui.laydate;
+			    
+			    //执行一个laydate实例
+			    laydate.render({
+			      elem: '#start' //指定元素
+			    });
+			
+			
+			
+			
+			    //执行一个laydate实例
+			    laydate.render({
+			      elem: '#end' //指定元素
+			    });
+			  });
+			
+			
+			  /*用户-删除*/
+			  function member_del(obj,id){
+			      layer.confirm('确认要删除吗？',function(index){
+			          //发异步删除数据
+			          $(obj).parents("tr").remove();
+			          layer.msg('已删除!',{icon:1,time:1000});
+			      });
+			  }
+			
+			
+			  ppo=[1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+			  function delAll (argument) {
+
+		
+			   var id = document.getElementsByName('test');
+    var value = new Array();
+    for(var i = 0; i < id.length; i++){
+     if(id[i].checked)
+     value.push(id[i].value);
+    } 
+// 		for(var i in jsont) {
+// 
+//      console.log(i,":",jsont[i]);
+// 		 alert(jsont[i])
+// 
+// }
+        
+			    layer.confirm('确认要删除吗？'+value.length,function(index){
+			        //捉到所有被选中的，发异步进行删除
+							// for(var p=0;p<value.length;p++){
+							// 	jsont.splice(parseInt(jsont[p]-1),1)
+							// 	alert("gg:"+jsont.length)
+							// }
+							if(value.length!=0){
+								 $.post("http://localhost:86/HBuilder/xops/Back.php",{
+																     
+																     type:"User",
+																	 operation:"del",
+																     account:value.join(','),
+															
+																	 token:"1ab66e59325257b60b971d4afa1505ce"
+																     
+																   },function(data,status){
+																	obj = JSON.parse(data);
+																	if(obj.code==200){
+																		 layer.msg('删除成功', {icon: 1});
+																	}else{
+																			 layer.msg('删除失败', {icon: 1});
+																	}
+								
+																	   })
+								  
+							}
+				  
+				    // $(".layui-form-checked").not('.header').parents('tr').remove();
+				});
+			  }
+			
+			
+		</script>
+		
+	</body>
+
+</html>

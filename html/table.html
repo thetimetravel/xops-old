@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>layui</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<!-- <link rel="stylesheet" href="../lib/layui/css/layui.css" media="all"> -->
+		<script src="../lib/layui/layui.js"></script>
+			<link href="../lib/layui/css/layui.css" type="text/css" rel="stylesheet" media="all">
+			<script src="../js/jquery-3.3.1.min.js"></script>
+		<!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
+	</head>
+	<body>
+
+		<table class="layui-hide" id="test" lay-data="{id: 'idTest'}"></table>
+		<button onclick="hu()">dddd</button>
+		<button onclick="hu2()">tia</button>
+		-----<br/>
+	
+  
+     
+    <span class="pp">
+        <input type="text" class="layui-input" id="test9" placeholder=" - ">
+		<button>  fss</button>
+    </span>
+	----<br/>
+	<div class="layui-inline">
+		<label class="layui-form-label">发起时间从</label>
+		<div class="layui-input-block">
+			<input name="beginTimeFrom" type="text" autocomplete="off" id="startTime" class="layui-input laydate">
+		</div>
+</div>
+<div class="layui-inline">
+		<label class="layui-form-label">发起时间至</label>
+		<div class="layui-input-block">
+			<input name="beginTimeTo" type="text" autocomplete="off" id="endTime" class="layui-input laydate">
+		</div>
+</div>
+ 
+<div class="layui-btn-container" style="text-align: center;">
+		<button class="layui-btn" lay-submit lay-filter="btn-sch" id="btn-sch" ><i class="icon-search"></i> 查询</button>
+		<button class="layui-btn layui-btn-primary" id="btn-resert"  ><i class="icon-undo"></i> 重置</button>
+</div>
+
+    
+ 
+<!-- <table class="layui-table" lay-data="{id: 'idTest'}"> …… </table> -->
+
+		<!-- <script src="../lib/layui.js" charset="utf-8"></script> -->
+		<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+
+		<script>
+			 var nowTime=new Date();  
+			   	layui.use(['laydate'], function() {
+			
+			   	 var laydate = layui.laydate;
+    var startTime=laydate.render({
+    	elem:'#startTime',
+    	type:'datetime',
+    	btns: ['confirm'],
+    	// max:'nowTime',//默认最大值为当前日期
+    	done:function(value,date){
+//    		console.log(value); //得到日期生成的值，如：2017-08-18
+//    	    console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+    	    endTime.config.min={    	    		
+    	    	year:date.year,
+    	    	month:date.month-1,//关键
+                date:date.date,
+                hours:date.hours,
+                minutes:date.minutes,
+                seconds:date.seconds
+    	    };
+    	    
+    	}
+    })
+    var endTime=laydate.render({
+    	elem:'#endTime',
+    	type:'datetime',
+    	btns: ['confirm'],
+    	// max:'nowTime',
+    	done:function(value,date){
+//    		console.log(value); //得到日期生成的值，如：2017-08-18
+//    	    console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}    	   
+    	    startTime.config.max={
+    	    		year:date.year,
+        	    	month:date.month-1,//关键
+                    date:date.date,
+                    hours:date.hours,
+                    minutes:date.minutes,
+                    seconds:date.seconds
+    	    }
+    	    
+    	}
+    })
+	})
+ 
+//重置
+ $("#btn-resert").on("click",function(){
+    		// $(".layui-inline")[0].reset(); 
+    		// endTime.config.min='1900-1-1';
+    		// startTime.config.max=endTime.config.max;
+      });
+			var data = [{
+				"id": 10000,
+				"username": "user-0",
+				"sex": "女",
+				"city": "城市-0",
+				"sign": "签名-0",
+				"experience": 255,
+				"logins": 24,
+				"wealth": 82830700,
+				"classify": "作家",
+				"score": 57
+			}, {
+				"id": 10001,
+				"username": "user-1",
+				"sex": "男",
+				"city": "城市-1",
+				"sign": "签名-1",
+				"experience": 884,
+				"logins": 58,
+				"wealth": 64928690,
+				"classify": "词人",
+				"score": 27
+			}, {
+				"id": 10002,
+				"username": "user-2",
+				"sex": "女",
+				"city": "城市-2",
+				"sign": "签名-2",
+				"experience": 650,
+				"logins": 77,
+				"wealth": 6298078,
+				"classify": "酱油",
+				"score": 31
+			}, {
+				"id": 10003,
+				"username": "user-3",
+				"sex": "女",
+				"city": "城市-3",
+				"sign": "签名-3",
+				"experience": 362,
+				"logins": 157,
+				"wealth": 37117017,
+				"classify": "诗人",
+				"score": 68
+			}, {
+				"id": 10004,
+				"username": "user-4",
+				"sex": "男",
+				"city": "城市-4",
+				"sign": "签名-4",
+				"experience": 807,
+				"logins": 51,
+				"wealth": 76263262,
+				"classify": "作家",
+				"score": 6
+			}, {
+				"id": 10005,
+				"username": "user-5",
+				"sex": "女",
+				"city": "城市-5",
+				"sign": "签名-5",
+				"experience": 173,
+				"logins": 68,
+				"wealth": 60344147,
+				"classify": "作家",
+				"score": 87
+			}, {
+				"id": 10006,
+				"username": "user-6",
+				"sex": "女",
+				"city": "城市-6",
+				"sign": "签名-6",
+				"experience": 982,
+				"logins": 37,
+				"wealth": 57768166,
+				"classify": "作家",
+				"score": 34
+			}, {
+				"id": 10007,
+				"username": "user-7",
+				"sex": "男",
+				"city": "城市-7",
+				"sign": "签名-7",
+				"experience": 727,
+				"logins": 150,
+				"wealth": 82030578,
+				"classify": "作家",
+				"score": 28
+			}, {
+				"id": 10008,
+				"username": "user-8",
+				"sex": "男",
+				"city": "城市-8",
+				"sign": "签名-8",
+				"experience": 951,
+				"logins": 133,
+				"wealth": 16503371,
+				"classify": "词人",
+				"score": 14
+			}, {
+				"id": 10009,
+				"username": "user-9",
+				"sex": "女",
+				"city": "城市-9",
+				"sign": "签名-9",
+				"experience": 484,
+				"logins": 25,
+				"wealth": 86801934,
+				"classify": "词人",
+				"score": 75
+			}]
+			
+			layui.use(['table', 'laydate'], function() {
+				var table = layui.table;
+				 var laydate = layui.laydate;
+  
+ //时间范围
+  laydate.render({
+    elem: '#test9',
+    type: 'time',
+	format:"H:m:s",
+	min:'06:00:00',
+	theme:"#1a7bc5",
+	// lang: 'en',
+// 	change: function(value, date){//控件选择完毕后的回调---点击日期、清空、现在、确定均会触发。
+//     console.log(value); //得到日期生成的值，如：2017-08-18
+// 	test9.config.min={    	    		
+//                 hours:10,
+//                 minutes:10,
+//                 seconds:10
+//     	    };
+// 		
+// 
+//   },
+
+    range: true
+  });
+				table.render({
+					elem: '#test',
+					data: data,
+					count: 10,
+					layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip'],
+    jump: function(obj){
+      console.log(obj)
+    },
+					limit: 2,
+					limits:[10,20,30],
+					loading:true,
+					text: {
+    none: '暂无相关数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+  },
+					page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+						layout: ['count',  'prev', 'page', 'next','limit', 'skip',"refresh"] //自定义分页布局
+							,
+						curr: 1 //设定初始在第 5 页
+							,
+						groups: 5 //只显示 1 个连续页码
+							,
+						first: true //不显示首页
+							,
+						last: true //不显示尾页
+
+					},
+					cellMinWidth: 70 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+						,
+					cols: [
+						
+						[
+							{type:'checkbox'},{
+								field: 'id',
+								title: 'ID',
+								sort: true
+							}, {
+								field: 'username',
+								title: '用户名'
+							} //width 支持：数字、百分比和不填写。你还可以通过 minWidth 参数局部定义当前单元格的最小宽度，layui 2.2.1 新增
+							, {
+								field: 'sex',
+								title: '性别',
+								sort: true
+							}, {
+								field: 'city',
+								title: '城市'
+							}, {
+								field: 'sign',
+								title: '签名',
+								align: 'center'
+							}
+							// ,{field:'classify', title: '职业', align: 'center'} //单元格内容水平居中
+							//       ,{field:'experience', title: '积分', sort: true, align: 'right'} //单元格内容水平居中
+							//       ,{field:'score', title: '评分', sort: true, align: 'right'}
+							//       ,{field:'wealth', title: '财富', sort: true, align: 'right'}
+						]
+					]
+				});
+			});
+			function hu2(){
+				 layer.open({
+				  type: 2,
+				  title: 'iframe父子操作',
+				  maxmin: true,
+				  shadeClose: true, //点击遮罩关闭层
+				  area : ['800px' , '520px'],
+				  content: 'daoru-excel.html'
+				});
+			}
+		
+			function hu(){
+				
+				data[4]["username"]="的是的";
+				layui.use('table', function() {
+					var table = layui.table;
+				table.reload('test', {
+  // data:data,
+  page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+  						layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+  							,
+  						curr: 3 //设定初始在第 5 页
+  							,
+  						groups: 5 //只显示 1 个连续页码
+  							,
+  						first: true //不显示首页
+  							,
+  						last: true //不显示尾页
+  
+  					}
+  ,where: {} //设定异步数据接口的额外参数
+  //,height: 300
+});
+});
+				alert("d")
+			}
+		</script>
+
+	</body>
+</html>

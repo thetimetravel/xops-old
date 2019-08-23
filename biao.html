@@ -156,7 +156,7 @@
 			result = "["
 			cou=""
 			// alert("d:"+typeof(day)+" "+day)
-			$.post("http://mycloud.konzesys.com.cn/app/zhiweibao/xops/Back.php", {
+			$.post("http://localhost:86/HBuilder/xops/Back.php", {
 				type: "Uptime",
 				operation: "search",
 				token: "1ab66e59325257b60b971d4afa1505ce"
@@ -190,7 +190,7 @@
 					// alert(type+" "+id)	
 					
 			newArray=[]
-          $.post("http://mycloud.konzesys.com.cn/app/zhiweibao/xops/Back.php", {
+          $.post("http://localhost:86/HBuilder/xops/Back.php", {
           	type: "Class",
           	operation: "search_test",
 			id:id,
@@ -214,7 +214,8 @@
 				 heigh=div-90;
 				  // alert("5kp:"+" "+heigh)
 				 heigh=heigh /cou;
-				 heigh=Math.floor( heigh * 100 ) / 100
+				 heigh=Math.floor( heigh * 100 ) / 100;
+				 heigh=heigh>30?heigh:30;
 				 // alert(heigh)
 				 var Timetable = new Timetables({
 				 	el: '#coursesTable',

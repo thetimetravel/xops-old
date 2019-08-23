@@ -16,8 +16,9 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
  include_once 'User.php'    ;         //用户表
  include_once 'Admin.php'   ;        //管理员表
  include_once 'Schedule.php';         //课程表
- include_once 'Look.php'   ;           //
+ include_once 'Look.php'   ;           //查询
  include_once 'Teacher.php' ;        //职工表
+ include_once 'Send.php';      //微信发送消息
 class Back  extends Staticp  {
 
     public   $Staticp;
@@ -29,8 +30,8 @@ class Back  extends Staticp  {
 
     function user(){
 
-      $account=trim(isset($_POST['account'])?$_POST['account']:"");
-      $password=trim(isset($_POST['password'])?$_POST['password']:"");
+      $account=(isset($_POST['account'])?$_POST['account']:"");
+      $password=(isset($_POST['password'])?$_POST['password']:"");
       $phone=trim(isset($_POST['phone'])?$_POST['phone']:"");
       $curr=(isset($_POST['curr'])?$_POST['curr']:"");  //当前页面
       $nums=(isset($_POST['nums'])?$_POST['nums']:"");  //一页显示多少条数据
@@ -59,11 +60,17 @@ class Back  extends Staticp  {
           case 'add':
             $User->add();
             break;
+          case 'add2':
+            $User->add2();
+            break;
           case 'del':
             $User->del();
             break;
           case 'update':
             $User->update();
+            break;
+          case 'update2':
+            $User->update2();
             break;
           case 'dao':
             $User->dao();
@@ -81,8 +88,8 @@ class Back  extends Staticp  {
 
     function admin(){
            // echo "string";
-      $account=trim(isset($_POST['account'])?$_POST['account']:"");
-      $password=trim(isset($_POST['password'])?$_POST['password']:"");
+      $account=(isset($_POST['account'])?$_POST['account']:"");
+      $password=(isset($_POST['password'])?$_POST['password']:"");
       $phone=trim(isset($_POST['phone'])?$_POST['phone']:"");
       $sex=trim(isset($_POST['sex'])?$_POST['sex']:"");
       $operation=isset($_POST['operation'])?$_POST['operation']:"";
@@ -94,6 +101,9 @@ class Back  extends Staticp  {
           case 'add':
             $Admin->add();
             break;
+            case 'add2':
+              $Admin->add2();
+              break;
             case 'del':
               $Admin->del();
               break;
@@ -111,9 +121,18 @@ class Back  extends Staticp  {
           case 'update':
             $Admin->update();
             break;
+          case 'update2':
+            $Admin->update2();
+            break;
+          case 'dao':
+            $Admin->dao();
+            break;
           case 'searchAt':
 
             $Admin->searchat();
+            break;
+          case 'searchall':
+            $Admin->searchall();
             break;
             default:
             break;
@@ -271,7 +290,18 @@ class Back  extends Staticp  {
             $is_se=$this->searchid("`class`","time='$id'");
             if($is_se>0){
                $arr_se=$this->searchru('data,yuyue',"`class`","time='$id'");
-              echo $arr_se[0]["data"].":".$arr_se[0]["yuyue"];
+               $time_count=$this->searchid("`time`","id!='-1'");
+               $show_time="[";
+               $arr_data=json_decode($arr_se[0]["data"],true);
+               for($i=0;$i<$time_count;$i++){
+              
+                $show_time.=json_encode($arr_data[$i],JSON_UNESCAPED_UNICODE).",";
+              
+               }
+               $show_time= rtrim($show_time,",");
+               $show_time.="]";
+                echo $show_time.":".$arr_se[0]["yuyue"]."\n";
+              // echo $arr_se[0]["data"].":".$arr_se[0]["yuyue"];
             }
              
               break;
@@ -339,7 +369,18 @@ class Back  extends Staticp  {
                $is_se=$this->searchid("`schedule`","time='$id'");
             if($is_se>0){
                $arr_se=$this->searchru('data,yuyue',"`schedule`","time='$id'");
-              echo $arr_se[0]["data"].":".$arr_se[0]["yuyue"];
+              // echo $arr_se[0]["data"].":".$arr_se[0]["yuyue"];
+                $time_count=$this->searchid("`time`","id!='-1'");
+               $show_time="[";
+               $arr_data=json_decode($arr_se[0]["data"],true);
+               for($i=0;$i<$time_count;$i++){
+              
+                $show_time.=json_encode($arr_data[$i],JSON_UNESCAPED_UNICODE).",";
+              
+               }
+               $show_time= rtrim($show_time,",");
+               $show_time.="]";
+                echo $show_time.":".$arr_se[0]["yuyue"]."\n";
             }
               break;
             case 'search_test':
@@ -349,8 +390,19 @@ class Back  extends Staticp  {
                 die(json_encode($this->arre));
               else{
                  $arr_test=$this->searchru('data',"`class`","classname='$id'");
-              $show_test=["code"=>200,"data"=>$arr_test[0]["data"]];
-              echo json_encode($show_test,JSON_UNESCAPED_UNICODE);
+                   $time_count=$this->searchid("`time`","id!='-1'");
+               $show_time="[";
+               $arr_data=json_decode($arr_test[0]["data"],true);
+               for($i=0;$i<$time_count;$i++){
+              
+                $show_time.=json_encode($arr_data[$i],JSON_UNESCAPED_UNICODE).",";
+              
+               }
+               $show_time= rtrim($show_time,",");
+               $show_time.="]";
+                // echo $show_time.":"."\n";
+              $show_test=["code"=>200,"data"=>$show_time];
+              echo json_encode($show_test);
               }
              
             }else if($classname=="class"){//班级课程表
@@ -359,9 +411,18 @@ class Back  extends Staticp  {
                  die(json_encode($this->arre));
               else{
               $arr_test=$this->searchru('data',"`schedule`","classname='$id'");
-              $show_test=["code"=>200,"data"=>$arr_test[0]["data"]];
-              // echo $show_test;
-              echo json_encode($show_test,JSON_UNESCAPED_UNICODE);
+              $time_count=$this->searchid("`time`","id!='-1'");
+               $show_time="[";
+               $arr_data=json_decode($arr_test[0]["data"],true);
+               for($i=0;$i<$time_count;$i++){
+              
+                $show_time.=json_encode($arr_data[$i],JSON_UNESCAPED_UNICODE).",";
+              
+               }
+               $show_time= rtrim($show_time,",");
+               $show_time.="]";
+              $show_test=["code"=>200,"data"=>$show_time];
+                    echo json_encode($show_test);
               }
 
             }
@@ -404,10 +465,11 @@ class Back  extends Staticp  {
               
               // $arr_socket=$this->searchru("socket_ip","`configuration`","id=1");
               $socket="http://localhost:3006";
-              $show_neworder=array("type"=>"NewOrder","id"=>$show_amid);
+              $show_neworder=array("type"=>"CompleteNewOrder","id"=>$show_amid);
+              $show_neworder2=array("type"=>"NewOrder_i","id"=>$show_amid);
               $neworder=$this->post2($socket,$show_neworder);
                $socket2="http://localhost:3017";
-                $neworder2=$this->post2($socket2,$show_neworder);
+                $neworder2=$this->post2($socket,$show_neworder2);
               // echo "ki:".$socket."  =  ".$show_neworder;
               echo json_encode($show_in);
             }
@@ -443,25 +505,153 @@ class Back  extends Staticp  {
               }
               break;
             case 'addac':
-            $date=date("Y-m-d H:i:s");
+          
                if (!isset($userid) || !isset($username) )
                 echo json_encode($this->arrn);
               else{
                 $is_id=$this->searchid("`admin`"," account='$username'");
                 if($is_id<1)
                   die(json_encode($this->arrni));
-                
+                  $date=date("Y-m-d H:i:s");
                 $is_id="Update `yuorder` set accou=1  where id='$userid'";
                 $row_up=mysqli_query($GLOBALS['con'],$is_id);
                  $is_ac="Update `yuorder` set account='$username'  where id='$userid'";
                 $row_ac=mysqli_query($GLOBALS['con'],$is_ac);
                  $is_te="Update `yuorder` set finishtime='$date'  where id='$userid'";
                 $row_te=mysqli_query($GLOBALS['con'],$is_te);
-                $show_uo=["code"=>200,"data"=>$is_ac];
-                echo json_encode($show_uo);
+               
+                 
+                 // $is_id=$this->searchid("`user`","account='$username'");
+                 // if($is_id>0){
+                  // $is_open=$this->searchru("openid","`user`","account='$username'");
+                  // $is_openid=$is_open[0]["openid"];
+
+
+            //       if(strlen($is_openid)>4){
+            //       $arr_con=$this->searchru("appid,appsecret","`configuration`","id=1");
+            //       $appid=$arr_con[0]['appid'];
+            //       $appsecret=$arr_con[0]['appsecret'];
+            //       $template="azoipqSCCF-bn31GwPBDm_DZxw_VJ_SsT_Ewl3kY0CA";
+            //       $arr_num=$this->searchru("ordernum,username,time,classname","`yuorder`","id='$userid'");
+            //       $value_ordernum=$arr_num[0]["ordernum"];
+            //       $value_useraname=$arr_num[0]["username"];
+            //       $value_time=$arr_num[0]["time"];
+            //       $value_classname=$arr_num[0]["classname"];
+            //       $arr_ad=$this->searchru("tel","`admin`","account='$username'");
+            //       $value_tel=$arr_ad[0]["tel"];
+            //       $data=[   
+            //             "first"=>[
+            //             "value"=>"您提交的预约教室".$value_classname."已经通过审核了！",
+            //             "color"=>"#173177"
+            //             ],
+            //             "keyword1"=>[
+            //             "value"=>$value_ordernum,
+            //             "color"=>"#173177"
+            //             ],
+            //             "keyword2"=>[
+            //             "value"=>$value_useraname,
+            //             "color"=>"#173177"
+            //             ],
+            //             "keyword3"=>[
+            //             "value"=>$value_time,
+            //             "color"=>"#173177"
+        
+            //             ],
+            //             "keyword4"=>[
+            //             "value"=>$username,
+            //             "color"=>"#173177"
+        
+            //             ], 
+            //             "keyword5"=>[
+            //             "value"=>$date,
+            //             "color"=>"#173177"
+        
+            //             ],
+            //              "remark"=>[
+            //             "value"=>"若有疑问，请拨打:".$value_tel."",
+            //             "color"=>"#173177"
+        
+            //             ]
+
+            //             ];
+                       
+            // $OrderPush=new OrderPush($appid,$appsecret,$value_ordernum,$template,$is_openid);
+            //       // echo ($appid." ".$appsecret." ".$value_ordernum." ".$template." ".$is_openid);
+            // $result= $OrderPush->doSend($is_openid, $template, '', $data, $topcolor = '#7B68EE');
+
+            //       }
+                  $show_ko=["code"=>200,"data"=>$username];
+                   echo json_encode($show_ko);
+                 // }
+               
               }
               break;
+              case 'weixin':
 
+                 $is_id=$this->searchid("`user`","account='$username'");
+
+                 if($is_id>0){
+                  $is_open=$this->searchru("openid","`user`","account='$username'");
+                  $is_openid=$is_open[0]["openid"];
+
+                  // echo "strin2g:".$is_openid;
+                  if(strlen($is_openid)>4){
+                      $date=date("Y-m-d H:i:s");
+                  $arr_con=$this->searchru("appid,appsecret","`configuration`","id=1");
+                  $appid=$arr_con[0]['appid'];
+                  $appsecret=$arr_con[0]['appsecret'];
+                  $template="azoipqSCCF-bn31GwPBDm_DZxw_VJ_SsT_Ewl3kY0CA";
+                  $arr_num=$this->searchru("ordernum,username,time,classname","`yuorder`","id='$userid'");
+                  $value_ordernum=$arr_num[0]["ordernum"];
+                  // echo "p:".$value_ordernum."\n";
+                  $value_useraname=$arr_num[0]["username"];
+                  $value_time=$arr_num[0]["time"];
+                  $value_classname=$arr_num[0]["classname"];
+                  $arr_ad=$this->searchru("tel","`admin`","account='$username'");
+                  $value_tel=$arr_ad[0]["tel"];
+                  $data=[   
+                        "first"=>[
+                        "value"=>"您提交的预约教室".$value_classname."已经通过审核了！",
+                        "color"=>"#173177"
+                        ],
+                        "keyword1"=>[
+                        "value"=>$value_ordernum,
+                        "color"=>"#173177"
+                        ],
+                        "keyword2"=>[
+                        "value"=>$value_useraname,
+                        "color"=>"#173177"
+                        ],
+                        "keyword3"=>[
+                        "value"=>$value_time,
+                        "color"=>"#173177"
+        
+                        ],
+                        "keyword4"=>[
+                        "value"=>$username,
+                        "color"=>"#173177"
+        
+                        ], 
+                        "keyword5"=>[
+                        "value"=>$date,
+                        "color"=>"#173177"
+        
+                        ],
+                         "remark"=>[
+                        "value"=>"若有疑问，请拨打:".$value_tel."",
+                        "color"=>"#173177"
+        
+                        ]
+
+                        ];
+                       
+            $OrderPush=new OrderPush($appid,$appsecret,$value_ordernum,$template,$is_openid);
+                  // echo ($value_ordernum." ".$value_useraname." ".$value_ordernum." ".$value_time." ".$date);
+            $result= $OrderPush->doSend($is_openid, $template, '', $data, $topcolor = '#7B68EE');
+
+                  }
+                }
+                break;
               case 'searchfin':
                 $arr_fin=$this->searchru("*","`yuorder`","yuyue=1 and accou='1'");
                 $show_fin=["code"=>200,"data"=>$arr_fin];

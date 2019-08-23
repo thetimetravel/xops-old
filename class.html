@@ -67,6 +67,7 @@
 	   			height: 100%;
 	   			/* border: 1px solid yellow; */
 	   			float: left;
+				overflow:scroll;
 				
 	   		}
 		.eee{
@@ -422,6 +423,7 @@ input.cmn-toggle-round-flat:checked + label:after {
 							id: classid,
 							token: "1ab66e59325257b60b971d4afa1505ce"
 						}, function(data, status) {
+							// alert("dp:"+data)
 						var ku=data.split(":");
 						data=ku[0];
 						var ki=ku[1];
@@ -789,7 +791,7 @@ input.cmn-toggle-round-flat:checked + label:after {
 					// alert(res_str)
 					var c = isContained(arr_del, title);
 
-					alert("rre:" + c + "==" + arr_del.join(",") + " " + title.toString() + " " + arr_bj.join(","))
+					// alert("rre:" + c + "==" + arr_del.join(",") + " " + title.toString() + " " + arr_bj.join(","))
 					if (!c) {
 						// alert("缺少标题栏：" + arr_bj.join(" "))
 						layer.alert("缺少标题栏：" + arr_bj.join(","), {
@@ -844,7 +846,7 @@ input.cmn-toggle-round-flat:checked + label:after {
 					var yuyue = 0;
 					if ($("#cmn-toggle-5").is(':checked'))
 						yuyue = 1;
-					alert("r3:" + yuyue)
+					// alert("r3:" + yuyue)
 					
 					var ko = JSON.parse(output)
 					ko=ko.splice(0,12);
@@ -854,7 +856,7 @@ input.cmn-toggle-round-flat:checked + label:after {
 						})
 					});
 					newArray = newArray.splice(1, 7);
-					alert("ppp2:" + newArray.length+" "+classnm)
+					// alert("ppp2:" + newArray.length+" "+classnm)
 					
 
 					$.post("http://localhost:86/HBuilder/xops/Back.php", {
@@ -868,7 +870,7 @@ input.cmn-toggle-round-flat:checked + label:after {
 					}, function(data, status) {
 					
 						onChange(newArray)
-						alert("data1:"+(data));
+						// alert("data1:"+(data));
 					
 					})
 					console.log('da:' + " " + typeof(output) + " " + output)

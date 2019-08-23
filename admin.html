@@ -3,20 +3,17 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-		<title>用户管理</title>
+		<title>管理员管理</title>
 		<link rel="stylesheet" href="layui2/src/css/layui.css" media="all">
 		<script src="layui2/src/layui.js"></script>
+		
 		<script src="js/jquery-3.3.1.min.js"></script>
 		<script src="js/cpexcel.js"></script>
 		<script src="js/shim.js"></script>
 		<script src="js/jszip.js"></script>
 		<script src="js/xlsx.js"></script>
 		
-		<!-- <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-		
-		<script type="text/javascript" src="//unpkg.com/blob.js@1.0.1/Blob.js"></script>
-		<script type="text/javascript" src="//unpkg.com/file-saver@1.3.3/FileSaver.js"></script> -->
-
+	
 	</head>
 	<style>
 		.a-upload {
@@ -67,6 +64,7 @@ body .demo-class .layui-layer-btn{border-top:1px solid #E9E7E7}
 body .demo-class .layui-layer-btn a{background:blueviolet;}
 body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 
+
 .content{
    		outline-style: none ;
    		    border: 0px solid #ccc;
@@ -85,9 +83,8 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
       /* -webkit-box-shadow: inset 0 1px 1px  darkturquoise,0 0 8px  darkorange;
        box-shadow: inset 0 1px 1px  darkturquoise,0 0 8px  darkturquoise; */
    }
-
 </style>
-	<body>
+	<body >
 		<div style="margin-top: 3%;margin-left: 2%;margin-right: 3%;">
 
 		<script type="text/html;text/javascript" id="toolbarDemo">
@@ -95,6 +92,7 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 			<div class="layui-btn-container layui-inline">
 	<button class="layui-btn layui-btn-danger" lay-event="deleteSome"><i class="layui-icon"></i>删除</button>
 	<button class="layui-btn " onclick="add()"><i class="layui-icon"></i>添加</button>
+
 	<button class="layui-btn " id="bianji" onclick="update()">编辑</button>
 		<button class="a-upload layui-btn" onclick="daochu()">
 			导入
@@ -109,15 +107,13 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 
 	
 	 {{# } }}
-	 <div  style="display: inline-block; vertical-align: middle; height: 38px; line-height: 38px; padding: 0 10px;  color: bleak; white-space: nowrap; text-align: center; font-size: 16px; border: none; cursor: pointer; -moz-user-select: none; -webkit-user-select: none; -ms-user-select: none;margin-right: 10px; margin-bottom: 10px;">筛选:</div>
 	
-	 		 <!-- <input type="text" name="username" value="关键字"  class="layui-input" style="width: 100%;border: 0px solid #ccc;"> -->
-	
-	 <span class="layui-btn" style="padding:0%;margin-left: 0;" >
+	 
+	 <span class="layui-btn" style="padding:0%;width: 10%;margin-left: 0;" >
 		 <input type="text" name="username" placeholder="关键字"  class="layui-input" style="width: 100%;">
 	 </span>
-	
 	 <button class="layui-btn" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+	 
 	  <button class="layui-btn" lay-event="reload"  style="margin-left: 0;" id="rad" >刷新</button>
 	  
 	  
@@ -134,8 +130,14 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 	</span>
 	
 		<table class="layui-hide" lay-id="demo2" lay-filter="test" id="test"></table>
-
-<script type="text/html" id="account3">
+ 
+		<script type="text/html" id="sel_update_time">
+			<input type="password" name="date" id="sel_create_date{{d.id}}" value="{{d.password}}"  class="layui-table-cell  pass" style="position: absolute;right: 0;top: -20%;bottom: 0%;left: 0;width: 100%;height: 155%;border-width: 0;padding-left: 5%; background-color:white" onkeyup="value=value.replace(/[^\a-\z\A-\Z0-9]/g,'')" onchange="onChangeTest(this)" >
+</script>
+		<script type="text/html" id="ac_id3">
+		<input type="text" id="{{d.id}}:id" class="content" value="{{d.ac_id}}"    onchange="change(this)" readonly onchangeValue=""/>
+	</script>
+	<script type="text/html" id="account3">
 		<input type="text" id="{{d.id}}:ac" class="content" value="{{d.account}}"    onchange="change(this)" readonly onchangeValue=""/>
 	</script>
 	<script type="text/html" id="password3">
@@ -148,67 +150,103 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
   <!-- 这里的 checked 的状态只是演示 -->
   <input type="checkbox"  disabled="disabled" class="checkbox2" name="sex" value="{{d.id}}" lay-skin="switch" lay-text="女|男" lay-filter="sexDemo" {{ d.sex == '女' ? 'checked' : '' }}>
 </script>
-	
 
-			<script type="text/html" id="barDemo">
-				<a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-   <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
- </script>
+
+<script type="text/html" id="zhiwu">
+	 
+            <select class="select2" onchange="ch(this)" disabled="disabled" >
+			
+			{{#  var ap=["普通职工","辅导员","导师","年级主任"];
+			var ap2=[]; 
+			ap2.push(d.duty) ;
+			var ap3=ap.filter(function(v){ return ap2.indexOf(v) == -1 });
+			
+			 }}
+			
+			<option value="{{d.duty}}" >{{d.duty}}</option>
+			{{# for(var p=0;p<ap3.length;p++) { }}
+			<option value="{{ap3[p]}}" >{{ap3[p]}}</option>
+			 {{# } }}
+            </select>
+			
+			 {{# $(".select2").removeAttr("disabled");console.log("----"); }}
+
+   </script>
+   
+	<script type="text/html" id="zhiwu2">
+	  <select class="select2" onchange="ch(this)" >
+	 
+	 {{#  var ap=["普通职工","辅导员","导师","年级主任"];
+	 var ap2=[]; 
+	 ap2.push(d.duty) ;
+	 var ap3=ap.filter(function(v){ return ap2.indexOf(v) == -1 });
+	 
+	  }}
+	 
+	 <option value="{{d.duty}}" >{{d.duty}}</option>
+	 {{# for(var p=0;p<ap3.length;p++) { }}
+	 <option value="{{ap3[p]}}" >{{ap3[p]}}</option>
+	  {{# } }}
+	 </select>
+	 
+	  {{# $(".select2").removeAttr("disabled");console.log("----"); }}
+	</script>
+	
 		
 		</div>
-		 
+		
 		<script type="text/javascript">
+	
+	
+			
+				
+				var id_ac=[];
+				count=[]
+			function change(event){
+				// alert("r:"+event.value+" "+event.id)
+				var arr_e=event.id.split(":")
+				// alert('dg:'+typeof(arr_e[0])+" "+arr_e[1]+" "+event.value)
+				
+				var choid=parseInt(arr_e[0])
+				var kp="";
+				switch(arr_e[1]){
+					case "ac":
+					kp="account";
+					break;
+					case "pwd":
+					kp="password";
+					break;
+					case "tel":
+					kp="tel";
+					break;
+					
+					default:
+					break;
+				}
+					
+					// alert('d:'+choid+" "+kp)
+							
+				function objFn(obj, objIndex, objs) {
+					if (obj.id == choid)
+						return obj.id;
+							
+				}
+				
+				var wpw = data_json.findIndex(objFn);
+				// alert("wp:"+wpw+" "+count.indexOf(wpw))
+				data_json[wpw][kp]=event.value;
+				if(count.indexOf(wpw)==-1){
+					id_ac.push(choid);
+					count.push(wpw);
+				}
+				
+				// alert("的的："+id_ac.toString())
+				// console.log(data_json[wpw])
+				
+// 				
+			}
 			
 			
-			
-			var id_ac=[];
-							count=[]
-						function change(event){
-							// alert("r:"+event.value+" "+event.id)
-						
-							var arr_e=event.id.split(":")
-							// alert('dg:'+typeof(arr_e[0])+" "+arr_e[1]+" "+event.value)
-							
-							var choid=parseInt(arr_e[0])
-							var kp="";
-							switch(arr_e[1]){
-								case "ac":
-								kp="account";
-								break;
-								case "pwd":
-								kp="password";
-								break;
-								case "tel":
-								kp="tel";
-								break;
-								
-								default:
-								break;
-							}
-								
-								// alert('d:'+choid+" "+kp)
-										
-							function objFn(obj, objIndex, objs) {
-								if (obj.id == choid)
-									return obj.id;
-										
-							}
-							
-							var wpw = data_json.findIndex(objFn);
-							// alert("wp:"+wpw+" "+count.indexOf(wpw))
-							data_json[wpw][kp]=event.value;
-							if(count.indexOf(wpw)==-1){
-								id_ac.push(choid);
-								count.push(wpw);
-							}
-							
-							// alert("的的："+id_ac.toString())
-							// console.log(data_json[wpw])
-							
-			// 				
-						}
-						
 				function update(){
 
 			
@@ -217,7 +255,7 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 					var str=$("#bianji").text();
 					if(str=="编辑"){
 						$(".checkbox2").removeAttr("disabled") //启用
-					
+						$(".select2").removeAttr("disabled")
 						$(".password3").removeAttr("type");
 						 $(".content").removeAttr('readonly')
 						$(".content").addClass('content2',true)
@@ -234,7 +272,7 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 						if(count.length>0)
    $.post("http://localhost:86/HBuilder/xops/Back.php",{
 					     
-					     type:"User",
+					     type:"Admin",
 						 operation:"update2",
 					     account:arr_show,
 						 password:id_ac,
@@ -258,7 +296,7 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 						 count=[];
 						 id_ac=[];
 						 $(".checkbox2").attr("disabled","disabled")
-					
+						 $('.select2').attr("disabled","disabled");
 						 $(".password3").attr("type","password")
 						 $(".content").removeClass('content2')
 							 $(".content").attr("readonly","readonly")
@@ -267,8 +305,57 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 				
 				
 			}
+			
+			function onChangeTest(changeVal) {
+				var val = parseInt(changeVal["attributes"][1]["value"].substring(15, changeVal["attributes"][1]["value"].length));
 
+				function objFn(obj, objIndex, objs) {
+
+					if (obj.id == val)
+						return objs;
+
+				}
 				
+			
+				var neww = changeVal.value;
+				// var old=changeVal.defaultValue;
+
+
+				layui.use(['table'], function() {
+					var table = layui.table;
+
+					bo = ($("#img").attr("src") == "images/look_p2.png");
+					// alert("bo:"+bo)
+					if (neww.length < 6) {
+						table.reload('test', {
+							data: data_json
+						});
+						if (bo) {
+							$("#img").attr("src", 'images/look_p2.png');
+							$(".pass").removeAttr("type")
+						}
+						layer.msg("密码不能少于6个字符！", {
+							icon: 4
+						});
+					} else if (neww.length > 16) {
+						table.reload('test', {
+							data: data_json
+						});
+						if (bo) {
+							$("#img").attr("src", 'images/look_p2.png');
+							$(".pass").removeAttr("type")
+						}
+						layer.msg("密码不能超过16个字符！", {
+							icon: 4
+						});
+					}
+				})
+				var wpw = data_json.findIndex(objFn);
+
+
+			}
+
+		
 
 
 	
@@ -278,21 +365,20 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 			resc = 1;
 
 			$.post("http://localhost:86/HBuilder/xops/Back.php", {
-				type: "User",
-				operation: "search",
-				curr: 1,
-				nums: 10,
+				type: "Admin",
+				operation: "searchall",
+			
 				token: "1ab66e59325257b60b971d4afa1505ce"
 			}, function(data, status) {
-
+				// alert("data:"+(data));
 				data_json = JSON.parse(data);
 				data_json = data_json["data"];
-				// alert("data:"+(data));
+				
 
 			})
 			layui.config({
 				base: 'test/js/'
-			}).use(['testTablePlug'], function() {
+			}).use(['testTablePlug3'], function() {
 				var $ = layui.jquery,
 					layer = layui.layer //弹层
 					, form = layui.form //弹层
@@ -301,7 +387,6 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 					,
 					tablePlug = layui.tablePlug; //表格插件
 
-				// 当前这个测试页面测试的重点不是智能重载，所以关掉该功能，实际上该功能也是默认关闭的，可以不执行下面这句代码，也可以强制指定。
 				tablePlug.smartReload.enable(false);
 layer.config({
   skin: 'demo-class'
@@ -379,7 +464,7 @@ layer.config({
 						// console.log("res:", res);
 
 						//得到当前页码
-						console.log("curr", curr);
+						console.log("curr", curr," ",$("#bianji").text());
 
 						//得到数据总量
 						console.log("co", count);
@@ -411,117 +496,129 @@ layer.config({
 					cols: [
 						[{
 								type: 'numbers',
-									// fixed: 'left',
-									title: '序号',
-									minWidth:50, 
-									width:"10%",
+								// fixed: 'left',
+								title: '序号',
+								minWidth:50, 
+								width:"10%",
+
+							},
+							{
+								type: 'checkbox',
+							
+								// fixed: 'left',
+								minWidth: 40,
+								width:"7%",
+
+							}, {
+								field: 'id',
+								title: 'ID',
+								width:"10%",
+								align:"center",
+								unresize: true,
+								sort: true,
+
+								// fixed: 'left',
+								minWidth: 60,
+								// minWidth: 500,
 								
-								},
-								{
-									type: 'checkbox',
-								
-									// fixed: 'left',
-									minWidth: 40,
-									width:"7%",
-								
-								}, {
-									field: 'id',
-									title: 'ID',
-									width:"10%",
-									align:"center",
-									unresize: true,
-									sort: true,
-								
-									// fixed: 'left',
-									minWidth: 60,
-									// minWidth: 500,
-									
-								
-								}, {
-									// field: 'account',
-									// title: '用户名',
-									// minWidth: 120,
-									// width: '15%',
-									// edit: 'text',
-									// fixed: 'center',
-									// minWidth: "10%",
-									// toolbar: '#account3',
-									field: 'account',
-									title: '用户名',									            align:"center",				
-									width:'15%',
-											
-									minWidth: 120,
-									sort: true,
-									 templet: '#account3',
-									  unresize: true
-								
-								},
-								{
-									// field: 'password',
-									// title: '密码',
-									// width: '15%',
-									// minWidth: 120,
-									// edit: 'text',
-									// fixed: 'center',
-									// sort: true,
-									// minWidth: "10%",
-									// toolbar: '#password3',
-									field: 'password',
-									title: '密码',
-									align:"center",					
-									width:'20%',
-								
-									minWidth: 120,
-									sort: true,
-									 templet: '#password3',
-									  unresize: true
-								},
-								
-								{
-									field: 'tel',
-									title: '电话',
-									width: '13%',
-									minWidth: 120,
-									edit: 'text',
-									align:"center",
-									sort: true,
-									minWidth: "10%",
-									toolbar: '#tel3',
-								},
-								{
-									field: 'sex',
-									title: '性别',
-									align:"center",
-									width:"5%",
-								
-									// fixed: 'right',
-									minWidth: 60,
-									sort: true,
-									 templet: '#switchTpl',
-									  unresize: true
-								
-								},
-								
-								
-								
-								 {
-									field: 'datetime',
-									title: '注册时间',
-									align:"center",
-									width:'20%',
-									// edit: 'text',
-									// fixed: 'right',
-									// minWidth: 120,
-									sort: true,
-								rowspan:2,
-								
+
+							}, {
+								// field: 'account',
+								// title: '用户名',
+								// minWidth: 120,
+								// width: '15%',
+								// edit: 'text',
+								// fixed: 'center',
+								// minWidth: "10%",
+								// toolbar: '#account3',
+								field: 'account',
+								title: '用户名',									            align:"center",				
+								width:'15%',
+			
+								minWidth: 120,
+								sort: true,
+								 templet: '#account3',
+								  unresize: true
+
+							},
+							{
+								// field: 'password',
+								// title: '密码',
+								// width: '15%',
+								// minWidth: 120,
+								// edit: 'text',
+								// fixed: 'center',
+								// sort: true,
+								// minWidth: "10%",
+								// toolbar: '#password3',
+								field: 'password',
+								title: '密码',
+								align:"center",					
+								width:'20%',
+
+								minWidth: 120,
+								sort: true,
+								 templet: '#password3',
+								  unresize: true
+							},
+
+							{
+								field: 'tel',
+								title: '电话',
+								width: '13%',
+								minWidth: 120,
+								edit: 'text',
+								align:"center",
+								sort: true,
+								minWidth: "10%",
+								toolbar: '#tel3',
+							},
+							{
+								field: 'sex',
+								title: '性别',
+								align:"center",
+								width:"5%",
+							
+								// fixed: 'right',
+								minWidth: 60,
+								sort: true,
+								 templet: '#switchTpl',
+								  unresize: true
+							
+							},
+							
+							
+							
+							 {
+								field: 'datetime',
+								title: '注册时间',
+								align:"center",
+								width:'20%',
+								// edit: 'text',
+								// fixed: 'right',
+								// minWidth: 120,
+								sort: true,
+							rowspan:2,
 							}
 
+							
+							
+// 							,{
+// 							    fixed: 'right',
+// 							    type: 'toolbar',
+// 							    field: 'toolbar_common',
+// 							    title: '操作1',
+// 							    width: 190,
+// 							    align: 'right',
+// 							    toolbar: '#barDemo',
+// 							    // rowspan: 2
+// 							  }
+// 
 
 						]
 					]
 				});
-			form.on('switch(sexDemo)', function(obj){
+					 form.on('switch(sexDemo)', function(obj){
     // layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
 	 var choid=parseInt(this.value);
 				function objFn(obj, objIndex, objs) {
@@ -540,11 +637,12 @@ layer.config({
 					count.push(wpn);
 					id_ac.push(choid)
 				}
-				data_json[wpn]["sex"]=kp;
-				// console.log("【】",data_json[wpn])
 				
-			
+				data_json[wpn]["sex"]=kp;
+	// layer.tips(this.value + ' = ' + this.name + '：'+ obj.elem.checked, obj.othis);
+	   // console.log("【】",data_json[wpn])
   });
+  
 				$(document).on('click', '.layui-table-view .layui-table-body tr', function(event) {
 					var trElem = $(this);
 					var tableView = trElem.closest('.layui-table-view');
@@ -565,22 +663,22 @@ layer.config({
 // 
 // 					});
 // 				});
-				$("#rad").click();
-
+			$("#rad").click();
 			}
 
 			function add() {
 				layer.open({
 					type: 2,
-					title: '添加用户数据',
+					title: '添加管理员数据',
 					shadeClose: true,
 					shade: false,
 					maxmin: true, //开启最大化最小化按钮
 					anim: 2, //动画从下到上
-
-
-					area: ['600px', '400px'],
-					content: 'html/member-add.html'
+					offset: 'auto',
+					resize :true,
+					resizing :true,
+					area: ['600px', '600px'],
+					content: 'html/admin-add2.html'
 				});
 			}
 		</script>
@@ -607,7 +705,7 @@ layer.config({
 				function get_format() {
 					return "json";
 				}
-		
+	
 				var to_json = function to_json(workbook) {
 					var result = {};
 					workbook.SheetNames.forEach(function(sheetName) {
@@ -627,8 +725,9 @@ layer.config({
 					res_str = "[";
 					var uid = 0;
 					var	pid = 0;
-					var tid = 0;
+					var	tid = 0;
 					var sid = 0;
+
 					for (var i in result) {
 		
 						for (var j in result[i]) {
@@ -651,6 +750,7 @@ layer.config({
 											case "性别":
 												sid = k;
 												break;
+											
 											default:
 												break;
 										}
@@ -663,8 +763,8 @@ layer.config({
 								}
 								// console.log(i, "  ", j, "  ", z, "::", result[i][j][z])
 								if (j > 0) {
-							res_str += "{\"account\":\"" + result[i][j][uid] + "\",\"password\":\"" + result[i][j][pid] +
-								"\",\"tel\":\"" + result[i][j][tid] + "\",\"sex\":\"" + result[i][j][sid] + "\"},"
+									res_str += "{\"account\":\"" + result[i][j][uid] + "\",\"password\":\"" + result[i][j][pid] +
+										"\",\"tel\":\"" + result[i][j][tid] + "\",\"sex\":\"" + result[i][j][sid] + "\"},"
 								}
 		
 								// alert("vv:"+" "+j+" "+z+" "+result[i][j][z])
@@ -689,11 +789,11 @@ layer.config({
 					layer.alert("缺少标题栏：" + arr_bj.join(","), {icon: 0}); 
 					     p_test=1; 
 					} else {
-							// alert("u:"+res_str)
+							
 						userData=JSON.parse(res_str);
-					
+					// alert("u:"+res_str+" "+typeof(userData))
 						 layui.sessionData('test', {
-						  key: 'nickname'
+						  key: 'adminname'
 						  ,value: userData
 						});
 					
@@ -703,13 +803,13 @@ layer.config({
 						var layer = layui.layer;
 		                   layer.open({
 		                     type: 2,
-							 title:"学生数据导入",
-		                     area: ['700px', '500px'],
+							 title:"管理员数据导入",
+		                     area: ['725px', '500px'],
 		                     fixed: false, //不固定
 		                     maxmin: true,
 							 	shadeClose: true,
 							 shade: false,
-		                     content: 'html/daoru-excel.html',
+		                     content: 'html/daoru-excela.html',
 		                   	
 		                   
 		                   });

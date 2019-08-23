@@ -64,10 +64,40 @@ class Admin extends Staticp  {
            }
        }
    }
+    function add2(){
+        $is_account=$this->searchid("admin","account='$this->account'");
+      if($is_account>0){
+        $show_error_ac=["code"=>301,"data"=>"account already"];
+        die(json_encode($show_error_ac));
+      }
+      $is_tel=$this->searchid("admin","tel='$this->phone'");
+      if($is_tel>0){
+        $show_error_tel=["code"=>302,"data"=>"tel already"];
+        die(json_encode($show_error_tel));
+      }
+      $date=Date("Y-m-d H:i:s");
+      $sql_in="Insert into `admin`(account,password,tel,sex,datetime) values('$this->account','$this->password','$this->phone','$this->sex','$date')";
+      // echo "sql：".$sql_in;
+      $row_in=mysqli_query($GLOBALS['con'],$sql_in);
+      // echo "string:".$row_in;
+      $arr_account=$this->searchru("id","`admin`","account='$this->account'");
+      $arr_ac=['code' => 200,"date"=>$date,"id"=>$arr_account[0]['id']];
+      if($row_in>0){
+        echo json_encode($arr_ac);
+      }else{
+        echo json_encode($this->arre);
+      }
+    }
 
       function search(){
       	$arr_all=$this->searchru("id,account,password","`admin`","amid!='-5'");
       	echo json_encode($arr_all);
+      }
+
+      function searchall(){
+        $arr_all=$this->searchru("*","`admin`","id!=-1");
+        $show_all=["code"=>200,"data"=>$arr_all];
+        echo json_encode($show_all,JSON_UNESCAPED_UNICODE);
       }
 
       function del(){
@@ -150,8 +180,86 @@ class Admin extends Staticp  {
       }
       }
 
+      function update2(){
+          $arr_account=$this->account;
+      $id_account=$this->password;
+
+      for($i=0;$i<count($this->account);$i++){
+        $account=json_encode($arr_account[$i]['account'],JSON_UNESCAPED_UNICODE);
+        $password=json_encode($arr_account[$i]['password']);
+        $sex=json_encode($arr_account[$i]['sex'],JSON_UNESCAPED_UNICODE);
+        $tel=json_encode($arr_account[$i]['tel']);
+       
+        // echo "p:".$i." ".json_encode($this->account[$i]["account"],JSON_UNESCAPED_UNICODE)."\n";
+        $sql_up="Update `admin` set account=$account,password=$password,sex=$sex,tel=$tel where id='$id_account[$i]'";
+        $row_in=mysqli_query($GLOBALS['con'],$sql_up);
+        // echo $sql_up."\n";
+
+      }
+      echo json_encode($this->arrs);
+      
+      }
+
 
       function searchat(){
       	echo "log";
       }
+
+    function dao(){
+         $this->account=json_decode($this->account,true);
+        $password2=json_decode($this->password,true);
+        $ret=[];
+        $rete=[];
+        $look=0;
+        $arr_ac=[];
+        $date=Date("Y-m-d H:i:s");
+       
+        // if($this->phone!="-1"){
+
+        for ($i=0; $i <count($password2) ; $i++) { 
+          // echo "Lp:".$i." ".($this->password);
+          $username=json_encode($password2[$i]["account"],JSON_UNESCAPED_UNICODE);
+          $password=json_encode($password2[$i]["password"]);
+          $tel2=json_encode($password2[$i]["tel"]);
+          // echo "tel2:".$this->phone."\n";
+          $sex2=json_encode($password2[$i]["sex"],JSON_UNESCAPED_UNICODE);
+        
+          $num_user=$this->searchid("`admin`","account=$username");
+          $num_tel=$this->searchid("`admin`","tel=$tel2");
+        
+           $yan=0;
+          if($num_user>0){
+            $ret[]=$i;
+            // echo "g".$i."\n";
+             $yan=1;
+             // echo $this->phone
+          }
+          if ($num_tel>0) {
+             $rete[]=$i;
+            // echo "hh".$i."\n";
+           $yan=1;
+          }
+         
+
+          if($this->phone=='-1' &&  $yan==0){
+          
+          $sql_up="Insert into `admin`(account,password,tel,datetime,sex) values($username,$password,$tel2,'$date',$sex2)";
+              // file_put_contents("log.txt",date("Y-m-d H:i:s").":"."sql_up2====:".$sql_up."\n\n",FILE_APPEND);
+              $row_row=mysqli_query($GLOBALS['con'],$sql_up);
+              $look=1;
+              $arr_ac[]=$this->searchru("*","`admin`","account=$username");
+
+          }
+         
+          
+        }
+        // file_put_contents("log.txt",date("Y-m-d H:i:s").":"."1=====================:"."\n\n",FILE_APPEND);
+        if($look==0)
+        echo json_encode($ret).":".json_encode($rete);
+      else{
+        $show_ac=["code"=>200,"data"=>$arr_ac];
+         echo  json_encode($show_ac,JSON_UNESCAPED_UNICODE);
+      }
+    }
+
 }

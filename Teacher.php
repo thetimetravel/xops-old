@@ -60,6 +60,8 @@ class Teacher  extends Staticp {
     	}
     }
 
+
+
     function del(){
             $arr_del=explode(",", $this->account);
         $y=0;
@@ -87,6 +89,8 @@ class Teacher  extends Staticp {
         $rete=[];
         $rete3=[];
         $date=Date("Y-m-d H:i:s");
+        $look=0;
+        $arr_ac=[];
        
         // if($this->phone!="-1"){
 
@@ -121,28 +125,47 @@ class Teacher  extends Staticp {
           if($this->tel=='-1' &&  $yan==0){
           
              $sql_up="Insert into `teacher`(account,password,tel,time,sex,ac_id,duty) values($username,$password,$tel2,'$date',$sex2,$ac_id,$duty)";
-              // file_put_contents("log.txt",date("Y-m-d H:i:s").":"."sql_up2====:".$sql_up."\n\n",FILE_APPEND);
+              file_put_contents("log.txt",date("Y-m-d H:i:s").":"."sql_up3====:".$sql_up."\n\n",FILE_APPEND);
               $row_row=mysqli_query($GLOBALS['con'],$sql_up);
+              $look=1;
+              $arr_ac[]=$this->searchru("*","`teacher`","account=$username");
+
           }
          
           
         }
         // file_put_contents("log.txt",date("Y-m-d H:i:s").":"."1=====================:"."\n\n",FILE_APPEND);
+          if($look==0)
         echo json_encode($ret).":".json_encode($rete).":".json_encode($rete3);
+      else{
+         $show_ac=["code"=>200,"data"=>$arr_ac];
+         echo  json_encode($show_ac,JSON_UNESCAPED_UNICODE);
+      }
     }
 
    
 
     function update(){
-      $arr_ac=explode(":",$this->account);
-      $arr_account=explode(",",$arr_ac[0]);
-      $id_account=explode(",",$arr_ac[1]);
-      for($i=0;$i<count($arr_account);$i++){
-        $sql_up="Update `teacher` set account='$arr_account[$i]' where id='$id_account[$i]'";
+   
+      $arr_account=$this->account;
+      $id_account=$this->password;
+
+      for($i=0;$i<count($this->account);$i++){
+        $account=json_encode($arr_account[$i]['account'],JSON_UNESCAPED_UNICODE);
+        $password=json_encode($arr_account[$i]['password']);
+        $sex=json_encode($arr_account[$i]['sex'],JSON_UNESCAPED_UNICODE);
+        $tel=json_encode($arr_account[$i]['tel']);
+        $ac_id=json_encode($arr_account[$i]['ac_id'].JSON_UNESCAPED_UNICODE);
+        $duty=json_encode($arr_account[$i]['duty'],JSON_UNESCAPED_UNICODE);
+        // echo "p:".$i." ".json_encode($this->account[$i]["account"],JSON_UNESCAPED_UNICODE)."\n";
+        $sql_up="Update `teacher` set account=$account,password=$password,sex=$sex,tel=$tel,ac_id=$ac_id,duty=$duty where id='$id_account[$i]'";
         $row_in=mysqli_query($GLOBALS['con'],$sql_up);
         // echo $sql_up."\n";
+
       }
       echo json_encode($this->arrs);
-      // echo gettype($arr_account)." : ".$arr_account[0];
+      
+      // echo gettype($this->account)." : ".count($this->account);
+      //  echo gettype($this->password)." : ".count($this->password);
     }
 }

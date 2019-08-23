@@ -67,6 +67,7 @@
 	   			height: 100%;
 	   			/* border: 1px solid yellow; */
 	   			float: left;
+				overflow:scroll;
 				
 	   		}
 		.eee{
@@ -396,7 +397,7 @@ input.cmn-toggle-round-flat:checked + label:after {
 					}],
 					// contextmenuList: ["copy","add.async","edit","remove",{eventName: "test", text: "测试"}],
 					searchNodeMethod: function(value, data) {
-						console.log("f:" + value)
+						// console.log("f:" + value)
 						// for(var i in data)
 						// console.log("di:",i," ",data[i]," ",typeof(data[i]))
 						if (!value) return true;
@@ -703,7 +704,7 @@ input.cmn-toggle-round-flat:checked + label:after {
 					classid:classid+":"+py,
 					token: "1ab66e59325257b60b971d4afa1505ce"
 				}, function(data, status) {
-alert("2data:" + (data));
+// alert("2data:" + (data));
 					obj = JSON.parse(data)
 					
 					if(obj.code==200){
@@ -771,7 +772,7 @@ alert("2data:" + (data));
 					// }, function(data, status) {
 					// 
 					// 	
-					// 	alert("data1:"+(data));
+				
 					// 
 					// })
 
@@ -789,7 +790,7 @@ alert("2data:" + (data));
 					// alert(res_str)
 					var c = isContained(arr_del, title);
 
-					alert("rre:" + c + "==" + arr_del.join(",") + " " + title.toString() + " " + arr_bj.join(","))
+					// alert("rre:" + c + "==" + arr_del.join(",") + " " + title.toString() + " " + arr_bj.join(","))
 					if (!c) {
 						// alert("缺少标题栏：" + arr_bj.join(" "))
 						layer.alert("缺少标题栏：" + arr_bj.join(","), {
@@ -844,7 +845,7 @@ alert("2data:" + (data));
 					var yuyue = 0;
 					if ($("#cmn-toggle-5").is(':checked'))
 						yuyue = 1;
-					alert("r3:" + yuyue)
+					// alert("r3:" + yuyue)
 					
 					var ko = JSON.parse(output)
 					ko=ko.splice(0,12);
@@ -854,7 +855,7 @@ alert("2data:" + (data));
 						})
 					});
 					newArray = newArray.splice(1, 7);
-					alert("ppp2:" + classid+" "+classnm)
+					// alert("ppp2:" + classid+" "+classnm)
 					
 
 					$.post("http://localhost:86/HBuilder/xops/Back.php", {
@@ -868,7 +869,7 @@ alert("2data:" + (data));
 					}, function(data, status) {
 					
 						onChange(newArray)
-						alert("data1:"+(data));
+						// alert("data1:"+(data));
 					
 					})
 					console.log('da:' + " " + typeof(output) + " " + output)

@@ -13,7 +13,7 @@
 		<script src="js/jszip.js"></script>
 		<script src="js/xlsx.js"></script>
 		
-		<link rel="stylesheet" type="text/css" href="css/formSelects-v4.css" />
+	
 	</head>
 	<style>
 		.a-upload {
@@ -84,7 +84,7 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
        box-shadow: inset 0 1px 1px  darkturquoise,0 0 8px  darkturquoise; */
    }
 </style>
-	<body>
+	<body >
 		<div style="margin-top: 3%;margin-left: 2%;margin-right: 3%;">
 
 		<script type="text/html;text/javascript" id="toolbarDemo">
@@ -140,13 +140,25 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 	<script type="text/html" id="account3">
 		<input type="text" id="{{d.id}}:ac" class="content" value="{{d.account}}"    onchange="change(this)" readonly onchangeValue=""/>
 	</script>
+	<script type="text/html" id="password3">
+		<input type="password" id="{{d.id}}:pwd" class="content password3" value="{{d.password}}"    onchange="change(this)" readonly onkeyup="value=value.replace(/[^\a-\z\A-\Z0-9]/g,'')">
+	</script>
+	<script type="text/html" id="tel3">
+		<input type="text" id="{{d.id}}:tel" class="content" value="{{d.tel}}"    onchange="change(this)" readonly >
+	</script>
+	<script type="text/html" id="zhiwu3">
+		<input type="text" id="{{d.id}}:duty" class="content" value="{{d.duty}}"    onchange="change(this)" readonly >
+	</script>
 	<script type="text/html" id="switchTpl">
   <!-- 这里的 checked 的状态只是演示 -->
-  <input type="checkbox" readonly="readonly" name="sex" value="{{d.id}}" lay-skin="switch" lay-text="女|男" lay-filter="sexDemo" {{ d.sex == '女' ? 'checked' : '' }}>
+  <input type="checkbox"  disabled="disabled" class="checkbox2" name="sex" value="{{d.id}}" lay-skin="switch" lay-text="女|男" lay-filter="sexDemo" {{ d.sex == '女' ? 'checked' : '' }}>
 </script>
-	<!-- <div class="layui-table-cell laytable-cell-radio" lay-filter="selFilter">
-		 
-            <select class="selece_duty" onchange="ch(this)" disabled="disabled" >
+<!-- // <div class="layui-table-cell laytable-cell-radio" lay-filter="selFilter">   <!-- </div> --> 
+
+<script type="text/html" id="zhiwu">
+	 
+            <select class="select2" onchange="cha(this)" >
+			
 			{{#  var ap=["普通职工","辅导员","导师","年级主任"];
 			var ap2=[]; 
 			ap2.push(d.duty) ;
@@ -159,47 +171,89 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 			<option value="{{ap3[p]}}" >{{ap3[p]}}</option>
 			 {{# } }}
             </select>
-   </div> -->
+			
+			 {{# $(".select2").removeAttr("disabled");console.log("----"); }}
+
+   </script>
    
-	<script type="text/html" id="zhiwu">
-	 <div class="layui-table-cell laytable-cell-radio" lay-filter="selFilter" style="overflow: inherit;word-break: break-all;height: 200px;position: absolute;">
-   <select name="city" xm-select="select12_2" >
-   	<option value="1">北京</option>
-   	<option value="2">上海</option>
-   	<option value="3" >广州</option>
-   	<option value="4" >深圳</option>
-   	<option value="5" >天津</option>
-   	<option value="6" >杭州</option>
-   </select>
-</div>
+	<script type="text/html" id="zhiwu2">
+	  <select class="select2" onchange="ch(this)" >
+	 
+	 {{#  var ap=["普通职工","辅导员","导师","年级主任"];
+	 var ap2=[]; 
+	 ap2.push(d.duty) ;
+	 var ap3=ap.filter(function(v){ return ap2.indexOf(v) == -1 });
+	 
+	  }}
+	 
+	 <option value="{{d.duty}}" >{{d.duty}}</option>
+	 {{# for(var p=0;p<ap3.length;p++) { }}
+	 <option value="{{ap3[p]}}" >{{ap3[p]}}</option>
+	  {{# } }}
+	 </select>
+	 
+	  {{# $(".select2").removeAttr("disabled");console.log("----"); }}
 	</script>
 	
 		
 		</div>
-		 <script src="js/formSelects-v4.min.js" type="text/javascript" charset="UTF-8"></script>
-		<script type="text/javascript">
 		
+		<script type="text/javascript">
+	
+	
 			
-			
-				var arr_ac=[];
+				
 				var id_ac=[];
+				 count=[];
 			function change(event){
 				// alert("r:"+event.value+" "+event.id)
 				var arr_e=event.id.split(":")
 				// alert('dg:'+typeof(arr_e[0])+" "+arr_e[1]+" "+event.value)
-				if(arr_e[1]=="ac"){
-					var i=id_ac.indexOf(arr_e[0])
-					// alert("dg:"+i)
-					
-					if( i==-1){
-						arr_ac.push(event.value);
-						id_ac.push(arr_e[0])
-					}else{
-						arr_ac[i]=event.value;
-						id_ac[i]=arr_e[0];
-					}
-		
+				
+				var choid=parseInt(arr_e[0])
+				var kp="";
+				switch(arr_e[1]){
+					case "ac":
+					kp="account";
+					break;
+					case "pwd":
+					kp="password";
+					break;
+					case "tel":
+					kp="tel";
+					break;
+					case "sex":
+					kp="sex";
+					break;
+					case "id":
+					kp="ac_id";
+					break;
+					default:
+					break;
 				}
+					
+					// alert('d:'+choid+" "+kp)
+			
+				function objFn(obj, objIndex, objs) {
+					if (obj.id == choid)
+						return obj.id;
+			
+				}
+				
+				var wpw = data_json.findIndex(objFn);
+				// alert("wp:"+wpw+" "+count.indexOf(wpw))
+				data_json[wpw][kp]=event.value;
+				if(count.indexOf(wpw)==-1){
+					id_ac.push(choid);
+					count.push(wpw);
+				}
+				
+				
+				console.log(data_json[wpw])
+				
+				
+	
+				
 				// if(ge.indexOf(event.id)==-1)
 				// ge.push(event.id)
 				// alert("d:"+ge.toString()+" "+event+" "+$("#"+event).val())
@@ -208,26 +262,36 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 			
 			
 				function update(){
-				// $("table").find('tbody').find('tr[class^="layui-table-col-special"]').eq(0).css("color","red");
-				// alert($("tbody").find("tr").length)
-				// ($("tbody").find("tr").find("data-index=1").css("background-color","red"));
-				($("tbody").find("tr").eq(2).css("background-color","red"));
-					var str=$("#bianji").text();
 				
+				
+			
+				// $("tbody").find("tr").eq(0).css("background-color","red");
+
+					var str=$("#bianji").text();
 					if(str=="编辑"){
+						$(".checkbox2").removeAttr("disabled") //启用
+						$(".select2").removeAttr("disabled")
+						$(".password3").removeAttr("type");
 						 $(".content").removeAttr('readonly')
 						$(".content").addClass('content2',true)
 						$("#bianji").text("保存")
 					}else{
-						// alert("su:"+arr_ac.toString()+" "+id_ac.toString()+" "+typeof(arr_ac))
-						if(id_ac.length>0)
-   $.post("http://localhost:86/HBuilder/xops/Back.php",{
+						alert("su:"+count.toString()+" "+id_ac.toString()+" "+typeof(count))
+						var arr_show=[];
+						for(var i in count){
+							// alert("i:"+count[i])
+							arr_show.push(data_json[count[i]])
+						}
+						
+						console.log(arr_show)
+						if(count.length>0)
+   $.post("http://119.126.159.221:86/HBuilder/xops/Back.php",{
 					     
 					     type:"Teacher",
 						 operation:"update",
-					     account:arr_ac+":"+id_ac,
-						 // password:arr_value.join(","),
-						 // phone:arr_id.join(","),
+					     account:arr_show,
+						 password:id_ac,
+						
 						 token:"1ab66e59325257b60b971d4afa1505ce"
 					     
 					   },function(data,status){
@@ -245,8 +309,11 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 						   }
 						   })
 						   
-						 arr_ac=[];
+						 count=[];
 						 id_ac=[];
+						 $(".checkbox2").attr("disabled","disabled")
+						 $('.select2').attr("disabled","disabled");
+						 $(".password3").attr("type","password")
 						 $(".content").removeClass('content2')
 							 $(".content").attr("readonly","readonly")
 						$("#bianji").text("编辑")
@@ -301,7 +368,7 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 				})
 				var wpw = data_json.findIndex(objFn);
 				alert("p:"+data_json[wpw]["account"])
-				$.post("http://localhost:86/HBuilder/xops/Back.php", {
+				$.post("http://119.126.159.221:86/HBuilder/xops/Back.php", {
 					type: "Teacher",
 					operation: "update",
 					account: data_json[wpw]["account"],
@@ -340,14 +407,14 @@ body .demo-class .layui-layer-btn .layui-layer-btn1{background:#999999;}
 
 		
 
-
+			
 	
 
 
 			data_json = "";
 			resc = 1;
 
-			$.post("http://localhost:86/HBuilder/xops/Back.php", {
+			$.post("http://119.126.159.221:86/HBuilder/xops/Back.php", {
 				type: "Teacher",
 				operation: "search",
 			
@@ -479,72 +546,91 @@ layer.config({
 					cols: [
 						[{
 								type: 'numbers',
-								fixed: 'left',
+								// fixed: 'left',
 								title: '序号',
-								// minWidth: "5%"
-								width:40,
+								minWidth:50, 
+								width:"4%",
 
 							},
 							{
 								type: 'checkbox',
 							
-								fixed: 'left',
-								// minWidth: "5%"
-								width:30,
+								// fixed: 'left',
+								minWidth: 40,
+								width:"4%",
 
 							}, {
 								field: 'id',
 								title: 'ID',
-							width:60,
-								fixed: 'left',
+							width:"7%",
+								align:"center",
 								unresize: true,
 								sort: true,
 
-								fixed: 'left',
-								// minWidth: "10%"
+								// fixed: 'left',
+								minWidth: 60,
 								// minWidth: 500,
 								
 
 							}, {
-								field: 'account',
-								title: '职工名',
-								minWidth: 120,
-								width: '15%',
-								edit: 'text',
-								fixed: 'center',
+								// field: 'account',
+								// title: '职工名',
+								// minWidth: 120,
+								// width: '15%',
+								// edit: 'text',
+								// fixed: 'center',
 								// minWidth: "10%",
-								toolbar: '#account3',
+								// toolbar: '#account3',
+								field: 'account',
+								title: '职工名',									            align:"center",				
+								width:'15%',
+			
+								minWidth: 120,
+								sort: true,
+								 templet: '#account3',
+								  unresize: true
 
 							},
 							{
+								// field: 'password',
+								// title: '密码',
+								// width: '15%',
+								// minWidth: 120,
+								// edit: 'text',
+								// fixed: 'center',
+								// sort: true,
+								// minWidth: "10%",
+								// toolbar: '#password3',
 								field: 'password',
 								title: '密码',
-								width: '15%',
+								align:"center",					
+								width:'17%',
+
 								minWidth: 120,
-								edit: 'text',
-								fixed: 'center',
 								sort: true,
-								minWidth: "10%"
+								 templet: '#password3',
+								  unresize: true
 							},
 
 							{
 								field: 'tel',
 								title: '电话',
-								width: '15%',
+								width: '13%',
 								minWidth: 120,
 								edit: 'text',
-								fixed: 'right',
+								align:"center",
 								sort: true,
-								minWidth: "10%"
+								minWidth: "10%",
+								toolbar: '#tel3',
 							},
 							{
 								field: 'sex',
 								title: '性别',
+								align:"center",
+								width:"5%",
 							
-								width:60,
-							
-								fixed: 'right',
-								// minWidth: 120,
+								// fixed: 'right',
+								minWidth: 60,
 								sort: true,
 								 templet: '#switchTpl',
 								  unresize: true
@@ -554,10 +640,10 @@ layer.config({
 								field: 'ac_id',
 								title: '职工id',
 								 type: 'toolbar',
-								width:'10%',
+								width:'12%',
 								edit: 'text',
-								fixed: 'right',
-							
+								// fixed: 'right',
+								align:"center",
 								sort: true,
 								  toolbar: '#ac_id3',
 
@@ -567,26 +653,26 @@ layer.config({
 							
 								field: 'duty',
 								title: '职务',
-							
-								width:'15%',
-								// edit: 'text',
-								fixed: 'right',
+								align:"center",
+								width:'8%',
+								edit: 'text',
+								// fixed: 'right',
 								// minWidth: 120,
 								sort: true,
-								// toolbar:"#zhiwu",
+								toolbar:"#zhiwu3",
 								
 							
 							},
 							 {
 								field: 'time',
 								title: '注册时间',
-							
+								align:"center",
 								width:'15%',
 								// edit: 'text',
-								fixed: 'right',
+								// fixed: 'right',
 								// minWidth: 120,
 								sort: true,
-							
+							rowspan:2,
 							}
 
 							
@@ -607,7 +693,27 @@ layer.config({
 					]
 				});
 					 form.on('switch(sexDemo)', function(obj){
-    layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+						 var choid=parseInt(this.value);
+				function objFn(obj, objIndex, objs) {
+					if (obj.id == choid)
+						return obj.id;
+							
+				}
+				var wpn=data_json.findIndex(objFn);
+			// alert("2:"+obj.elem.checked)
+				if(obj.elem.checked)
+				var kp="女";
+				else
+				var kp="男";
+					// alert(wpn+" "+kp)
+				if(count.indexOf(wpn)==-1){
+					count.push(wpn);
+					id_ac.push(choid)
+				}
+				
+				data_json[wpn]["sex"]=kp;
+    // layer.tips(this.value + ' = ' + this.name + '：'+ obj.elem.checked, obj.othis);
+	   console.log("【】",data_json[wpn])
   });
   
 				$(document).on('click', '.layui-table-view .layui-table-body tr', function(event) {
@@ -622,14 +728,15 @@ layer.config({
 
 			function GetValue(data) {
 
-				data_json.push(data);
-				layui.use('table', function() {
-					var table = layui.table;
-					table.reload('test', {
-						data: data_json,
-
-					});
-				});
+// 				data_json.push(data);
+// 				layui.use('table', function() {
+// 					var table = layui.table;
+// 					table.reload('test', {
+// 						data: data_json,
+// 
+// 					});
+// 				});
+				$("#rad").click();
 
 			}
 

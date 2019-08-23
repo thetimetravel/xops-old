@@ -5,6 +5,8 @@
  * @date    2019-06-04 10:21:28
  * @version $Id$
  */
+header("Content-Type: text/html; charset=UTF-8");
+header('Access-Control-Allow-Origin:*');
  include_once 'server_mysql.php';    //加载数据库配置项
  include_once 'Staticp.php';          //sql语句和各种参数表
 class User extends Staticp  {
@@ -25,6 +27,11 @@ class User extends Staticp  {
     }
 
     function login(){
+      // session_start();
+
+        // $_SESSION['amid']=$this->account;
+         // header("Location: http://www.baidu.com");
+
     	   $count=$this->searchid("`admin`","account='$this->account'");
     	   if($count==0) {
     	   	    $error_act=['code'=>301];
@@ -38,6 +45,7 @@ class User extends Staticp  {
            $arr_id=$this->searchru("id","`admin`","account='$this->account'");
            $show_id=["code"=>200,"data"=>$arr_id[0]["id"]];
            	echo json_encode($show_id);
+
            }
       
     	   }
@@ -68,6 +76,30 @@ class User extends Staticp  {
            }
        }
    }
+    function add2(){
+        $is_account=$this->searchid("user","account='$this->account'");
+      if($is_account>0){
+        $show_error_ac=["code"=>301,"data"=>"account already"];
+        die(json_encode($show_error_ac));
+      }
+      $is_tel=$this->searchid("user","tel='$this->phone'");
+      if($is_tel>0){
+        $show_error_tel=["code"=>302,"data"=>"tel already"];
+        die(json_encode($show_error_tel));
+      }
+      $date=Date("Y-m-d H:i:s");
+      $sql_in="Insert into `user`(account,password,tel,sex,datetime) values('$this->account','$this->password','$this->phone','$this->curr','$date')";
+      // echo "sql：".$sql_in;
+      $row_in=mysqli_query($GLOBALS['con'],$sql_in);
+      // echo "string:".$row_in;
+      $arr_account=$this->searchru("id","`user`","account='$this->account'");
+      $arr_ac=['code' => 200,"date"=>$date,"id"=>$arr_account[0]['id']];
+      if($row_in>0){
+        echo json_encode($arr_ac);
+      }else{
+        echo json_encode($this->arre);
+      }
+    }
 
       function search(){
         $zq=($this->curr-1)*$this->nums;
@@ -180,21 +212,48 @@ class User extends Staticp  {
          // echo $sql_up;
       }
 
+      function update2(){
+          $arr_account=$this->account;
+      $id_account=$this->password;
+
+      for($i=0;$i<count($this->account);$i++){
+        $account=json_encode($arr_account[$i]['account'],JSON_UNESCAPED_UNICODE);
+        $password=json_encode($arr_account[$i]['password']);
+        $sex=json_encode($arr_account[$i]['sex'],JSON_UNESCAPED_UNICODE);
+        $tel=json_encode($arr_account[$i]['tel']);
+       
+        // echo "p:".$i." ".json_encode($this->account[$i]["account"],JSON_UNESCAPED_UNICODE)."\n";
+        $sql_up="Update `user` set account=$account,password=$password,sex=$sex,tel=$tel where id='$id_account[$i]'";
+        $row_in=mysqli_query($GLOBALS['con'],$sql_up);
+        // echo $sql_up."\n";
+
+      }
+      echo json_encode($this->arrs);
+      
+      }
+
       function dao(){
-        $this->account=json_decode($this->account,true);
+       $this->account=json_decode($this->account,true);
         $password2=json_decode($this->password,true);
         $ret=[];
         $rete=[];
+        $look=0;
+        $arr_ac=[];
         $date=Date("Y-m-d H:i:s");
        
         // if($this->phone!="-1"){
 
         for ($i=0; $i <count($password2) ; $i++) { 
+          // echo "Lp:".$i." ".($this->password);
           $username=json_encode($password2[$i]["account"],JSON_UNESCAPED_UNICODE);
           $password=json_encode($password2[$i]["password"]);
-          $tel=json_encode($password2[$i]["tel"]);
+          $tel2=json_encode($password2[$i]["tel"]);
+          // echo "tel2:".$this->phone."\n";
+          $sex2=json_encode($password2[$i]["sex"],JSON_UNESCAPED_UNICODE);
+        
           $num_user=$this->searchid("`user`","account=$username");
-          $num_tel=$this->searchid("`user`","tel=$tel");
+          $num_tel=$this->searchid("`user`","tel=$tel2");
+        
            $yan=0;
           if($num_user>0){
             $ret[]=$i;
@@ -207,21 +266,26 @@ class User extends Staticp  {
             // echo "hh".$i."\n";
            $yan=1;
           }
+         
 
           if($this->phone=='-1' &&  $yan==0){
           
-             $sql_up="Insert into `user`(account,password,tel,datetime) values($username,$password,$tel,'$date')";
-              file_put_contents("log.txt",date("Y-m-d H:i:s").":"."sql_up====:".$sql_up."\n\n",FILE_APPEND);
+          $sql_up="Insert into `user`(account,password,tel,datetime,sex) values($username,$password,$tel2,'$date',$sex2)";
+              // file_put_contents("log.txt",date("Y-m-d H:i:s").":"."sql_up2====:".$sql_up."\n\n",FILE_APPEND);
               $row_row=mysqli_query($GLOBALS['con'],$sql_up);
+              $look=1;
+              $arr_ac[]=$this->searchru("*","`user`","account=$username");
+
           }
          
           
         }
-        file_put_contents("log.txt",date("Y-m-d H:i:s").":"."=====================:"."\n\n",FILE_APPEND);
-        echo json_encode($ret).":".json_encode($rete).":".gettype($this->phone)." =". $this->phone;
-      // }else{
-      //   echo "[]2:".gettype($this->phone)."\n";
-        
-      // }
+        // file_put_contents("log.txt",date("Y-m-d H:i:s").":"."1=====================:"."\n\n",FILE_APPEND);
+        if($look==0)
+        echo json_encode($ret).":".json_encode($rete);
+      else{
+        $show_ac=["code"=>200,"data"=>$arr_ac];
+         echo  json_encode($show_ac,JSON_UNESCAPED_UNICODE);
+      }
       }
 }

@@ -14,7 +14,7 @@
 		<!-- 提示框 -->
 		<link rel="stylesheet" type="text/css" href="css/dialog.css">
 		<script src="js/jquery.dialog.min.js"></script>
-		<script src="layui2/src/layui.js"></script>
+		<!-- <script src="layui2/src/layui.js"></script> -->
 	</head>
 
 	<style>
@@ -206,7 +206,7 @@
 	<script type="text/javascript">
 		
 		    
-		        var WebSocketUrl='ws://127.0.0.1:6086?type=ConnetSocket';
+		        var WebSocketUrl='ws://localhost:6086?type=ConnetSocket';
 		        var UpdateHeart=true;
 		        var MyLoop=null;
 		        var isConnectSocket={state:false,loop:null};
@@ -227,7 +227,7 @@
 		                        UpdateHeart=true;
 		
 		                 
-		                    var open=confirm("网络好像断开22，请重新连接网络");
+		                    // var open=confirm("网络好像断开22，请重新连接网络");
 		                if(open){
 		                    loopconnect();
 		                        function loopconnect(){
@@ -290,10 +290,9 @@
 		         }
 		
 		
-		        if(mydata.type=='NewOrder'){
+		        if(mydata.type=='CompleteNewOrder'){
 		         
-		            // cx()
-				 
+		       
 		            idd=mydata.id;
 					var arr_idd=idd.split(",");
 						ko(parseInt(arr_idd[1]))
@@ -310,26 +309,26 @@
 							$("#dd1").empty()
 							$("#dd1").append(pt);
 						}
-						layui.use(["layer"],function(){
-							var layer=layui.layer;
-							 layer.open({
-							  type: 0,
-									title:"提示"
-							  ,offset: "rb" //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
-							  ,id: 'layerDemo' //防止重复弹出
-							  ,content: '您有新的订单，请尽快去处理!'
-							  ,icon:6,
-							anim:2
-							  // ,btnAlign: 'c' //按钮居中
-							  ,shade: 0 ,//不显示遮罩
-									  shadeClose: true,
-									  time:2000
-							  ,yes: function(){
-							    layer.closeAll();
-							  }
-							});
-							
-						})
+						// layui.use(["layer"],function(){
+						// 	var layer=layui.layer;
+						// 	 layer.open({
+						// 	  type: 0,
+						// 			title:"提示"
+						// 	  ,offset: "rb" //具体配置参考：http://www.layui.com/doc/modules/layer.html#offset
+						// 	  ,id: 'layerDemo' //防止重复弹出
+						// 	  ,content: '您有新的订单，请尽快去处理!'
+						// 	  ,icon:6,
+						// 	anim:2
+						// 	  // ,btnAlign: 'c' //按钮居中
+						// 	  ,shade: 0 ,//不显示遮罩
+						// 			  shadeClose: true,
+						// 			  time:2000
+						// 	  ,yes: function(){
+						// 	    layer.closeAll();
+						// 	  }
+						// 	});
+						// 	
+						// })
 		            cout++;
 				
 		            console.log('有新的报修订单22,请触发提示信息，或重新获取信息'," ",cout," ", arr_idd[1]," = ",typeof(arr_idd[1]));
@@ -393,7 +392,7 @@
 			chusi()
 			function chusi(){
 				
-						$.post("http://localhost:86/HBuilder/xops/Back.php", {
+						$.post("http://127.0.0.1:86/HBuilder/xops/Back.php", {
 						type: "Look",
 						operation: "sea_all",
 					
@@ -438,7 +437,7 @@
 			init()
 			function init(){
 				$("#show_data").empty(); 
-			$.post("http://localhost:86/HBuilder/xops/Back.php", {
+			$.post("http://127.0.0.1:86/HBuilder/xops/Back.php", {
 				type: "Yuorder",
 				operation: "search",
 
@@ -459,7 +458,7 @@
 			
 			function finish(){
 					$("#finish").empty(); 
-				$.post("http://localhost:86/HBuilder/xops/Back.php", {
+				$.post("http://127.0.0.1:86/HBuilder/xops/Back.php", {
 					type: "Yuorder",
 					operation: "searchfin",
 				
@@ -477,7 +476,7 @@
 			}
 			
 			function ko(id){
-			$.post("http://localhost:86/HBuilder/xops/Back.php",{
+			$.post("http://127.0.0.1:86/HBuilder/xops/Back.php",{
 			type:"Yuorder",
 			operation:"searchid",
 			userid:id,
@@ -509,7 +508,7 @@
 			
 		
 			function guo(id){
-				$.post("http://localhost:86/HBuilder/xops/Back.php",{
+				$.post("http://127.0.0.1:86/HBuilder/xops/Back.php",{
 								  type:"Yuorder",
 								operation:"searchid",
 							userid:id,
@@ -587,7 +586,7 @@
 			
 			function shenhe(){
 					$("#shenhe").empty(); 
-					$.post("http://localhost:86/HBuilder/xops/Back.php", {
+					$.post("http://127.0.0.1:86/HBuilder/xops/Back.php", {
 						type: "Yuorder",
 						operation: "search_shenhe",
 					

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>动态数据表格插件ZBTable</title>
+			<!-- <script type="text/javascript" src="../lib/layui/layui.js" charset="utf-8"></script> -->
+		<script src="js/jquery-3.3.1.min.js"></script>
+		<!-- <link type="text/css" rel="stylesheet" href="../lib/layui/css/layui.css" /> -->
+		<!-- <link rel="stylesheet" type="text/css" href="../css/jquer.zbtable2.css" /> -->
+	
+	<link rel="stylesheet" href="layui2/src/css/layui.css" media="all">
+	<script src="layui2/src/layui.js"></script>
+	</head>
+	<style>
+		.layui-layout-admin .layui-footer {
+			position: fixed;
+			left: 200px;
+			right: 0;
+			bottom: 0;
+			text-align: right;
+			height: 50px;
+			line-height: 44px;
+			padding: 3px 15px 0;
+			background-color: #fff;
+			border-top: #eee 0px solid;
+			}
+			.layui-text a:not(.layui-btn) {
+				color: #01AAED
+			}
+			
+			.layui-text a:not(.layui-btn):hover {
+				text-decoration: underline
+			}
+			
+			.layui-btn {
+				display: inline-block;
+				height: 38px;
+				line-height: 38px;
+				vertical-align: top;
+				padding: 0 15px;
+				background-color: #0dc316;
+				color: #fff;
+				white-space: nowrap;
+				text-align: center;
+				font-size: 14px;
+				border: none;
+				border-radius: 2px;
+				cursor: pointer
+			}
+			
+			.layui-btn:hover {
+				opacity: .8;
+				filter: alpha(opacity=80);
+				color: #fff
+			}
+			
+			.layui-btn:active {
+				opacity: 1;
+				filter: alpha(opacity=100)
+			}
+			
+			.layui-btn+.layui-btn {
+				margin-left: 10px
+			}
+			.tab{
+				background-color: darkturquoise;
+			}
+	</style>
+	
+	<script>
+		var userData=[
+			{"account":"wa","password":"1234555","tel":"13451678881"},
+			{"account":"wdd","password":"124dddg","tel":"13456788801"},
+			{"account":"wang3","password":"124g","tel":"4553400"},
+			{"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// {"account":"wa","password":"1234555","tel":"13451678881"},
+			// {"account":"wdd","password":"124dddg","tel":"13456788801"},
+			// {"account":"wang3","password":"124g","tel":"4553400"},
+			// {"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// {"account":"wa","password":"1234555","tel":"13451678881"},
+			// {"account":"wdd","password":"124dddg","tel":"13456788801"},
+			// {"account":"wang3","password":"124g","tel":"4553400"},
+			// {"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// {"account":"wa","password":"1234555","tel":"13451678881"},
+			// {"account":"wdd","password":"124dddg","tel":"13456788801"},
+			// {"account":"wang3","password":"124g","tel":"4553400"},
+			// {"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// {"account":"wa","password":"1234555","tel":"13451678881"},
+			// {"account":"wdd","password":"124dddg","tel":"13456788801"},
+			// {"account":"wang3","password":"124g","tel":"4553400"},
+			// {"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// {"account":"wa","password":"1234555","tel":"13451678881"},
+			// {"account":"wdd","password":"124dddg","tel":"13456788801"},
+			// {"account":"wang3","password":"124g","tel":"4553400"},
+			// {"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// {"account":"wa","password":"1234555","tel":"13451678881"},
+			// {"account":"wdd","password":"124dddg","tel":"13456788801"},
+			// {"account":"wang3","password":"124g","tel":"4553400"},
+			// {"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// {"account":"wa","password":"1234555","tel":"13451678881"},
+			// {"account":"wdd","password":"124dddg","tel":"13456788801"},
+			// {"account":"wang3","password":"124g","tel":"4553400"},
+			// {"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// 
+			// {"account":"wa","password":"1234555","tel":"13451678881"},
+			// {"account":"wdd","password":"124dddg","tel":"13456788801"},
+			// {"account":"wang3","password":"124g","tel":"4553400"},
+			// {"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// {"account":"wa","password":"1234555","tel":"13451678881"},
+			// {"account":"wdd","password":"124dddg","tel":"13456788801"},
+			// {"account":"wang3","password":"124g","tel":"4553400"},
+			// {"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// {"account":"wa","password":"1234555","tel":"13451678881"},
+			// {"account":"wdd","password":"124dddg","tel":"13456788801"},
+			// {"account":"wang3","password":"124g","tel":"4553400"},
+			// {"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// {"account":"wa","password":"1234555","tel":"13451678881"},
+			// {"account":"wdd","password":"124dddg","tel":"13456788801"},
+			// {"account":"wang3","password":"124g","tel":"4553400"},
+			// {"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			]
+		child(userData)
+		// var obj_data="";
+function child(obj){
+	$("td").addClass("tab")
+	// console.log("obj:",obj)
+    // alert("ob2:"+obj+" "+typeof(obj));//获取父界面的传值
+	 // obj_data=obj;
+	 layui.config({
+	 	base: 'test/js/'
+	 }).use(['testTablePlug'], function() {
+	 	var $ = layui.jquery,
+	 		// layer = layui.layer //弹层
+	 		// , form = layui.form //弹层
+	 		// ,
+	 		table = layui.table //表格
+	 		,
+	 		tablePlug = layui.tablePlug; //表格插件
+	 
+	 	// 当前这个测试页面测试的重点不是智能重载，所以关掉该功能，实际上该功能也是默认关闭的，可以不执行下面这句代码，也可以强制指定。
+	 	tablePlug.smartReload.enable(false);
+		// 处理操作列
+		var fn1 = function(field) {
+			return function(data) {
+				return data[field];
+			};
+		};
+		 table.render({
+		 	// elem: '#demo2'
+		 	elem: '#test',
+		 	 height: 'full-200',
+		 	limit: 100,
+		 	loading: true,
+		 	data: obj,
+			page: false,
+			
+			text: {
+						none: '无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+					},
+					cols: [
+						[{
+								type: 'numbers',
+								fixed: 'left',
+								title: '序号',
+								minWidth: "5%",
+								align: 'center',
+								
+							}
+							 ,
+							 {
+								field: 'account',
+								title: '用户名',
+								width: "20%",
+								fixed: 'left',
+								unresize: true,
+								sort: true,
+								align: 'center',
+					
+							    edit: 'text',
+								minWidth: "20%",
+								 templet: '#sexTpl'
+								// minWidth: 500,
+								// event:'ddd',
+					
+							}, {
+								field: 'password',
+								title: '密码',
+								minWidth: 120,
+								width: '25%',
+								edit: 'text',
+								fixed: 'center',
+								unresize: true,
+								minWidth: "10%",
+								align: 'center',
+					
+							},
+							{
+								field: 'tel',
+								title: '电话',
+								edit: 'text',
+								width: '30%',
+								align: 'center',
+								minWidth: 120,
+								style:'background-color: darkturquoise',
+							},
+							{
+							    fixed: 'right',
+							    type: 'toolbar',
+							    field: 'toolbar_common',
+							    title: '操作',
+							    width: '20%',
+								align: 'center',
+							    toolbar: '#barDemo',
+							    // rowspan: 2
+							  }
+							]],
+							done: function(res, curr, count) {
+							
+								var tableView = this.elem.next();
+								var totalRow = tableView.find('.layui-table-total');
+								var limit = this.page ? this.page.limit : this.limit;
+								layui.each(totalRow.find('td'), function(index, tdElem) {
+									tdElem = $(tdElem);
+									var text = tdElem.text();
+									if (text && !isNaN(text)) {
+										text = (parseFloat(text) / limit).toFixed(2);
+										tdElem.find('div.layui-table-cell').html(text);
+									}
+								});
+								console.log("res:", res);
+								
+								//得到当前页码
+								console.log("curr", curr);
+								
+								//得到数据总量
+								console.log("co", count);
+								
+								}
+							});
+					
+	 })
+	
+}
+
+	
+	</script>
+	<body>
+		<div style="width:100%;color: #000000;">
+			<table class="layui-hide" lay-filter="test" id="test"></table>
+		<!-- <table id="test" class="zbt-table" style="color: red;"></table> -->
+</div>
+	<script type="text/html" id="barDemo">
+				
+	  <a class="layui-btn layui-btn-danger layui-btn-xs"  lay-event="del">删除</a>
+	</script>
+	<script type="text/html" id="sexTpl">
+  {{#  if(d.account =='wdd'){ }}
+    <span style="color: #F581B1;background-color: darkturquoise;width: 200%;">{{ d.account }}</span>
+  {{#  } else { }}
+    {{ d.account }}
+  {{#  } }}
+</script>
+		<div class="layui-form-item layui-layout-admin">
+			<div class="layui-input-block">
+				<div class="layui-footer" style="left: 0;">
+
+					<button type="reset" class="layui-btn layui-btn-primary" onclick="cancel()">取消</button>
+					<button class="layui-btn" lay-submit="" lay-filter="component-form-demo1" onclick="sub()">立即提交</button>
+
+				</div>
+			</div>
+		</div>
+		
+
+	</body>
+
+	<script type="text/javascript">
+		
+	function cancel(){
+			$("td").removeClass("tab");
+		parent.GetValue('我是子界面值'); //GetValue是父界面的Js 方法
+		// var index = parent.layer.getFrameIndex(window.name);
+		// parent.layer.close(index);
+		// var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+		//  parent.layer.close(index);
+		
+		
+	}
+	
+
+	function  FilterData(a,b)
+        {   //循环判断数组a里的元素在b里面有没有，有的话就放入新建立的数组中
+            var result = new Array();
+            var c=b.toString();
+            for(var i=0;i<a.length;i++)
+            {
+              if(c.indexOf(a[i].toString())==-1)
+              {
+	// alert("o:"+typeof(c)+"--="+c.indexOf(a[i].toString()));
+              result.push(a[i]);
+        // alert("ui:"+result.join(",")+" "+typeof(result)+" "+result.length+ " ="+result[0])
+              }      
+            }
+       
+                return result;
+        }
+		
+		
+		function sub() {
+			
+			// storage.removeItem("xops123456");
+			arr_user=[];
+			arr_pwd=[];
+			arr_tel=[];
+		    arr_res=[];
+			arr_all=[];
+			obj_data=userData
+			for(var j in obj_data){
+				console.log("obj_data:",j," ",typeof(obj_data[j])," ",obj_data[j])
+				arr_all.push(j)
+				for(var k in obj_data[j]){
+					console.log("obj_data[j]:",k," ",typeof(obj_data[j][k])," ",obj_data[j][k])
+					switch(k){
+						case "account":
+						var len=obj_data[j][k].length;
+						if(len<2 || len >16){
+							arr_user.push(j)
+						}
+						break;
+						case "password":
+						var len1=obj_data[j][k].length;
+						if(len1<6 || len1 >16){
+							arr_pwd.push(j)
+						}
+						break;
+						case "tel":
+						
+						var len2=/^1\d{10}$/.test(obj_data[j][k]);
+						// alert("len2:"+j+ " "+len2+ " "+obj_data[j][k] )
+						if(!len2){
+							arr_tel.push(j)
+						}
+						break;
+					}
+					
+					
+				// console.log("k:",j," **",k," --",obj_data[j][k].length," ++",(userData[j][k]))
+				}
+			}
+			
+			// $('#1tab  ').children().eq(0).css({
+			// 	'background-color': 'red'
+			// })
+				$("td").removeClass("tab");
+			for(var u in arr_user){
+				console.log("arr_user:",u," ",arr_user[u])
+				$('#'+arr_user[u]+'tab').children().eq(0).addClass("tab")
+			}
+			for(var u in arr_pwd){
+				console.log("arr_pwd:",u," ",arr_user[u])
+				$('#'+arr_pwd[u]+'tab').children().eq(1).addClass("tab")
+			}
+			for(var u in arr_tel){
+				console.log("arr_tel:",u," ",arr_user[u])
+				$('#'+arr_tel[u]+'tab').children().eq(2).addClass("tab")
+			}
+			
+		
+			let res = arr_user.concat(arr_tel.filter(v => !arr_user.includes(v))) 
+			 res = res.concat(arr_pwd.filter(v => !res.includes(v))) 
+			 c=FilterData(arr_all,res)
+			 for(var e=0;e<c.length;e++){
+				 console.log("g",e," ",c[e]," =",obj_data[c[e]],typeof(obj_data[c[e]]))
+				 arr_res.push(obj_data[c[e]])
+			 }
+			 // alert("gg:"+arr_res.join(","))
+			 $.post("http://localhost:86/HBuilder/xops/Back.php",{
+				 type:"User",
+				 operation:"dao",
+				 account:c.toString(),
+				 password:JSON.stringify(arr_res),
+				  token:"1ab66e59325257b60b971d4afa1505ce"
+				 
+			 },function(data,ff){
+				 // alert("data:"+data)
+				 arr_dt=data.split(":");
+				 // alert("q22:"+typeof(arr_dt))
+				 for(var i in arr_dt){
+					 console.log("i2:",i," ",arr_dt[i]," ",typeof(arr_dt[i]))
+				 }
+			 })
+			 
+			 // alert("c11:"+typeof(res)+ " "+c.join(",")+" "+arr_all.join(",")+"++"+res.join(","))
+			// alert("rel3:"+arr_user.join(",")+"-- "+arr_pwd.join(",")+ "-- "+arr_tel.join(",")+"=="+res+" "+typeof(res))
+			
+		}
+	
+		
+		// var userData=[
+		// 	{"account":"wa","password":"1234555","tel":"13451678881"},
+		// 	{"account":"wdd","password":"124dddg","tel":"13456788801"},
+		// 	{"account":"wang3","password":"124g","tel":"4553400"},
+		// 	{"account":"wang4wang4wang4","password":"1255412554125541","tel":"13566666888"},
+			// {"username":"wang5","password":"124g","tel":"45534"},
+			// {"username":"wang6","password":"124g","tel":"45534"},
+			// {"username":"wang7","password":"124g","tel":"45534"},
+			// {"username":"wang8","password":"124g","tel":"45534"},
+			// {"username":"wang9","password":"124g","tel":"45534"},
+			// {"username":"wang10","password":"124g","tel":"45534"},
+			// {"username":"wang11","password":"124g","tel":"45534"},
+			// {"username":"wang12","password":"124g","w":"45534"},
+			// {"username":"wang13","password":"124g","tel":"45534"},
+			// {"username":"wang14","password":"124g","tel":"45534"},
+			// {"username":"wang15","password":"124g","tel":"45534"}
+		// ]
+	
+		
+	</script>
+</html>

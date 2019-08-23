@@ -20,42 +20,47 @@ function main(){
             // alert(0)
             chusi();
 		    $('#show_data').attr("style","display:none;")
-			$('#show_data').show("fast",function(){
-				init();
-			});//slow
-		
+			// $('#show_data').show("fast",function(){
+			// 	init();
+			// });
+			//slow
+	
 			$( "#finish" ).hide();
 			
 			 $("#shenhe").hide();
-			 $("#guo").hide()
+			 $("#guo").hide();
+			 	$('#show_data').show();
+			 init();
         }
         else if($(this).index()==1){
 			// alert(1)
             $('.manage_myflight_content ul').hide();
 	    $("#guo").empty();
-			chusi();
+		
 			 $("#finish").hide();
 			 $("#shenhe").hide();
 			  $('#show_data').attr("style","display:none;")
-			  $( "#finish" ).show("fast",function(){
-				     
-				  finish()
-			  });
-			  // $("#guo").show('',function(){
-				 //  	guo(33);
+			  // $( "#finish" ).show("fast",function(){
+				 //     
+				 //  finish()
 			  // });
+			  	chusi();
+			  $( "#finish" ).show();
+			  finish();
+			
         }else{
 			// alert(2)
 			 $("#guo").hide()
 			 $('.manage_myflight_content ul').hide();
-			
+			$('#show_data').attr("style","display:none;")
 		  $("#finish").hide();
 		chusi();
-			  
-			$('#show_data').attr("style","display:none;")
-				$("#shenhe").show(" ",function(){
-								  shenhe()
-				});
+			
+				// $("#shenhe").show(" ",function(){
+				// 				  shenhe()
+				// });
+				 $("#shenhe").show();
+				 shenhe();
 				 
 		}
 		// alert("dd6:"+$(this).index())
@@ -80,8 +85,6 @@ function main(){
 		}
 		
 		function delfinsih(ww){
-			  $('.manage_myflight_content ul').hide();
-				
 
 			 $('#show_data').attr("style","display:none;")
 			
@@ -101,11 +104,15 @@ function main(){
 			 $( "#finish" ).hide();
 			 $( "#shenhe" ).hide();
 			   
-			 $("#guo" ).show("fast", function() {
-			 		$("#guo").empty();
+			 // $("#guo" ).show("fast", function() {
+			 // 		$("#guo").empty();
+			 // 	 guo(parseInt($(ww).attr("id")))
+			 // chusi();
+			 // })
+			 $("#guo" ).show()
+			 	$("#guo").empty();
 			 	 guo(parseInt($(ww).attr("id")))
 			 chusi();
-			 })
 		}
 		
 			function fhui(){
@@ -114,12 +121,15 @@ function main(){
 					$(".maindiv").hide()	
 						$("#shenhe").hide()
 							$("#guo").hide()
-				// $('.addFlight').hide('slow');
-				$('#show_data').show("fast",function(){
+				// $('#show_data').show("fast",function(){
+				// 
+				// 	init();
+				// 	chusi();
+				// });
 				
-					init();
+				$('#show_data').show();
+				init();
 					chusi();
-				});
 			}
 			
 			function fhui2(){
@@ -129,11 +139,13 @@ function main(){
 					$("#guo").hide()
 					$(".maindiv").hide()
 						$("#shenhe").hide()
-				$('#finish').show("slow",function(){
-			
-					finish();
+				// $('#finish').show("slow",function(){
+				// 	finish();
+				// 	chusi();
+				// });
+				$('#finish').show();
+				finish();
 					chusi();
-				});
 			}
 			
 			function fhui4(){
@@ -141,10 +153,14 @@ function main(){
 				$('.manage_myflight_content ul').hide();
 				$("#finish").hide();
 				$('#show_data').attr("style","display:none;")
-				$("#shenhe").show(" ",function(){
-				 shenhe()
+				// $("#shenhe").show(" ",function(){
+				//  shenhe()
+				//  chusi();
+				// 				});
+				$("#shenhe").show();
+				  shenhe()
 				 chusi();
-								});
+				
 			}
 			function del(ww){
 			
@@ -159,7 +175,7 @@ function main(){
 		   },
 		   onConfirm: function() {
 			 
-			   $.post("http://localhost:86/HBuilder/xops/Back.php", {
+			   $.post("http://127.0.0.1:86/HBuilder/xops/Back.php", {
 			   	type: "Yuorder",
 			   	operation: "delid",
 			    userid:parseInt($(ww).attr("id")),
@@ -225,28 +241,40 @@ function main(){
 			if(act==null){
 				$.sendSuccessToTop('当前登录用户名无效，登录失败，请重新登录！', 2000, function() {  });
 			}else{
-				$.post("http://localhost:86/HBuilder/xops/Back.php", {
+				$.post("http://127.0.0.1:86/HBuilder/xops/Back.php", {
 					type: "Yuorder",
 					operation: "addac",
 				 username:act,
 				 userid:parseInt($(value).attr("id")),
 					token: "1ab66e59325257b60b971d4afa1505ce"
 				}, function(data2, status) {
-								 // alert("d:"+data2)
-					obj = JSON.parse(data2);
+								
+							// alert("da:"+data2)
+					var obj = JSON.parse(data2);
+						 if(obj.code==201){
+					$.sendSuccessToTop('参数id,账号为空', 2000, function() {  });
+													   }else if(obj.code==200){
+														   $.sendSuccessToTop('处理成功！', 2000, function() {  });
+														   fhui();
+													   }else if(obj.code==203){
+													 $.sendSuccessToTop('管理员登录账户错误！', 2000, function() {  });
+													   }
+					 // alert("5d:"+act+" "+parseInt($(value).attr("id")))
+					 $.post("http://mycloud.konzesys.com.cn/app/zhiweibao/xops/Back.php", {
+						type: "Yuorder",
+						operation:"weixin",
+					 username:act,
+					 userid:parseInt($(value).attr("id")),
+						token: "1ab66e59325257b60b971d4afa1505ce"
+					}, function(data2, status) {
+						 // alert("4d:"+data2)
+						})
 								  
-								   if(obj.code==201){
-				  $.sendSuccessToTop('参数id,账号为空', 2000, function() {  });
-								   }else if(obj.code==200){
-									   $.sendSuccessToTop('处理成功！', 2000, function() {  });
-									   fhui();
-								   }else if(obj.code==203){
-								 $.sendSuccessToTop('管理员登录账户错误！', 2000, function() {  });
-								   }
+						
 								   })
 				
 			}
-			
+			// alert("f")
 			chusi();
 			// alert("dfg:"+parseInt($(value).attr("id")))
 		

@@ -44,7 +44,7 @@ $.post("http://localhost:86/HBuilder/xops/Back.php", {
 		}
 		result = result.substring(0, result.lastIndexOf(','));
 		 result+="]";
-
+           
 	courseType=eval(result);
  //  var pp=[
 	//   [{index: '1', name: '09:00-09:40'}, 1],
@@ -66,10 +66,11 @@ $.post("http://localhost:86/HBuilder/xops/Back.php", {
 	var div = document.getElementById('right');
 	 // alert("4kp:"+cou+" "+div.clientHeight)
 	 
-	heigh=div.clientHeight-50;
+	heigh=div.clientHeight-55;
 	 // alert("5kp:"+" "+heigh)
 	heigh=heigh /cou;
 	heigh=Math.floor( heigh * 100 ) / 100
+	heigh=heigh>30?heigh:30;
 	 // alert("2kp:"+" "+heigh)
 		Timetable = new Timetables({
 				el: '#coursesTable',

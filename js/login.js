@@ -2,7 +2,7 @@ function login() {
 	var username = document.getElementById("username").value;
 	var password = document.getElementById("password").value;
 
-  $.post("http://localhost:86/HBuilder/xops/Back.php",{
+  $.post("http://127.0.0.1:86/HBuilder/xops/Back.php",{
 	     
 	     type:"User",
 		 operation:"login",
@@ -11,7 +11,9 @@ function login() {
 		 token:"1ab66e59325257b60b971d4afa1505ce"
 	     
 	   },function(data,status){
-	 // alert("da:"+data);
+	
+	// alert("df:<?php  session_start(); $_SESSION['amid'];?>")
+	
 		  var obj=JSON.parse(data);
 	     var id=obj.data;
 		switch(obj.code)
@@ -40,8 +42,9 @@ function login() {
 	$.sendSuccessToTop('登录成功！', 2000, function() {  });
 		 // alert("登录成功！")
 		 // var t=document.write()
+		
 			localStorage.setItem('xops_id', username);
-			localStorage.setItem('xops_admin_id', id);
+			// localStorage.setItem('xops_admin_id', id);
 				// alert("w:+"+localStorage.getItem('xops_id'))
 				 
 		 window.location.href="http://127.0.0.1:86/HBuilder/xops/index.html"
